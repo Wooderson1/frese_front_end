@@ -1,0 +1,7 @@
+{
+  "name": "frese_order_service",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
