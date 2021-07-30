@@ -10,3 +10,11 @@ export interface Entree {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Cart {
+  item: string;
+  price: number;
+  quantity: number;
+}
+
+let total: number;

@@ -5,15 +5,38 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-title>Entrees</ion-title>
-    <ion-item *ngFor="let entree of entree">
-      <ion-avatar slot="start">
-        <ion-img [src]="entree.photoUrl"></ion-img>
-      </ion-avatar>
-      <ion-label>
-        {{ entree.description }}
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-title>Entrees</ion-title>
+          <ion-item *ngFor="let entree of entree">
+            <ion-avatar slot="start">
+              <ion-img [src]="entree.photoUrl"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              {{ entree.description }}
+              <p>${{ entree.price }}</p>
+                <ion-button (click)="updateCart(this.entree)">Add to Cart</ion-button>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col>
+        <ion-card>
+          <ion-list>
+            <ion-title>Cart</ion-title>
+            <ion-item *ngFor="let cart of cart">
+              <ion-label>
+                <p>Item: {{ cart.item }}</p>
+                <p>Quantity: 1</p>
+                <p>Price: {{ cart.price }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+          <ion-item>Total: ${{ total }}</ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
