@@ -23,7 +23,7 @@ export class FreseBakeryPage implements OnInit {
       updatedAt: '2021-07-07T02:51:28.000Z'
     },
     {
-      id: 1,
+      id: 2,
       title: 'sandwich',
       description: 'Reuben Sandwich',
       price: 10,
@@ -37,21 +37,23 @@ export class FreseBakeryPage implements OnInit {
     }
   ];
   cart: Cart[] = [];
- /*   {
-      item: 'Reuben Sandwich',
-      price: 10,
-      quantity: 1,
-    }
-  ]; */
 
+  // set total balance to 0 to start
   total = 0;
 
   constructor() { }
 
   // Update cart
   updateCart(entree) {
-    const newItem: Cart = {item: entree.description, price: entree.price, quantity: 1};
-    this.cart.push(newItem);
+    if (!this.cart[entree.id-1]) {
+      const newItem: Cart = {item: entree.description, price: entree.price, quantity: 1};
+      this.cart.push(newItem);
+    }
+    else {
+      this.cart[entree.id-1].quantity += 1;
+      this.cart[entree.id-1].price += entree.price;
+    }
+    console.log(this.cart[entree.id-1].item);
     this.total += entree.price;
   }
 

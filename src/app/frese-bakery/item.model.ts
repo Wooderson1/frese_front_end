@@ -1,3 +1,4 @@
+// Entree interface
 export interface Entree {
   id: number;
   title: string;
@@ -11,10 +12,12 @@ export interface Entree {
   updatedAt: string;
 }
 
+// Cart interface
 export interface Cart {
   item: string;
   price: number;
   quantity: number;
 }
 
+// total cart balance
 let total: number;
