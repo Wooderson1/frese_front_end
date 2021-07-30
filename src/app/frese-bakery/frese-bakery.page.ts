@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Entree } from './item.model';
+import { Item } from './item.model';
 import { Cart } from './item.model';
 
 @Component({
@@ -9,7 +9,7 @@ import { Cart } from './item.model';
 })
 export class FreseBakeryPage implements OnInit {
 
-  entree: Entree[] = [
+  entree: Item[] = [
     {
       id: 1,
       title: 'Pizza',
