@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Frese Bakery</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-title>Entrees</ion-title>
+    <ion-item *ngFor="let entree of entree">
+      <ion-avatar slot="start">
+        <ion-img [src]="entree.photoUrl"></ion-img>
+      </ion-avatar>
+      <ion-label>
+        {{ entree.description }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
