@@ -9,6 +9,7 @@ import { Cart } from './item.model';
 })
 export class FreseBakeryPage implements OnInit {
 
+  // entrees
   entree: Item[] = [
     {
       id: 1,
@@ -43,18 +44,20 @@ export class FreseBakeryPage implements OnInit {
 
   constructor() { }
 
-  // Update cart
-  updateCart(entree) {
-    if (!this.cart[entree.id-1]) {
-      const newItem: Cart = {item: entree.description, price: entree.price, quantity: 1};
-      this.cart.push(newItem);
-    }
-    else {
-      this.cart[entree.id-1].quantity += 1;
-      this.cart[entree.id-1].price += entree.price;
-    }
-    console.log(this.cart[entree.id-1].item);
-    this.total += entree.price;
+// Update cart
+updateCart(item) {
+  // if item is not in the cart yet
+  if (!this.cart[item.typeId-1] || !this.cart[item.id-1]) {
+    const newItem: Cart = {item: item.description, price: item.price, quantity: 1};
+    this.cart.push(newItem);
+  }
+  // if it is in the cart already, update values
+  else {
+    this.cart[item.typeId-1].quantity += 1;
+    this.cart[item.typeId-1].price += item.price;
+  }
+  // update cart total
+  this.total += item.price;
   }
 
   ngOnInit() {
