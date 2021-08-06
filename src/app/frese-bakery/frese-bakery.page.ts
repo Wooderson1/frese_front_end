@@ -53,8 +53,8 @@ updateCart(item) {
   }
   // if it is in the cart already, update values
   else {
-    this.cart[item.typeId-1].quantity += 1;
-    this.cart[item.typeId-1].price += item.price;
+    this.cart[item.id-1].quantity += 1;
+    this.cart[item.id-1].price += item.price;
   }
   // update cart total
   this.total += item.price;
