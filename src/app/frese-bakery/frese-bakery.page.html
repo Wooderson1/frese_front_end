@@ -17,9 +17,6 @@
             <ion-label>
               {{ entree.description }}
               <p>${{ entree.price }}</p>
-                <ion-icon name="remove-circle" (click)="decrement()"></ion-icon>
-                {{ itemCount }}
-                <ion-icon name="add-circle" (click)="increment()"></ion-icon>
                 <ion-button (click)="updateCart(this.entree)">Add to Cart</ion-button>
             </ion-label>
           </ion-item>
@@ -34,6 +31,9 @@
                 <p>Item: {{ cart.description }}</p>
                 <p>Quantity: {{cart.quantity}}</p>
                 <p>Price: ${{ cart.price }}</p>
+                <ion-icon name="remove-circle" (click)="decrement(cart)"></ion-icon>
+                {{ cart.quantity }}
+                <ion-icon name="add-circle" (click)="increment(cart)"></ion-icon>
               </ion-label>
             </ion-item>
           </ion-list>

@@ -40,16 +40,19 @@ cart: Item[] = [];
 
   // set total balance to 0 to start
   total = 0;
-  itemCount = 0;
 
   constructor() { }
 
-  increment() {
-    ++this.itemCount;
+  increment(cart) {
+    cart.price = cart.price + (cart.price / cart.quantity);
+    ++cart.quantity;
+    this.total += (cart.price / cart.quantity);
   }
 
-  decrement() {
-    --this.itemCount;
+  decrement(cart) {
+    cart.price = cart.price - (cart.price / cart.quantity);
+    --cart.quantity;
+    this.total -= (cart.price / cart.quantity);
   }
 
   // Update cart
