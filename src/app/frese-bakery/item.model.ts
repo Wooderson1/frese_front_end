@@ -12,12 +12,5 @@ export interface Item {
   updatedAt: string;
 }
 
-// Cart interface
-export interface Cart {
-  item: string;
-  price: number;
-  quantity: number;
-}
-
 // total cart balance
 let total: number;

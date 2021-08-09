@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Item } from './item.model';
-import { Cart } from './item.model';
 
 @Component({
   selector: 'app-frese-bakery',
@@ -37,27 +36,44 @@ export class FreseBakeryPage implements OnInit {
       updatedAt: '2021-07-07T02:51:28.000Z'
     }
   ];
-  cart: Cart[] = [];
+cart: Item[] = [];
 
   // set total balance to 0 to start
   total = 0;
+  itemCount = 0;
 
   constructor() { }
 
-// Update cart
-updateCart(item) {
-  // if item is not in the cart yet
-  if (!this.cart[item.typeId-1] || !this.cart[item.id-1]) {
-    const newItem: Cart = {item: item.description, price: item.price, quantity: 1};
-    this.cart.push(newItem);
+  increment() {
+    ++this.itemCount;
   }
-  // if it is in the cart already, update values
-  else {
-    this.cart[item.id-1].quantity += 1;
-    this.cart[item.id-1].price += item.price;
+
+  decrement() {
+    --this.itemCount;
   }
-  // update cart total
-  this.total += item.price;
+
+  // Update cart
+  updateCart(item) {
+    // if item is not in the cart yet
+    if (!this.cart[item.typeId-1] || !this.cart[item.id-1]) {
+      const newItem: Item = {id: item.id, title: item.title, description: item.description,
+                             price: item.price, typeId: item.typeId, active:  item.active,
+                             quantity: 1, photoUrl: item.photoUrl, createdAt: item.createdAt,
+                             updatedAt: item.updatedAt};
+      this.cart.push(newItem);
+    }
+    // if it is in the cart already, update values
+    else {
+      this.cart[item.id-1].quantity += 1;
+      this.cart[item.id-1].price += item.price;
+    }
+    // update cart total
+    this.total += item.price;
+  }
+
+  // check out logic goes here
+  checkOut(cart) {
+
   }
 
   ngOnInit() {
