@@ -1,3 +1,5 @@
+//import { isNgTemplate } from "@angular/compiler";
+
 // Entree interface
 export interface Item {
   id: number;

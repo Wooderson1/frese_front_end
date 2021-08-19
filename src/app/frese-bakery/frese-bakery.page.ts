@@ -1,3 +1,4 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { Item } from './item.model';
 
@@ -37,6 +38,7 @@ export class FreseBakeryPage implements OnInit {
     }
   ];
 cart: Item[] = [];
+cartMap = new Map();
 
   // set total balance to 0 to start
   total = 0;
@@ -44,31 +46,50 @@ cart: Item[] = [];
   constructor() { }
 
   increment(cart) {
-    cart.price = cart.price + (cart.price / cart.quantity);
+    cart.price += (cart.price / cart.quantity);
     ++cart.quantity;
     this.total += (cart.price / cart.quantity);
   }
 
   decrement(cart) {
-    cart.price = cart.price - (cart.price / cart.quantity);
-    --cart.quantity;
-    this.total -= (cart.price / cart.quantity);
+    if (cart.quantity === 1) {
+      this.total -= cart.price;
+        for (let x = 0; x < this.cart.length; ++x) {
+          if (this.cartMap.get(cart.id) === this.cart[x].description) {
+            console.log('deleted: ' + this.cartMap.delete(cart.id));
+            this.cart.splice(x, 1);
+          }
+        }
+    }
+    else {
+      this.total -= (cart.price / cart.quantity);
+      cart.price -= (cart.price / cart.quantity);
+      --cart.quantity;
+    }
   }
 
   // Update cart
   updateCart(item) {
     // if item is not in the cart yet
-    if (!this.cart[item.typeId-1] || !this.cart[item.id-1]) {
+    if (!this.cartMap.has(item.id)) {
       const newItem: Item = {id: item.id, title: item.title, description: item.description,
-                             price: item.price, typeId: item.typeId, active:  item.active,
+                             price: item.price, typeId: item.typeId, active: item.active,
                              quantity: 1, photoUrl: item.photoUrl, createdAt: item.createdAt,
                              updatedAt: item.updatedAt};
       this.cart.push(newItem);
+      this.cartMap.set(item.id, item.description);
     }
     // if it is in the cart already, update values
     else {
-      this.cart[item.id-1].quantity += 1;
-      this.cart[item.id-1].price += item.price;
+      for (let x = 0; x < this.cart.length; ++x) {
+        if (this.cartMap.get(item.id) === this.cart[x].description) {
+          this.cart[x].quantity += 1;
+          this.cart[x].price += item.price;
+          console.log('cart updated at array index: ' + x);
+        }
+      }
+      // this.cart[item.id-1].quantity += 1;
+          // this.cart[item.id-1].price += item.price;
     }
     // update cart total
     this.total += item.price;

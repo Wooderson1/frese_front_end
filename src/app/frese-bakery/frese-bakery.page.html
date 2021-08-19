@@ -29,11 +29,10 @@
             <ion-item *ngFor="let cart of cart">
               <ion-label>
                 <p>Item: {{ cart.description }}</p>
-                <p>Quantity: {{cart.quantity}}</p>
                 <p>Price: ${{ cart.price }}</p>
-                <ion-icon name="remove-circle" (click)="decrement(cart)"></ion-icon>
-                {{ cart.quantity }}
-                <ion-icon name="add-circle" (click)="increment(cart)"></ion-icon>
+                  <ion-icon name="remove-circle" (click)="decrement(cart)"></ion-icon>
+                  {{ cart.quantity }}
+                  <ion-icon name="add-circle" (click)="increment(cart)"></ion-icon>
               </ion-label>
             </ion-item>
           </ion-list>
