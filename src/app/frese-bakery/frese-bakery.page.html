@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar color='primary'>
     <ion-title>Frese Bakery</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -10,14 +10,14 @@
       <ion-col>
         <ion-list>
           <ion-title>Entrees</ion-title>
-          <ion-item *ngFor="let entree of entree;">
+          <ion-item *ngFor="let item of entree;">
             <ion-avatar slot="start">
-              <ion-img [src]="entree.photoUrl"></ion-img>
+              <ion-img [src]="item.photoUrl"></ion-img>
             </ion-avatar>
             <ion-label>
-              {{ entree.description }}
-              <p>${{ entree.price }}</p>
-                <ion-button (click)="updateCart(this.entree)">Add to Cart</ion-button>
+              {{ item.description }}
+              <p>${{ item.price }}</p>
+                <ion-button color='success' (click)="updateCart(item)">Add to Cart</ion-button>
             </ion-label>
           </ion-item>
         </ion-list>
@@ -26,13 +26,13 @@
         <ion-card>
           <ion-list>
             <ion-title>Cart</ion-title>
-            <ion-item *ngFor="let cart of cart">
+            <ion-item *ngFor="let item of cart.items">
               <ion-label>
-                <p>Item: {{ cart.description }}</p>
-                <p>Price: ${{ cart.price }}</p>
-                  <ion-icon name="remove-circle" (click)="decrement(cart)"></ion-icon>
-                  {{ cart.quantity }}
-                  <ion-icon name="add-circle" (click)="increment(cart)"></ion-icon>
+                <p>Item: {{ item.description }}</p>
+                <p>Price: ${{ item.price }}</p>
+                  <ion-icon color='danger' name="remove-circle" (click)="decrement(item)"></ion-icon>
+                  {{ item.quantity }}
+                  <ion-icon color='success' name="add-circle" (click)="increment(item)"></ion-icon>
               </ion-label>
             </ion-item>
           </ion-list>

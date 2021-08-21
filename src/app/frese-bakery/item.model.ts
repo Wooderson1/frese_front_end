@@ -14,5 +14,12 @@ export interface Item {
   updatedAt: string;
 }
 
+export interface Order  {
+  name: string;
+  phone: string;
+  email: string;
+  items: Item[];
+}
+
 // total cart balance
 let total: number;
