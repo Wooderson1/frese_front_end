@@ -24,3 +24,12 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.ion-color-frese {
+  --ion-color-base: var(--ion-color-frese) !important;
+  --ion-color-base-rgb: var(--ion-color-frese-rgb) !important;
+  --ion-color-contrast: var(--ion-color-frese-contrast) !important;
+  --ion-color-contrast-rgb: var(--ion-color-frese-contrast-rgb) !important;
+  --ion-color-shade: var(--ion-color-frese-shade) !important;
+  --ion-color-tint: var(--ion-color-frese-tint) !important;
+  }

@@ -103,7 +103,8 @@ cartMap = new Map();
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.dataService.getFullMenu().subscribe(productResults => { console.log(productResults); });
   }
 
 }

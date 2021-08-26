@@ -1,23 +1,28 @@
 <ion-header>
-  <ion-toolbar color='primary'>
-    <ion-title>Frese Bakery</ion-title>
+  <ion-toolbar color='dark'>
+    <img src="assets/images/freseLogo.png" width="140px" height="80px" class="ion-padding"/>
+    <div slot="end" class="ion-padding-end">
+      <ion-button color="frese">
+        <ion-icon slot="start" name="person-circle-outline"></ion-icon>Login
+      </ion-button>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content color="light">
   <ion-grid>
     <ion-row>
       <ion-col>
         <ion-list>
           <ion-title>Entrees</ion-title>
           <ion-item *ngFor="let item of entree;">
-            <ion-avatar slot="start">
+            <ion-avatar width="100%" height="100%" slot="start">
               <ion-img [src]="item.photoUrl"></ion-img>
             </ion-avatar>
             <ion-label>
               {{ item.description }}
               <p>${{ item.price }}</p>
-                <ion-button color='success' (click)="updateCart(item)">Add to Cart</ion-button>
+                <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
             </ion-label>
           </ion-item>
         </ion-list>
@@ -37,7 +42,7 @@
             </ion-item>
           </ion-list>
           <ion-item>Total: ${{ total }}</ion-item>
-          <ion-button margin (click)="checkOut(this.cart)">Checkout</ion-button>
+          <ion-button color='success' (click)="checkOut(this.cart)">Checkout</ion-button>
         </ion-card>
       </ion-col>
     </ion-row>

@@ -3,6 +3,16 @@
 
 /** Ionic CSS Variables **/
 :root {
+  --ion-padding: 8px;
+
+  /** frese bakery logo color **/
+  --ion-color-frese: #ffaf38;
+  --ion-color-frese-rgb: 255, 176, 56;
+  --ion-color-frese-contrast: #000000;
+  --ion-color-frese-contrast-rgb: 0, 0, 0;
+  --ion-color-frese-shade: #e0ac08;
+  --ion-color-frese-tint: #ffca22;
+
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
