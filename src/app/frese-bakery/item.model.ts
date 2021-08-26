@@ -1,7 +1,7 @@
 //import { isNgTemplate } from "@angular/compiler";
 
 // Entree interface
-export interface Item {
+export interface Product {
   id: number;
   title: string;
   description: string;
@@ -14,11 +14,11 @@ export interface Item {
   updatedAt: string;
 }
 
-export interface Order  {
+export interface Item {
   name: string;
   phone: string;
   email: string;
-  items: Item[];
+  items: Product[];
 }
 
 // total cart balance

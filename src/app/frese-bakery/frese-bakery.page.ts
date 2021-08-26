@@ -1,6 +1,6 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
-import { Item, Order } from './item.model';
+import { Product, Item } from './item.model';
 import {DataServiceService} from '../services/data-service.service';
 
 @Component({
@@ -11,7 +11,7 @@ import {DataServiceService} from '../services/data-service.service';
 export class FreseBakeryPage implements OnInit {
 
   // entrees
-  entree: Item[] = [
+  entree: Product[] = [
     {
       id: 1,
       title: 'Pizza',
@@ -38,7 +38,7 @@ export class FreseBakeryPage implements OnInit {
       updatedAt: '2021-07-07T02:51:28.000Z'
     }
   ];
-cart: Order = {name: 'Mark Woodhall',
+cart: Item = {name: 'Mark Woodhall',
              phone: '(909)273-1901',
              email: 'woodhallmark800@gmail.com',
              items: []};
@@ -76,7 +76,7 @@ cartMap = new Map();
   updateCart(item) {
     // if item is not in the cart yet
     if (!this.cartMap.has(item.id)) {
-      const newProduct: Item = {id: item.id, title: item.title, description: item.description,
+      const newProduct: Product = {id: item.id, title: item.title, description: item.description,
                              price: item.price, typeId: item.typeId, active: item.active,
                              quantity: 1, photoUrl: item.photoUrl, createdAt: item.createdAt,
                              updatedAt: item.updatedAt};
