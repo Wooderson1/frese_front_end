@@ -51,11 +51,9 @@
             <ion-item *ngFor="let item of cart.items">
               <ion-label>
                 Item: {{ item.description }}
-                <ion-col>
                   <ion-icon color='danger' name="remove-circle" (click)="decrement(item)"></ion-icon>
                   {{ item.quantity }}
                   <ion-icon color='success' name="add-circle" (click)="increment(item)"></ion-icon>
-                </ion-col>
                 <p>Price: ${{ item.price }}</p>
                 <div *ngIf="item.addOns">
                   <ion-item>
@@ -71,8 +69,9 @@
             </ion-item>
           </ion-list>
           <p *ngIf="cart.items.length > 0; else emptyCart">
-            <ion-item>Total: ${{ total }}</ion-item>
-            <ion-button color='success' (click)="checkOut(this.cart)">Checkout</ion-button>
+            <ion-item>Total: ${{ total }}
+              <ion-button slot="end" color='success' (click)="checkOut(this.cart)">Checkout</ion-button>
+            </ion-item>
           </p>
           <ng-template #emptyCart>
             <p style="text-indent:3%; color:red">Your Cart is Empty.</p>

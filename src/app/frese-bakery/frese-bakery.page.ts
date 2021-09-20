@@ -95,16 +95,20 @@ cartMap = new Map();
     console.log('event:' + $event.target.value);
     console.log('item: ' + item.description);
 
-      for (const x of $event.target.value) {
-          item.price += Number(x) * item.quantity;
-          this.total += Number(x) * item.quantity;
-      }
+    // update prices for every add on added
+    for (const x of $event.target.value) {
+        item.price += Number(x) * item.quantity;
+        this.total += Number(x) * item.quantity;
+    }
 
-      for (const y of this.cart.items) {
+    // log the add ons available for the item
+    for (const y of this.cart.items) {
+      if (y.addOns) {
         for (const option of y.addOns) {
           console.log('addOns: ' + option.value);
         }
       }
+    }
   }
 
   // Update cart
