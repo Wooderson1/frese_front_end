@@ -15,14 +15,16 @@ export class FreseBakeryPage implements OnInit {
     {
       id: 1,
       title: 'Pizza',
-      description: 'Pepperoni Pizza',
+      description: 'Cheese Pizza',
       price: 16,
       typeId: 1,
       active: true,
       quantity: -1,
-      photoUrl: 'https://www.armourmeats.com/wp-content/uploads/2019/01/Quick-and-Easy-Pepperoni-Pizza-700x700.jpg',
+      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUFdG_GWYyNQwkncDqLEZqmFdXCysA6_MSXw&usqp=CAU',
       createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z'
+      updatedAt: '2021-07-07T02:51:28.000Z',
+      addOns: [{ value: 'Pepperoni', cost: 2 },
+               { value: 'Mushroom', cost: 3 }]
     },
     {
       id: 2,
@@ -35,7 +37,22 @@ export class FreseBakeryPage implements OnInit {
       // eslint-disable-next-line max-len
       photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwMWYdg4XRgclhhNNOfIAzkQPRfUMUQ14aNYgY0e0lRzVsuYt1eT6D5Hs1IIcl-ixgpD8&usqp=CAU',
       createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z'
+      updatedAt: '2021-07-07T02:51:28.000Z',
+      addOns: null
+    },
+    {
+      id: 3,
+      title: 'cake',
+      description: 'Chocolate Cake',
+      price: 5,
+      typeId: 2,
+      active: true,
+      quantity: -1,
+      // eslint-disable-next-line max-len
+      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_M2Olw8zrmIr7FhqI9iBAFnXIuSkAgPr-_g&usqp=CAU',
+      createdAt: '2021-07-07T02:39:33.000Z',
+      updatedAt: '2021-07-07T02:51:28.000Z',
+      addOns: null
     }
   ];
 cart: Item = {name: 'Mark Woodhall',
@@ -72,6 +89,24 @@ cartMap = new Map();
     }
   }
 
+  // update price for add on
+  addAddOn($event, item) {
+
+    console.log('event:' + $event.target.value);
+    console.log('item: ' + item.description);
+
+      for (const x of $event.target.value) {
+          item.price += Number(x) * item.quantity;
+          this.total += Number(x) * item.quantity;
+      }
+
+      for (const y of this.cart.items) {
+        for (const option of y.addOns) {
+          console.log('addOns: ' + option.value);
+        }
+      }
+  }
+
   // Update cart
   updateCart(item) {
     // if item is not in the cart yet
@@ -79,7 +114,7 @@ cartMap = new Map();
       const newProduct: Product = {id: item.id, title: item.title, description: item.description,
                              price: item.price, typeId: item.typeId, active: item.active,
                              quantity: 1, photoUrl: item.photoUrl, createdAt: item.createdAt,
-                             updatedAt: item.updatedAt};
+                             updatedAt: item.updatedAt, selections: item.selections, addOns: item.addOns};
 
       this.cart.items.push(newProduct);
       this.cartMap.set(item.id, item.description);

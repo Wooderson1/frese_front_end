@@ -1,6 +1,11 @@
 //import { isNgTemplate } from "@angular/compiler";
 
-// Entree interface
+export interface Key {
+  value: string;
+  cost: number;
+}
+
+// Product interface
 export interface Product {
   id: number;
   title: string;
@@ -12,13 +17,17 @@ export interface Product {
   photoUrl: string;
   createdAt: string;
   updatedAt: string;
+  selections?: Key[];
+  addOns?: Key[];
 }
+
 
 export interface Item {
   name: string;
   phone: string;
   email: string;
   items: Product[];
+  size?: string;
 }
 
 // total cart balance
