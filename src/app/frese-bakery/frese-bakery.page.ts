@@ -60,7 +60,7 @@ cart: Item = {name: 'Mark Woodhall',
              email: 'woodhallmark800@gmail.com',
              items: []};
 cartMap = new Map();
-
+availableItems;
   // set total balance to 0 to start
   total = 0;
 
@@ -138,12 +138,14 @@ cartMap = new Map();
   }
 
   // check out logic goes here
-  checkOut(cart) {
-
+  checkOut(final) {
+    console.log('Checkout with: ' + final);
   }
 
-  async ngOnInit() {
-    await this.dataService.getFullMenu().subscribe(productResults => { console.log(productResults); });
+  ngOnInit() {
+    this.dataService.getFullMenu().subscribe(productResults => {
+      console.log(productResults);
+      this.availableItems = productResults;
+    });
   }
-
 }

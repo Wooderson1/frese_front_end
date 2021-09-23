@@ -13,6 +13,6 @@ export class OrderServiceService {
     return this.http.get(`${this.apiUrl}/products/types`);
   }
   getFullMenu() {
-    return this.http.get(`${this.apiUrl}/products`);
+    return this.http.get(`${this.apiUrl}/productsAndSizes`);
   }
 }
