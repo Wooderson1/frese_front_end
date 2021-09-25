@@ -2,9 +2,9 @@
   <ion-toolbar color='dark'>
     <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
     <div slot="end" class="ion-padding-end">
-      <ion-button color="frese">
+      <!-- <ion-button color="frese">
         <ion-icon slot="start" name="person-circle-outline"></ion-icon>Login
-      </ion-button>
+      </ion-button> -->
     </div>
   </ion-toolbar>
 </ion-header>
@@ -91,8 +91,11 @@
             </ion-item>
           </ion-list>
           <p *ngIf="cart.items.length > 0; else emptyCart">
-            <ion-item>Total: ${{ total }}
+            <ion-item>Total: ${{ total }}</ion-item>
+            <ion-item>
               <ion-button slot="end" color='success' (click)="checkOut(this.cart)">Checkout</ion-button>
+              <ion-label>Select Pickup Date</ion-label>
+              <ion-datetime value="2021-09-25"></ion-datetime>
             </ion-item>
           </p>
           <ng-template #emptyCart>
