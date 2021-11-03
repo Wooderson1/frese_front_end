@@ -2,9 +2,9 @@
   <ion-toolbar color='dark'>
     <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
     <div slot="end" class="ion-padding-end">
-      <!-- <ion-button color="frese">
-        <ion-icon slot="start" name="person-circle-outline"></ion-icon>Login
-      </ion-button> -->
+      <ion-button color="frese">
+        <ion-icon slot="start" name="information-circle-outline"></ion-icon>About Us
+      </ion-button>
     </div>
   </ion-toolbar>
 </ion-header>
@@ -14,7 +14,7 @@
     <ion-row>
       <ion-col>
         <ion-card>
-          <ion-list>
+          <ion-list *ngIf="availableItems; else loading">
             <ion-title>Entrees</ion-title>
             <p *ngFor="let item of availableItems;">
               <ion-item *ngIf="item.typeId === 1">
@@ -64,6 +64,9 @@
               </ion-item>
             </p>
           </ion-list>
+          <ng-template #loading>
+            <ion-spinner name="lines"></ion-spinner>
+          </ng-template>
         </ion-card>
       </ion-col>
       <ion-col>
@@ -94,6 +97,7 @@
             <ion-item>Total: ${{ total }}</ion-item>
             <ion-item>
               <ion-button slot="end" color='success' (click)="checkOut(this.cart)">Checkout</ion-button>
+              <ion-button slot="end" (click)="getTodaysDate()">getDate</ion-button>
               <ion-label>Select Pickup Date</ion-label>
               <ion-datetime value="2021-09-25"></ion-datetime>
             </ion-item>

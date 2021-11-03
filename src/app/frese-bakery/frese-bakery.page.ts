@@ -11,7 +11,7 @@ import {DataServiceService} from '../services/data-service.service';
 export class FreseBakeryPage implements OnInit {
 
   // entrees
-  entree: Product[] = [
+  products: Product[] = [
     {
       id: 1,
       title: 'Pizza',
@@ -61,8 +61,9 @@ cart: Item = {name: 'Mark Woodhall',
              items: []};
 cartMap = new Map();
 availableItems;
-  // set total balance to 0 to start
-  total = 0;
+todaysDate = new Date();
+// set total balance to 0 to start
+total = 0;
 
   constructor( public dataService: DataServiceService) { }
 
@@ -140,6 +141,10 @@ availableItems;
   // check out logic goes here
   checkOut(final) {
     console.log('Checkout with: ' + final);
+  }
+
+  getTodaysDate() {
+    console.log(this.todaysDate);
   }
 
   ngOnInit() {
