@@ -93,6 +93,16 @@ total = 0;
   // update price for add on
   addAddOn($event, item) {
 
+    // Reset orignal price, to avoid doubling up on updating price
+    for (const x of this.products) {
+
+      if (x.description === item.description) {
+        const diff = item.price - x.price;
+        this.total -= diff;
+        item.price = x.price;
+      }
+    }
+
     console.log('event:' + $event.target.value);
     console.log('item: ' + item.description);
 

@@ -14,9 +14,9 @@
     <ion-row>
       <ion-col>
         <ion-card>
-          <ion-list *ngIf="availableItems; else loading">
+          <ion-list *ngIf="products; else loading">
             <ion-title>Entrees</ion-title>
-            <p *ngFor="let item of availableItems;">
+            <p *ngFor="let item of products;">
               <ion-item *ngIf="item.typeId === 1">
                 <ion-avatar slot="start">
                   <ion-img *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
@@ -32,7 +32,7 @@
               </ion-item>
             </p>
             <ion-title>Desserts</ion-title>
-            <p *ngFor="let item of availableItems;">
+            <p *ngFor="let item of products;">
               <ion-item *ngIf="item.typeId === 2">
                 <ion-avatar slot="start">
                   <ion-img *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
@@ -48,7 +48,7 @@
               </ion-item>
             </p>
             <ion-title>Sides</ion-title>
-            <p *ngFor="let item of availableItems;">
+            <p *ngFor="let item of products;">
               <ion-item *ngIf="item.typeId === 3">
                 <ion-avatar slot="start">
                   <ion-img *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
