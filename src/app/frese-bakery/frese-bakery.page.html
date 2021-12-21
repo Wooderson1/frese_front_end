@@ -97,9 +97,8 @@
             <ion-item>Total: ${{ total }}</ion-item>
             <ion-item>
               <ion-button slot="end" color='success' (click)="checkOut(this.cart)">Checkout</ion-button>
-              <ion-button slot="end" (click)="getTodaysDate()">getDate</ion-button>
               <ion-label>Select Pickup Date</ion-label>
-              <ion-datetime value="2021-09-25"></ion-datetime>
+              <ion-datetime value={{this.todaysDate}}></ion-datetime>
             </ion-item>
           </p>
           <ng-template #emptyCart>

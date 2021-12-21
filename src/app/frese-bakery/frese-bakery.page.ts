@@ -150,11 +150,13 @@ total = 0;
 
   // check out logic goes here
   checkOut(final) {
-    console.log('Checkout with: ' + final);
-  }
 
-  getTodaysDate() {
-    console.log(this.todaysDate);
+    console.log('Checkout with: ');
+    if (final.items) {
+       for (const x of final.items){
+        console.log(x.description);
+      }
+    }
   }
 
   ngOnInit() {
