@@ -25,7 +25,7 @@
                   </ng-template>
                 </ion-avatar>
                 <ion-label class="ion-text-wrap">
-                  {{ item.title }}
+                  {{ item.description }}
                   <p *ngIf="item.price">${{ item.price }}</p>
                 </ion-label>
                 <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
@@ -41,7 +41,7 @@
                   </ng-template>
                 </ion-avatar>
                 <ion-label class="ion-text-wrap">
-                  {{ item.title }}
+                  {{ item.description }}
                   <p>${{ item.price }}</p>
                 </ion-label>
                 <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
@@ -57,7 +57,7 @@
                   </ng-template>
                 </ion-avatar>
                 <ion-label class="ion-text-wrap">
-                  {{ item.title }}
+                  {{ item.description }}
                   <p>${{ item.price }}</p>
                 </ion-label>
                 <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
@@ -75,7 +75,7 @@
             <ion-title>Cart</ion-title>
             <ion-item *ngFor="let item of cart.items">
               <ion-label>
-                Item: {{ item.title }}
+                Item: {{ item.description }}
                   <ion-icon color='danger' name="remove-circle" (click)="decrement(item)"></ion-icon>
                   {{ item.quantity }}
                   <ion-icon color='success' name="add-circle" (click)="increment(item)"></ion-icon>

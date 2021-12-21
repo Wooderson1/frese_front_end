@@ -53,6 +53,20 @@ export class FreseBakeryPage implements OnInit {
       createdAt: '2021-07-07T02:39:33.000Z',
       updatedAt: '2021-07-07T02:51:28.000Z',
       addOns: null
+    },
+    {
+      id: 4,
+      title: 'mozz stick',
+      description: 'Mozzarella Sticks',
+      price: 7,
+      typeId: 3,
+      active: true,
+      quantity: -1,
+      // eslint-disable-next-line max-len
+      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpAT7FjKcL1e6HmNrzrOpQEjsOSENKSkcplg&usqp=CAU',
+      createdAt: '2021-07-07T02:39:33.000Z',
+      updatedAt: '2021-07-07T02:51:28.000Z',
+      addOns: null
     }
   ];
 cart: Item = {name: 'Mark Woodhall',
