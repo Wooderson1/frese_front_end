@@ -3,6 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { Product, Item } from './item.model';
 import {DataServiceService} from '../services/data-service.service';
 
+import { PopoverController } from '@ionic/angular';
+import { PopoverComponent } from '../popover/popover.component';
+import { CheckOutComponent } from '../check-out/check-out.component';
+
 @Component({
   selector: 'app-frese-bakery',
   templateUrl: './frese-bakery.page.html',
@@ -75,11 +79,12 @@ cart: Item = {name: 'Mark Woodhall',
              items: []};
 cartMap = new Map();
 availableItems;
-todaysDate = new Date();
+todaysDate = new Date().toISOString();
 // set total balance to 0 to start
 total = 0;
 
-  constructor( public dataService: DataServiceService) { }
+  constructor( public dataService: DataServiceService,
+               public popoverController: PopoverController) { }
 
   increment(cart) {
     cart.price += (cart.price / cart.quantity);
@@ -163,7 +168,7 @@ total = 0;
   }
 
   // check out logic goes here
-  checkOut(final) {
+  async checkOut(final) {
 
     console.log('Checkout with: ');
     if (final.items) {
@@ -171,6 +176,20 @@ total = 0;
         console.log(x.description);
       }
     }
+    console.log('Total: ' + this.total);
+    console.log('Pick Up Date/Time: ' + this.todaysDate);
+
+    const popover = await this.popoverController.create({
+      component: CheckOutComponent
+    });
+    return await popover.present();
+  }
+
+  async openPopover(event) {
+    const popover = await this.popoverController.create({
+      component: PopoverComponent
+    });
+    return await popover.present();
   }
 
   ngOnInit() {

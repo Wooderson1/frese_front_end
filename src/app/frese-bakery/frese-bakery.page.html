@@ -2,7 +2,7 @@
   <ion-toolbar color='dark'>
     <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
     <div slot="end" class="ion-padding-end">
-      <ion-button color="frese">
+      <ion-button color="frese" (click)="openPopover($event)">
         <ion-icon slot="start" name="information-circle-outline"></ion-icon>About Us
       </ion-button>
     </div>
@@ -97,8 +97,10 @@
             <ion-item>Total: ${{ total }}</ion-item>
             <ion-item>
               <ion-button slot="end" color='success' (click)="checkOut(this.cart)">Checkout</ion-button>
-              <ion-label>Select Pickup Date</ion-label>
-              <ion-datetime value={{this.todaysDate}}></ion-datetime>
+              <ion-label>Select Pickup Date/Time</ion-label>
+              <ion-datetime displayFormat="MMM DD, YYYY HH:mm" [(ngModel)]="todaysDate"
+              placeholder="Select Pickup Date/Time" minuteValues="0,15,30,45"
+              yearValues="2022,2023" hourValues="9,10,11,12,1,2,3,4,5"></ion-datetime>
             </ion-item>
           </p>
           <ng-template #emptyCart>
