@@ -8,7 +8,6 @@
     </div>
   </ion-toolbar>
 </ion-header>
-
 <ion-content color="light">
   <ion-grid>
     <ion-row>
@@ -94,8 +93,7 @@
             </ion-item>
           </ion-list>
           <p *ngIf="cart.items.length > 0; else emptyCart">
-            <ion-item>Total: ${{ total }}</ion-item>
-            <ion-item>
+            <ion-item>Total: ${{ total }}
               <ion-button slot="end" color='success' (click)="checkOut(this.cart)">Checkout</ion-button>
             </ion-item>
           </p>

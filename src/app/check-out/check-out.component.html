@@ -3,7 +3,10 @@
     <ion-icon slot="end" name="close"></ion-icon>
   </ion-item>
   <ion-item>
-    <ion-input placeholder="Enter email" [(ngModel)]="email"></ion-input>
+    <ion-input placeholder="Enter email" [(ngModel)]="email" required></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input placeholder="Enter phone number" [(ngModel)]="phone" required></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>Select Pickup Date/Time</ion-label>
@@ -13,7 +16,7 @@
   </ion-item>
   <ion-item>
     <ion-label>Pay with card or in store?</ion-label>
-    <ion-select>
+    <ion-select [(ngModel)]="payment">
       <ion-select-option value="card">Card Payment</ion-select-option>
       <ion-select-option value="store">In Store Payment</ion-select-option>
     </ion-select>
