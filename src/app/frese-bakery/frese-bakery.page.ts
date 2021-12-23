@@ -176,18 +176,18 @@ total = 0;
         console.log(x.description);
       }
     }
-    console.log('Total: ' + this.total);
-    console.log('Pick Up Date/Time: ' + this.todaysDate);
 
     const popover = await this.popoverController.create({
-      component: CheckOutComponent
+      component: CheckOutComponent,
+      componentProps: {value: final}
     });
+    popover.style.cssText = '--min-width: 50%;';
     return await popover.present();
   }
 
   async openPopover(event) {
     const popover = await this.popoverController.create({
-      component: PopoverComponent
+      component: PopoverComponent,
     });
     return await popover.present();
   }
