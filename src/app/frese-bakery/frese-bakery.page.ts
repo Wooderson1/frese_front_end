@@ -144,7 +144,7 @@ total = 0;
   // Update cart
   updateCart(item) {
     // if item is not in the cart yet
-    if (!this.cartMap.has(item.id)) {
+    if (!this.cartMap.has(item.id) || item.addOns) {
       const newProduct: Product = {id: item.id, title: item.title, description: item.description,
                              price: item.price, typeId: item.typeId, active: item.active,
                              quantity: 1, photoUrl: item.photoUrl, createdAt: item.createdAt,

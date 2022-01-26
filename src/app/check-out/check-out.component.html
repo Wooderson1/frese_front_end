@@ -21,6 +21,11 @@
       <ion-select-option value="store">In Store Payment</ion-select-option>
     </ion-select>
   </ion-item>
+  <ion-item *ngIf="payment === 'card'">
+    <ion-item>
+      <ion-input placeholder="Enter card number" [(ngModel)]="card" required></ion-input>
+    </ion-item>
+  </ion-item>
   <ion-item>
     <ion-button slot="end" color="success" (click)="done()">Submit</ion-button>
   </ion-item>

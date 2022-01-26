@@ -13,6 +13,9 @@ export class CheckOutComponent implements OnInit {
   todaysDate = new Date().toISOString();
   email = '';
   phone = '';
+  card = '';
+  cardExpiriation = '';
+  cardCVC = '';
   payment;
 
   constructor(public popoverController: PopoverController) { }
