@@ -15,4 +15,8 @@ export class OrderServiceService {
   getFullMenu() {
     return this.http.get(`${this.apiUrl}/productsAndSizes`);
   }
+  getActiveMenu() {
+    return this.http.get(`${this.apiUrl}/activeProductsAndSizes`);
+
+  }
 }

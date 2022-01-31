@@ -79,6 +79,7 @@ cart: Item = {name: 'Mark Woodhall',
              items: []};
 cartMap = new Map();
 availableItems;
+productTypes;
 todaysDate = new Date().toISOString();
 // set total balance to 0 to start
 total = 0;
@@ -193,7 +194,12 @@ total = 0;
   }
 
   ngOnInit() {
-    this.dataService.getFullMenu().subscribe(productResults => {
+    this.dataService.getProductTypes().subscribe(types => {
+      console.log(types);
+      this.productTypes = types;
+    });
+
+    this.dataService.getActiveMenu().subscribe(productResults => {
       console.log(productResults);
       this.availableItems = productResults;
     });

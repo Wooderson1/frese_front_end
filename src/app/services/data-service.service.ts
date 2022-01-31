@@ -16,4 +16,7 @@ export class DataServiceService {
   getFullMenu(): Observable<any> {
     return this.orderService.getFullMenu();
   }
+  getActiveMenu(): Observable<any> {
+    return this.orderService.getActiveMenu();
+  }
 }

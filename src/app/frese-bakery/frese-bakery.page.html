@@ -11,74 +11,47 @@
 <ion-content color="light">
   <ion-grid>
     <ion-row>
+      <!--  Avaiable Items  -->
       <ion-col>
         <ion-card>
-          <ion-list *ngIf="products; else loading">
-            <ion-title>Entrees</ion-title>
-            <p *ngFor="let item of products;">
-              <ion-item *ngIf="item.typeId === 1">
-                <ion-avatar slot="start">
-                  <ion-img *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
-                  <ng-template #noPhoto>
-                    <ion-img src="assets/images/null.jpg"></ion-img>
-                  </ng-template>
-                </ion-avatar>
-                <ion-label class="ion-text-wrap">
-                  {{ item.description }}
-                  <p *ngIf="item.price">${{ item.price }}</p>
-                </ion-label>
-                <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
-              </ion-item>
-            </p>
-            <ion-title>Desserts</ion-title>
-            <p *ngFor="let item of products;">
-              <ion-item *ngIf="item.typeId === 2">
-                <ion-avatar slot="start">
-                  <ion-img *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
-                  <ng-template #noPhoto>
-                    <ion-img src="assets/images/null.jpg"></ion-img>
-                  </ng-template>
-                </ion-avatar>
-                <ion-label class="ion-text-wrap">
-                  {{ item.description }}
-                  <p>${{ item.price }}</p>
-                </ion-label>
-                <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
-              </ion-item>
-            </p>
-            <ion-title>Sides</ion-title>
-            <p *ngFor="let item of products;">
-              <ion-item *ngIf="item.typeId === 3">
-                <ion-avatar slot="start">
-                  <ion-img *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
-                  <ng-template #noPhoto>
-                    <ion-img src="assets/images/null.jpg"></ion-img>
-                  </ng-template>
-                </ion-avatar>
-                <ion-label class="ion-text-wrap">
-                  {{ item.description }}
-                  <p>${{ item.price }}</p>
-                </ion-label>
-                <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
-              </ion-item>
-            </p>
+          <ion-list *ngIf="this.availableItems; else loading">
+            <table *ngFor="let type of this.productTypes">
+            <ion-title> {{ type.name }} </ion-title>
+              <tr *ngFor="let item of this.availableItems">
+                <ion-item *ngIf="item.typeId === type.id">
+                  <ion-avatar slot="start">
+                    <ion-img *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
+                    <ng-template #noPhoto>
+                      <ion-img src="assets/images/null.jpg"></ion-img>
+                    </ng-template>
+                  </ion-avatar>
+                  <ion-label class="ion-text-wrap">
+                    {{ item.title }}
+                    <p *ngIf="item.price">${{ item.price }}</p>
+                  </ion-label>
+                  <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
+                </ion-item>
+              </tr>
+            </table>
           </ion-list>
           <ng-template #loading>
             <ion-spinner name="lines"></ion-spinner>
           </ng-template>
         </ion-card>
       </ion-col>
+      <!--  Cart  -->
       <ion-col>
         <ion-card>
           <ion-list>
             <ion-title>Cart</ion-title>
             <ion-item *ngFor="let item of cart.items">
               <ion-label>
-                Item: {{ item.description }}
+                Item: {{ item.title }}
                   <ion-icon color='danger' name="remove-circle" (click)="decrement(item)"></ion-icon>
                   {{ item.quantity }}
                   <ion-icon color='success' name="add-circle" (click)="increment(item)"></ion-icon>
-                <p>Price: ${{ item.price }}</p>
+                <p *ngIf="item.price">Price: ${{ item.price }}</p>
+                <!--  If there are add ons -->
                 <div *ngIf="item.addOns">
                   <ion-item>
                     <ion-label>Add Ons</ion-label>
@@ -89,6 +62,8 @@
                     </ion-select>
                   </ion-item>
                 </div>
+                <!--  If there are sizes
+                <div *ngIf="item.sizes"></div> -->
               </ion-label>
             </ion-item>
           </ion-list>
