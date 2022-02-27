@@ -26,7 +26,7 @@ export interface Item {
   name: string;
   phone: string;
   email: string;
-  items: Product[];
+  items: any[];
   size?: string;
 }
 

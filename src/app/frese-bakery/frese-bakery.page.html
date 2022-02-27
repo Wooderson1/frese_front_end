@@ -15,23 +15,38 @@
       <ion-col>
         <ion-card>
           <ion-list *ngIf="this.availableItems; else loading">
-            <table *ngFor="let type of this.productTypes">
+            <table class="item-row" *ngFor="let type of this.productTypes">
             <ion-title> {{ type.name }} </ion-title>
-              <tr *ngFor="let item of this.availableItems">
-                <ion-item *ngIf="item.typeId === type.id">
+              <div class="item-row" *ngFor="let item of getProductsForType(type)">
+                <ion-card>
+                <ion-item class="item-row" *ngIf="item.typeId === type.id">
                   <ion-avatar slot="start">
                     <ion-img *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
                     <ng-template #noPhoto>
-                      <ion-img src="assets/images/null.jpg"></ion-img>
+                      <ion-img src="assets/images/pizza.jpg"></ion-img>
                     </ng-template>
                   </ion-avatar>
                   <ion-label class="ion-text-wrap">
                     {{ item.title }}
                     <p *ngIf="item.price">${{ item.price }}</p>
                   </ion-label>
-                  <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
+<!--                  <ion-button slot="end" color='frese' *ngIf="!hasAddOns(item)" (click)="updateCart(item)">Add to Cart</ion-button>-->
                 </ion-item>
-              </tr>
+                  <ion-list *ngIf="hasAddOns(item)">
+                    <ion-item *ngFor="let addOnKey of addOnKeys(item)">
+                      <ion-label>{{addOnKey}}</ion-label>
+                      <ion-select multiple=true [placeholder]="" [(ngModel)]="addOnVal">
+                        <ion-select-option *ngFor="let v of item.product_add_on_values[addOnKey]" [value]="v">
+                          {{v.value}}
+                          <br>
+                          <p *ngIf="v.cost">${{v.cost}}</p>
+                        </ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                  </ion-list>
+                  <ion-button color='frese' (click)="updateCart(item, ao, {})">Add to Cart</ion-button>
+                </ion-card>
+              </div>
             </table>
           </ion-list>
           <ng-template #loading>
