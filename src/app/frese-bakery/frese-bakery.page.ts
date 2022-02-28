@@ -84,6 +84,8 @@ export class FreseBakeryPage implements OnInit {
   cartMap = new Map();
   availableItems;
   productTypes;
+  TAX_CONSTANT = .08;
+
   orderItem;
   todaysDate = new Date().toISOString();
 // set total balance to 0 to start
@@ -129,6 +131,9 @@ export class FreseBakeryPage implements OnInit {
   }
 
   getProductsForType(type) {
+    if (!this.availableItems) {
+      return;
+    }
     return this.availableItems.filter(t => t.typeId === type.id);
   }
 
@@ -164,39 +169,46 @@ export class FreseBakeryPage implements OnInit {
     }
   }
 
-  // Update cart
-  updateCart(item) {
-    // if item is not in the cart yet
-    console.log("ITEM ", item);
-    console.log("add ons", this.product_add_ons);
-    if (!this.cartMap.has(item.id) || item.addOns) {
-      const newProduct = {
-        price: item.price,
-        productId: item.id,
-        product_name: item.title,
-        quantity: 1,
-        product_size_id: item.product_size_id,
-        // selections,
-        // add_ons
-      };
-      console.log("item ", newProduct);
-
-
-      this.cart.items.push(newProduct);
-      this.cartMap.set(item.id, item.description);
-    }
-    // if it is in the cart already, update values
-    else {
-      for (let x = 0; x < this.cart.items.length; ++x) {
-        if (this.cartMap.get(item.id) === this.cart.items[x].description) {
-          this.cart.items[x].quantity += 1;
-          this.cart.items[x].price += item.price;
-          console.log('cart updated at array index: ' + x);
-        }
+  formatAddOns(item) {
+    let key = 'x';
+    let vals = {};
+    Object.keys(item.product_add_on_values).forEach(key => {
+      if (item.product_add_on_values[key].selected) {
+        vals[key] = item.product_add_on_values[key].selected.map(val => {
+          return {
+            value: val.value,
+            cost: val.cost
+          }
+        })
+        item.product_add_on_values[key].selected = null;
       }
-    }
-    // update cart total
-    this.total += item.price;
+    });
+    console.log("V ", vals);
+    return vals;
+  }
+
+  initializeItem(item) {
+    return {
+      price: item.price,
+      productId: item.id,
+      product_name: item.title,
+      quantity: 1,
+      product_size_id: null,
+      selections: {},
+      add_ons: this.formatAddOns(item),
+    };
+  }
+  getAddOnValues(item, key) {
+    return item.add_ons[key];
+  }
+  // Update cart
+  updateCart(newItem) {
+    // if item is not in the cart yet
+    console.log("ITEM ", newItem);
+    let item = this.initializeItem(newItem);
+    //item.product_add_on_values[addOnKey].selected
+    console.log("after", item);
+    this.cart.items.push(item);
   }
 
   // check out logic goes here
@@ -224,6 +236,33 @@ export class FreseBakeryPage implements OnInit {
     return await popover.present();
   }
 
+  formatAOV(val) {
+    let keys = Object.keys(val);
+    keys.forEach(k => {
+      val[k].forEach(v => v["selected"] = false);
+    });
+    return val;
+  }
+
+  initializeSelectionsAddOns(menu) {
+    menu.forEach((item) => {
+      menu[item] = {
+        ...item,
+        product_add_on_values: this.formatAOV(item.product_add_on_values)
+      }
+    });
+    return menu;
+
+  }
+
+  chooseAddOn(item, key, val) {
+    let y = this.availableItems.find(p => {
+      return p.id == item.id
+    });
+    y["product_add_on_values"][key]
+
+  }
+
   ngOnInit() {
     this.dataService.getProductTypes().subscribe(types => {
       console.log(types);
@@ -231,8 +270,65 @@ export class FreseBakeryPage implements OnInit {
     });
 
     this.dataService.getActiveMenu().subscribe(productResults => {
-      console.log(productResults);
-      this.availableItems = productResults;
+      this.availableItems = this.initializeSelectionsAddOns(productResults);
+      console.log(this.availableItems);
     });
+  }
+
+  round(value: number, digits = 2) {
+    value = value * Math.pow(10, digits);
+    value = Math.round(value);
+    value = value / Math.pow(10, digits);
+    return value;
+  }
+
+  displayTotal() {
+    return this.getTotal().toFixed(2);
+  }
+
+  displaySubtotal() {
+    return this.getSubtotal().toFixed(2);
+  }
+
+  displayAmount(amount) {
+    return amount.toFixed(2);
+  }
+
+  getTotal() {
+    let subtotal = this.getSubtotal();
+    return this.round(subtotal + this.getTax(subtotal));
+  }
+
+  getSubtotal() {
+    let total = 0;
+    for (const item of this.cart.items) {
+      let item_cost = item.price;
+      Object.keys(item.selections).forEach(key => {
+        if (item.selections[key].cost) {
+          item_cost += item.selections[key].cost;
+        }
+      });
+      Object.keys(item.add_ons).forEach(key => {
+        for (const value of item.add_ons[key]) {
+          if (value.cost) {
+            item_cost += value.cost;
+          }
+        }
+      });
+      total += item_cost * item.quantity;
+    }
+    return this.round(total);
+  }
+
+  getTax(total) {
+    return this.round(total * this.TAX_CONSTANT);
+  }
+
+  getSelectionKeys(item) {
+    return Object.keys(item.selections);
+  }
+
+  getAddOnKeys(item) {
+    return Object.keys(item.add_ons);
   }
 }
