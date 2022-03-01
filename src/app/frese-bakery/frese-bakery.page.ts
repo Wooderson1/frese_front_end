@@ -3,7 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {Product, Item} from './item.model';
 import {DataServiceService} from '../services/data-service.service';
 
-import {PopoverController} from '@ionic/angular';
+import {AlertController, PopoverController} from '@ionic/angular';
 import {PopoverComponent} from '../popover/popover.component';
 import {CheckOutComponent} from '../check-out/check-out.component';
 
@@ -92,6 +92,7 @@ export class FreseBakeryPage implements OnInit {
   total = 0;
 
   constructor(public dataService: DataServiceService,
+              private alertController: AlertController,
               public popoverController: PopoverController) {
   }
 
@@ -120,12 +121,18 @@ export class FreseBakeryPage implements OnInit {
   addOnKeys(product) {
     return Object.keys(product.product_add_on_values);
   }
+  selectionKeys(product) {
+    return Object.keys(product.product_selection_values);
+  }
 
   getAddOns(item, addOnKey) {
     console.log("ITEM ", item);
     console.log("KEY ", addOnKey);
   }
 
+  hasSelections(product) {
+    return Object.keys(product.product_selection_values).length > 0;
+  }
   hasAddOns(product) {
     return Object.keys(product.product_add_on_values).length > 0;
   }
@@ -169,8 +176,20 @@ export class FreseBakeryPage implements OnInit {
     }
   }
 
+  formatSelections(item) {
+    let vals = {};
+    Object.keys(item.product_selection_values).forEach(key => {
+      if (item.product_selection_values[key].selected) {
+        vals[key] = {
+            value: item.product_selection_values[key].selected.value,
+            cost: item.product_selection_values[key].selected.cost
+          };
+        item.product_selection_values[key].selected = null;
+      }
+    });
+    return vals;
+  }
   formatAddOns(item) {
-    let key = 'x';
     let vals = {};
     Object.keys(item.product_add_on_values).forEach(key => {
       if (item.product_add_on_values[key].selected) {
@@ -179,35 +198,64 @@ export class FreseBakeryPage implements OnInit {
             value: val.value,
             cost: val.cost
           }
-        })
+        });
         item.product_add_on_values[key].selected = null;
       }
     });
-    console.log("V ", vals);
     return vals;
   }
+  formatSize(item) {
+    let id = item.product_size_selected.id;
+    item.product_size_selected = item.product_sizes[0];
+    return id;
+  }
 
-  initializeItem(item) {
+  formatCartItem(item) {
     return {
       price: item.price,
       productId: item.id,
       product_name: item.title,
       quantity: 1,
-      product_size_id: null,
-      selections: {},
+      product_size_id: this.formatSize(item),
+      selections: this.formatSelections(item),
       add_ons: this.formatAddOns(item),
     };
   }
   getAddOnValues(item, key) {
     return item.add_ons[key];
   }
+  checkForSelectionCount(item) {
+    return Object.keys(item.product_selection_values).some(key => {
+      return !item.product_selection_values[key].selected
+    });
+  }
+  getItemCost(item) {
+    if(item.product_size_selected) {
+      return item.product_size_selected.cost;
+    } else {
+      return item.price;
+    }
+  }
   // Update cart
-  updateCart(newItem) {
-    // if item is not in the cart yet
-    console.log("ITEM ", newItem);
-    let item = this.initializeItem(newItem);
-    //item.product_add_on_values[addOnKey].selected
-    console.log("after", item);
+  async updateCart(newItem) {
+    if(this.checkForSelectionCount(newItem)) {
+      console.log("Have not selected all of the required selections");
+
+      const alert = await this.alertController.create({
+        header: 'Whoops!',
+        message: 'Please make a selection',
+        buttons: [
+          {
+            text: 'Dismiss',
+            handler: () => {
+            }
+          }
+        ]
+      });
+      return alert.present();
+    }
+    let item = this.formatCartItem(newItem);
+    console.log("ITEM ", item);
     this.cart.items.push(item);
   }
 
@@ -244,23 +292,16 @@ export class FreseBakeryPage implements OnInit {
     return val;
   }
 
-  initializeSelectionsAddOns(menu) {
+  formatMenu(menu) {
+    return this.initializeSelectedSizes(menu);
+  }
+  initializeSelectedSizes(menu) {
     menu.forEach((item) => {
-      menu[item] = {
-        ...item,
-        product_add_on_values: this.formatAOV(item.product_add_on_values)
+      if(item.product_sizes && item.product_sizes.length > 0) {
+        item.product_size_selected = item.product_sizes[0];
       }
     });
     return menu;
-
-  }
-
-  chooseAddOn(item, key, val) {
-    let y = this.availableItems.find(p => {
-      return p.id == item.id
-    });
-    y["product_add_on_values"][key]
-
   }
 
   ngOnInit() {
@@ -270,7 +311,7 @@ export class FreseBakeryPage implements OnInit {
     });
 
     this.dataService.getActiveMenu().subscribe(productResults => {
-      this.availableItems = this.initializeSelectionsAddOns(productResults);
+      this.availableItems = this.formatMenu(productResults);
       console.log(this.availableItems);
     });
   }

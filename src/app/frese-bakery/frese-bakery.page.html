@@ -30,13 +30,34 @@
                     </ng-template>
                     <ion-card-header>
                       <ion-card-title>{{item.title}}</ion-card-title>
-                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>
-                      <ion-card-subtitle *ngIf="!item.price">See sizing for price</ion-card-subtitle>
+<!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
+                      <ion-card-subtitle>Price: ${{getItemCost(item)}}</ion-card-subtitle>
                     </ion-card-header>
-                    <ion-list *ngIf="hasAddOns(item)">
-                      <div class="select-opt" *ngFor="let addOnKey of addOnKeys(item)">
-                          <ion-select multiple=true [(ngModel)]="item.product_add_on_values[addOnKey].selected" (ngModelChange)="chooseAddOn(item, addOnKey, item.product_add_on_values[addOnKey])" [placeholder]="">
+                    <ion-list *ngIf="item.product_sizes.length > 0">
+                      <div class="subText">Select a Size</div>
+                      <ion-select [(ngModel)]="item.product_size_selected" placeholder="{{item.product_size_selected}}">
+                        <ion-select-option *ngFor="let v of item.product_sizes" [value]="v">
+                          <ion-label>{{v.size}}</ion-label>
+                        </ion-select-option>
+                      </ion-select>
+                    </ion-list>
 
+                    <ion-list *ngIf="hasSelections(item)">
+                      <div class="subText">Selections</div>
+                      <div class="select-opt" *ngFor="let selectionKey of selectionKeys(item)">
+                          <ion-select [(ngModel)]="item.product_selection_values[selectionKey].selected" [placeholder]="selectionKey">
+                          <ion-select-option *ngFor="let v of item.product_selection_values[selectionKey]" [value]="v">
+                            {{v.value}}
+                            <br>
+                            <p *ngIf="v.cost">${{v.cost}}</p>
+                          </ion-select-option>
+                        </ion-select>
+                      </div>
+                    </ion-list>
+                    <ion-list *ngIf="hasAddOns(item)">
+                      <div class="subText">Extras</div>
+                      <div class="select-opt" *ngFor="let addOnKey of addOnKeys(item)">
+                        <ion-select multiple=true [(ngModel)]="item.product_add_on_values[addOnKey].selected" [placeholder]="addOnKey">
                           <ion-select-option *ngFor="let v of item.product_add_on_values[addOnKey]" [value]="v">
                             {{v.value}}
                             <br>
