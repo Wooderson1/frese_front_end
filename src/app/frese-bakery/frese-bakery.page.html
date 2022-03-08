@@ -30,7 +30,7 @@
                     </ng-template>
                     <ion-card-header>
                       <ion-card-title>{{item.title}}</ion-card-title>
-<!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
+                      <!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
                       <ion-card-subtitle>Price: ${{getItemCost(item)}}</ion-card-subtitle>
                     </ion-card-header>
                     <ion-list *ngIf="item.product_sizes.length > 0">
@@ -45,7 +45,8 @@
                     <ion-list *ngIf="hasSelections(item)">
                       <div class="subText">Selections</div>
                       <div class="select-opt" *ngFor="let selectionKey of selectionKeys(item)">
-                          <ion-select [(ngModel)]="item.product_selection_values[selectionKey].selected" [placeholder]="selectionKey">
+                        <ion-select [(ngModel)]="item.product_selection_values[selectionKey].selected"
+                                    [placeholder]="selectionKey">
                           <ion-select-option *ngFor="let v of item.product_selection_values[selectionKey]" [value]="v">
                             {{v.value}}
                             <br>
@@ -57,7 +58,8 @@
                     <ion-list *ngIf="hasAddOns(item)">
                       <div class="subText">Extras</div>
                       <div class="select-opt" *ngFor="let addOnKey of addOnKeys(item)">
-                        <ion-select multiple=true [(ngModel)]="item.product_add_on_values[addOnKey].selected" [placeholder]="addOnKey">
+                        <ion-select multiple=true [(ngModel)]="item.product_add_on_values[addOnKey].selected"
+                                    [placeholder]="addOnKey">
                           <ion-select-option *ngFor="let v of item.product_add_on_values[addOnKey]" [value]="v">
                             {{v.value}}
                             <br>
@@ -95,34 +97,36 @@
                       <div>{{item.product_name}}</div>
                     </ion-col>
                     <ion-col>
-                      <div class="endSlot">${{displayAmount(item.price * item.quantity)}}</div>
+                      <div>${{displayAmount(item.price * item.quantity)}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
-<!--                <div class="endSlot">${{displayAmount(item.price * item.quantity)}}</div>-->
-                <br>
-                <div *ngFor="let selectionKey of getSelectionKeys(item)">
-                  <div class="ninety">- {{selectionKey}}</div>
-                  <div class="startSlot padded subText">
+                <div class="subText" *ngFor="let selectionKey of getSelectionKeys(item)">
+                  <ion-grid>
+                  <div><b>{{selectionKey}}:</b></div>
+                  <ion-col class="startSlot subText">
                     {{item.selections[selectionKey].value}}
-                  </div>
-                  <div class="endSlot">
-                    <div *ngIf="item.selections[selectionKey].cost">${{displayAmount(item.selections[selectionKey].cost *
+                  </ion-col>
+                  <ion-col class="endSlot">
+                    <div *ngIf="item.selections[selectionKey].cost">${{displayAmount(item.selections[selectionKey].cost
+                      *
                       item.quantity)}}
                     </div>
-                  </div>
-                  <br>
+                  </ion-col>
+                </ion-grid>
                 </div>
-                <div *ngFor="let addOnKey of getAddOnKeys(item)">
-                  <div class="ninety">- {{addOnKey}}</div>
-                  <div *ngFor="let v of getAddOnValues(item, addOnKey)">
-                    <div class="startSlot padded subText">
-                      {{v.value}}
-                    </div>
-                    <div class="endSlot">
-                      <div *ngIf="v.cost">${{displayAmount(v.cost * item.quantity)}}</div>
-                    </div>
-                  </div>
+                <div class="subText" *ngFor="let addOnKey of getAddOnKeys(item)">
+                  <ion-grid>
+                  <div><b>{{addOnKey}}:</b></div>
+                    <ion-row *ngFor="let v of getAddOnValues(item, addOnKey)">
+                      <ion-col class="startSlot half-width">
+                        {{v.value}}
+                      </ion-col>
+                      <ion-col class="margin endSlot">
+                        <div *ngIf="v.cost">${{displayAmount(v.cost * item.quantity)}}</div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
                 </div>
               </ion-label>
             </ion-item>
@@ -134,16 +138,16 @@
           </ion-item-sliding>
         </ion-list>
       </ion-col>
-        <div class="total">
-          <div class="startSlot">
-            <div class="subText">
+      <div class="total">
+        <div class="startSlot">
+          <div class="subText">
             Subtotal: ${{displaySubtotal()}}<br>
             Est. Tax: ${{displayAmount(getTax(getSubtotal()))}}<br>
-            </div>
-            <b>Total:</b> ${{displayTotal()}}
           </div>
-          <ion-button class="pay-button" (click)="Pay()">Checkout</ion-button>
+          <b>Total:</b> ${{displayTotal()}}
         </div>
+        <ion-button class="pay-button" (click)="Pay()">Checkout</ion-button>
+      </div>
     </ion-row>
   </ion-grid>
 </ion-content>

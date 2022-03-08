@@ -1,11 +1,11 @@
-import {THIS_EXPR} from '@angular/compiler/src/output/output_ast';
 import {Component, OnInit} from '@angular/core';
 import {Product, Item} from './item.model';
 import {DataServiceService} from '../services/data-service.service';
 
-import {AlertController, PopoverController} from '@ionic/angular';
+import {AlertController, ModalController, PopoverController} from '@ionic/angular';
 import {PopoverComponent} from '../popover/popover.component';
 import {CheckOutComponent} from '../check-out/check-out.component';
+import {PayNowPage} from "../pages/pay-now/pay-now.page";
 
 @Component({
   selector: 'app-frese-bakery',
@@ -16,62 +16,6 @@ export class FreseBakeryPage implements OnInit {
 
   // entrees
   products: Product[] = [
-    {
-      id: 1,
-      title: 'Pizza',
-      description: 'Cheese Pizza',
-      price: 16,
-      typeId: 1,
-      active: true,
-      quantity: -1,
-      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUFdG_GWYyNQwkncDqLEZqmFdXCysA6_MSXw&usqp=CAU',
-      createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z',
-      addOns: [{value: 'Pepperoni', cost: 2},
-        {value: 'Mushroom', cost: 3}]
-    },
-    {
-      id: 2,
-      title: 'sandwich',
-      description: 'Reuben Sandwich',
-      price: 10,
-      typeId: 1,
-      active: true,
-      quantity: -1,
-      // eslint-disable-next-line max-len
-      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwMWYdg4XRgclhhNNOfIAzkQPRfUMUQ14aNYgY0e0lRzVsuYt1eT6D5Hs1IIcl-ixgpD8&usqp=CAU',
-      createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z',
-      addOns: null
-    },
-    {
-      id: 3,
-      title: 'cake',
-      description: 'Chocolate Cake',
-      price: 5,
-      typeId: 2,
-      active: true,
-      quantity: -1,
-      // eslint-disable-next-line max-len
-      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_M2Olw8zrmIr7FhqI9iBAFnXIuSkAgPr-_g&usqp=CAU',
-      createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z',
-      addOns: null
-    },
-    {
-      id: 4,
-      title: 'mozz stick',
-      description: 'Mozzarella Sticks',
-      price: 7,
-      typeId: 3,
-      active: true,
-      quantity: -1,
-      // eslint-disable-next-line max-len
-      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpAT7FjKcL1e6HmNrzrOpQEjsOSENKSkcplg&usqp=CAU',
-      createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z',
-      addOns: null
-    }
   ];
   product_selections = {};
   product_add_ons = {};
@@ -86,12 +30,14 @@ export class FreseBakeryPage implements OnInit {
   productTypes;
   TAX_CONSTANT = .08;
 
+
   orderItem;
   todaysDate = new Date().toISOString();
 // set total balance to 0 to start
   total = 0;
 
   constructor(public dataService: DataServiceService,
+              private modalController: ModalController,
               private alertController: AlertController,
               public popoverController: PopoverController) {
   }
@@ -135,6 +81,22 @@ export class FreseBakeryPage implements OnInit {
   }
   hasAddOns(product) {
     return Object.keys(product.product_add_on_values).length > 0;
+  }
+
+  async Pay() {
+    const modal = await this.modalController.create({
+      component: PayNowPage,
+      componentProps: {
+        order: this.cart
+      }
+    });
+    modal.onDidDismiss().then(async (detail: any) => {
+      if (detail.data.refresh) {
+        window.location.reload();
+        console.log("refreshing");
+      }
+    });
+    await modal.present();
   }
 
   getProductsForType(type) {
@@ -205,6 +167,7 @@ export class FreseBakeryPage implements OnInit {
     return vals;
   }
   formatSize(item) {
+    if(!item.product_size_selected) { return null; }
     let id = item.product_size_selected.id;
     item.product_size_selected = item.product_sizes[0];
     return id;
@@ -212,7 +175,7 @@ export class FreseBakeryPage implements OnInit {
 
   formatCartItem(item) {
     return {
-      price: item.price,
+      price: this.getItemCost(item),
       productId: item.id,
       product_name: item.title,
       quantity: 1,
@@ -228,6 +191,9 @@ export class FreseBakeryPage implements OnInit {
     return Object.keys(item.product_selection_values).some(key => {
       return !item.product_selection_values[key].selected
     });
+  }
+  deleteItem(index) {
+    this.cart.items.splice(index, 1);
   }
   getItemCost(item) {
     if(item.product_size_selected) {
@@ -331,9 +297,14 @@ export class FreseBakeryPage implements OnInit {
     return this.getSubtotal().toFixed(2);
   }
 
+  ssdisplayAmount(amount) {
+    console.log("AMT ", amount);
+    return amount.toFixed(2);
+  }
   displayAmount(amount) {
     return amount.toFixed(2);
   }
+
 
   getTotal() {
     let subtotal = this.getSubtotal();

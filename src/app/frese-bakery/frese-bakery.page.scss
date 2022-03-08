@@ -34,13 +34,24 @@
   text-align: center;
 }
 
+.half-width {
+  width: 50%;
+  margin: 0px;
+}
 .startSlot.padded {
   padding-left: 2%;
+}
+.price-font {
+  font-size: 80%;
+  padding: 5px;
 }
 
 .type {
   font-size: 1vw;
   text-align: center;
+}
+.margin {
+  padding-right: 5px;
 }
 
 .padded{
