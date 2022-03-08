@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 declare var Stripe;
 import { HttpClient } from "@angular/common/http";
+import {DataServiceService} from "../../services/data-service.service";
 
 @Component({
   selector: 'app-pay-now',
@@ -8,17 +9,23 @@ import { HttpClient } from "@angular/common/http";
   styleUrls: ['./pay-now.page.scss'],
 })
 export class PayNowPage {
-  stripe = Stripe('YOUR_PUBLISHABLE_KEY');
+  stripe = Stripe('pk_test_51KasQqEZvpspKOfSlXnGLRy8IxkOOIZfo5bSREuWGPiK4HCkRyPaSy3m6TqFll4shlG3czSvOiE6eeUEUBG4Ueat00nSgYii4r');
   card: any;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private dataService: DataServiceService) {
   }
 
   ngOnInit() {
     this.setupStripe();
   }
-  makePayment(id) {
-
+  makePayment(token) {
+    this.dataService.processPayment({
+      amount: 100,
+      currency: 'usd',
+      token: token.id
+    }).subscribe(data => {
+      console.log("RES ", data);
+    })
   }
 
   setupStripe() {
@@ -58,13 +65,13 @@ export class PayNowPage {
       event.preventDefault();
       console.log(event)
 
-      this.stripe.createSource(this.card).then(result => {
+      this.stripe.createToken(this.card).then(result => {
         if (result.error) {
           var errorElement = document.getElementById('card-errors');
           errorElement.textContent = result.error.message;
         } else {
-          console.log(result);
-          this.makePayment(result.id);
+          console.log("R ", result);
+          this.makePayment(result.token);
         }
       });
     });
