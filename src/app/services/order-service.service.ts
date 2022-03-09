@@ -17,6 +17,8 @@ export class OrderServiceService {
   }
   getActiveMenu() {
     return this.http.get(`${this.apiUrl}/activeProductsAndSizes`);
-
+  }
+  createOrder(o) {
+    return this.http.post(`${this.apiUrl}/orders`, o)
   }
 }

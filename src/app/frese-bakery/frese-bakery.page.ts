@@ -5,7 +5,7 @@ import {DataServiceService} from '../services/data-service.service';
 import {AlertController, ModalController, PopoverController} from '@ionic/angular';
 import {PopoverComponent} from '../popover/popover.component';
 import {CheckOutComponent} from '../check-out/check-out.component';
-import {PayNowPage} from "../pages/pay-now/pay-now.page";
+import {PayNowPage} from "../pay-now/pay-now.page";
 
 @Component({
   selector: 'app-frese-bakery',
@@ -19,10 +19,7 @@ export class FreseBakeryPage implements OnInit {
   ];
   product_selections = {};
   product_add_ons = {};
-  cart: Item = {
-    name: 'Mark Woodhall',
-    phone: '(909)273-1901',
-    email: 'woodhallmark800@gmail.com',
+  cart:any = {
     items: []
   };
   cartMap = new Map();
@@ -84,10 +81,12 @@ export class FreseBakeryPage implements OnInit {
   }
 
   async Pay() {
+    this.cart.total = this.getTotal();
+    this.cart.subtotal = this.getSubtotal();
     const modal = await this.modalController.create({
       component: PayNowPage,
       componentProps: {
-        order: this.cart
+        cart: this.cart
       }
     });
     modal.onDidDismiss().then(async (detail: any) => {

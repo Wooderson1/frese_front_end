@@ -23,6 +23,10 @@ export class DataServiceService {
     return this.orderService.getActiveMenu();
   }
 
+  createOrder(o): Observable<any> {
+    return this.orderService.createOrder(o);
+  }
+
   processPayment(data): Observable<any> {
     return this.stripeService.processPayment(data);
   }

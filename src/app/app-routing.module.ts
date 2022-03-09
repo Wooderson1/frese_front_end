@@ -14,7 +14,7 @@ const routes: Routes = [
   },
   {
     path: 'pay-now',
-    loadChildren: () => import('./pages/pay-now/pay-now.module').then( m => m.PayNowPageModule)
+    loadChildren: () => import('./pay-now/pay-now.module').then( m => m.PayNowPageModule)
   },
 ];
 
