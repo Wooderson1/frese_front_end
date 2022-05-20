@@ -19,6 +19,18 @@ export class OrderServiceService {
     return this.http.get(`${this.apiUrl}/activeProductsAndSizes`);
   }
   createOrder(o) {
+    o.status = "pending";
     return this.http.post(`${this.apiUrl}/orders`, o)
+  }
+
+  getSpecialById(id) {
+    return this.http.get(`${this.apiUrl}/specials/${id}`)
+  }
+
+  updateOrderDetails(orderId, body) {
+    return this.http.patch(`${this.apiUrl}/orders/${orderId}/updateOrderDetails`, body);
+  }
+  getAvailableTimeSlots() {
+    return this.http.get(`${this.apiUrl}/orders/availableTimes`);
   }
 }

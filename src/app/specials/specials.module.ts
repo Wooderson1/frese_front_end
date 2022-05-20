@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { PayNowPageRoutingModule } from './pay-now-routing.module';
+import { SpecialsPageRoutingModule } from './specials-routing.module';
 
-import { PayNowPage } from './pay-now.page';
+import { SpecialsPage } from './specials.page';
 import {DebounceClickDirective} from "../helpers/debounce-click.directive";
 
 @NgModule({
@@ -14,8 +14,8 @@ import {DebounceClickDirective} from "../helpers/debounce-click.directive";
     CommonModule,
     FormsModule,
     IonicModule,
-    PayNowPageRoutingModule
+    SpecialsPageRoutingModule
   ],
-  declarations: [PayNowPage, DebounceClickDirective]
+  declarations: [SpecialsPage, DebounceClickDirective]
 })
-export class PayNowPageModule {}
+export class SpecialsPageModule {}

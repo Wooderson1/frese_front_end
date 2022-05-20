@@ -6,6 +6,7 @@ import {AlertController, ModalController, PopoverController} from '@ionic/angula
 import {PopoverComponent} from '../popover/popover.component';
 import {CheckOutComponent} from '../check-out/check-out.component';
 import {PayNowPage} from "../pay-now/pay-now.page";
+import {SpinnerService} from "../services/spinner.service";
 
 @Component({
   selector: 'app-frese-bakery',
@@ -34,6 +35,7 @@ export class FreseBakeryPage implements OnInit {
   total = 0;
 
   constructor(public dataService: DataServiceService,
+              private spinnerService: SpinnerService,
               private modalController: ModalController,
               private alertController: AlertController,
               public popoverController: PopoverController) {
@@ -80,19 +82,47 @@ export class FreseBakeryPage implements OnInit {
     return Object.keys(product.product_add_on_values).length > 0;
   }
 
+  refreshPage() {
+    window.location.reload();
+  }
+  async presentAlertMessage(msg, func = null) {
+    const binded = func.bind(this);
+    const alert = await this.alertController.create({
+      message: msg,
+      buttons: [{
+        text: 'Okay',
+        cssClass: 'primary',
+        handler: () => {
+          binded();
+        }
+      }
+      ]
+    });
+    await alert.present();
+  }
+
   async Pay() {
+    console.log("HI");
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
+
+    const orderRes = await this.dataService.createOrder(this.cart).toPromise();
+    if (!orderRes.id) {
+      await this.presentAlertMessage("Something went wrong creating your order, please try again");
+      return;
+    }
     const modal = await this.modalController.create({
       component: PayNowPage,
       componentProps: {
-        cart: this.cart
+        orderId: orderRes.id,
+        total: this.cart.total,
+        subtotal: this.cart.subtotal,
       }
     });
     modal.onDidDismiss().then(async (detail: any) => {
-      if (detail.data.refresh) {
-        window.location.reload();
-        console.log("refreshing");
+      this.spinnerService.hideSpinner();
+      if (detail.data && detail.data.success) {
+        await this.presentAlertMessage("Thank you for your order!", this.refreshPage);
       }
     });
     await modal.present();

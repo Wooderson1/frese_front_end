@@ -11,27 +11,32 @@
 </ion-header>
 
 <ion-content>
-  <ion-card class="welcome-card">
+  <ion-card class="welcome-card" lines="none">
     <!--    <ion-img src="/assets/stripe.png"></ion-img>-->
-    <ion-card-header>
+    <ion-card-header lines="none">
 <!--      <ion-card-subtitle>Order Details</ion-card-subtitle>-->
       <ion-card-title>Order Details</ion-card-title>
-      <ion-item>Total: ${{ cart.total }}</ion-item>
+      <ion-item>Total: ${{ displayAmount(total) }}</ion-item>
       <ion-item>
-        <ion-input [(ngModel)]="cart.notes" placeholder="Notes for the order..."></ion-input>
+        <ion-icon (click)="setPickupTime()" slot="end" name="calendar"></ion-icon>
+        <ion-label>Pickup Time: {{formatDate()}}</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-icon slot="end" name="pencil-outline"></ion-icon>
+        <ion-input class="input-lines" [(ngModel)]="orderNotes" placeholder="Notes for the order..."></ion-input>
       </ion-item>
     </ion-card-header>
     <ion-card-content>
       <ion-item lines="inset" class="white-background">
-        <ion-input [(ngModel)]="cart.name" placeholder="Customer Name" (keyup.enter)="hideKeyboard()"
+        <ion-input [(ngModel)]="customerInfo.name" placeholder="Customer Name" (keyup.enter)="hideKeyboard()"
                    type="email"></ion-input>
       </ion-item>
       <ion-item lines="inset" class="white-background">
-        <ion-input [(ngModel)]="cart.email" placeholder="Email" (keyup.enter)="hideKeyboard()"
+        <ion-input [(ngModel)]="customerInfo.email" placeholder="Email" (keyup.enter)="hideKeyboard()"
                    type="email"></ion-input>
       </ion-item>
       <ion-item lines="inset" class="white-background">
-        <ion-input [(ngModel)]="cart.phone" placeholder="Phone Number" (keyup.enter)="hideKeyboard()" type
+        <ion-input [(ngModel)]="customerInfo.phone" placeholder="Phone Number" (keyup.enter)="hideKeyboard()" type
                    type="email"></ion-input>
       </ion-item>
       <br>
@@ -41,7 +46,10 @@
           <!-- Used to display Element errors -->
           <div id="card-errors" role="alert"></div>
         </div>
-        <ion-button color="frese" type="submit" expand="full">Make Payment</ion-button>
+<!--        <ion-button color="frese" type="submit" expand="full">Make Payment</ion-button>-->
+        <ion-item class="pay-button" color="frese">
+          <button appDebounceClick class="full_button" type="submit" (debounceClick)="Pay()" [debounceTime]="700">Make Payment</button>
+        </ion-item>
       </form>
     </ion-card-content>
   </ion-card>

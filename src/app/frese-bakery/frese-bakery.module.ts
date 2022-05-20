@@ -6,6 +6,7 @@ import { FreseBakeryPageRoutingModule } from './frese-bakery-routing.module';
 import { FreseBakeryPage } from './frese-bakery.page';
 import { PopoverComponent } from '../popover/popover.component';
 import { CheckOutComponent } from '../check-out/check-out.component';
+import {DebounceClickDirective} from "../helpers/debounce-click.directive";
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { CheckOutComponent } from '../check-out/check-out.component';
     FreseBakeryPageRoutingModule
   ],
   entryComponents: [PopoverComponent, CheckOutComponent],
-  declarations: [FreseBakeryPage, PopoverComponent, CheckOutComponent]
+  declarations: [FreseBakeryPage, PopoverComponent, CheckOutComponent, DebounceClickDirective]
 })
 export class FreseBakeryPageModule {}

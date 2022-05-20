@@ -27,6 +27,21 @@ export class DataServiceService {
     return this.orderService.createOrder(o);
   }
 
+  updateOrderDetails(orderId, body): Observable<any> {
+    return this.orderService.updateOrderDetails(orderId, body);
+  }
+
+  getAvailableTimeSlots(): Observable<any> {
+    return this.orderService.getAvailableTimeSlots();
+  }
+
+  getSpecialById(id) : Observable<any> {
+    return this.orderService.getSpecialById(id)
+  }
+
+
+  // Stripe
+
   processPayment(data): Observable<any> {
     return this.stripeService.processPayment(data);
   }

@@ -11,10 +11,9 @@ export class StripeService {
   constructor(public http: HttpClient) { }
 
   processPayment(data) {
+    const {phone, email, amount, currency, token, orderId, name } = data;
     return this.http.post(`${this.apiUrl}/stripe/charge`, {
-      amount: data.amount,
-      currency: data.currency,
-      token: data.token
+      phone, email, amount, currency, token, orderId, name
     })
   }
 }

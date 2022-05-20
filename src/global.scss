@@ -32,6 +32,9 @@
   --ion-color-shade: var(--ion-color-frese-shade) !important;
   --ion-color-tint: var(--ion-color-frese-tint) !important;
   }
+button {
+
+}
 //  Force text-wrap on <ion-select>
 ion-select::part(placeholder),
 ion-select::part(text) {

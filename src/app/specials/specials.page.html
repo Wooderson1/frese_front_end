@@ -15,15 +15,10 @@
       <!--  Avaiable Items  -->
       <ion-col size="9">
         <ion-grid>
-          <ion-row *ngFor="let type of this.productTypes">
             <ion-grid>
               <ion-row>
-                <ion-title> {{ type.name }}</ion-title>
-                <br>
-              </ion-row>
-              <ion-row>
-                <div *ngFor="let item of getProductsForType(type)">
-                  <ion-card class="item-row" *ngIf="item.typeId === type.id">
+                <div *ngFor="let item of products">
+                  <ion-card class="item-row">
                     <ion-img class="item-image" *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
                     <ng-template #noPhoto>
                       <ion-img class="item-image" src="assets/images/pizza.jpg"></ion-img>
@@ -32,6 +27,7 @@
                       <ion-card-title>{{item.title}}</ion-card-title>
                       <!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
                       <ion-card-subtitle>Price: ${{getItemCost(item)}}</ion-card-subtitle>
+                      <ion-card-subtitle>Amount left: {{item.quantity}}</ion-card-subtitle>
                     </ion-card-header>
                     <ion-list *ngIf="item.product_sizes.length > 0">
                       <div class="subText">Select a Size</div>
@@ -73,16 +69,16 @@
                 </div>
               </ion-row>
             </ion-grid>
-          </ion-row>
         </ion-grid>
         <ng-template #loading>
           <ion-spinner name="lines"></ion-spinner>
         </ng-template>
       </ion-col>
       <!--  Cart  -->
-      <ion-col class="float" size="3">
+      <ion-col class="float">
         <ion-toolbar class="cart">
           <ion-title>Cart</ion-title>
+          <ion-subtitle>*Swipe left to delete</ion-subtitle>
         </ion-toolbar>
         <ion-list>
           <ion-item-sliding *ngFor="let item of cart.items; let ii=index">
@@ -103,21 +99,21 @@
                 </ion-grid>
                 <div class="subText" *ngFor="let selectionKey of getSelectionKeys(item)">
                   <ion-grid>
-                  <div><b>{{selectionKey}}:</b></div>
-                  <ion-col class="startSlot subText">
-                    {{item.selections[selectionKey].value}}
-                  </ion-col>
-                  <ion-col class="endSlot">
-                    <div *ngIf="item.selections[selectionKey].cost">${{displayAmount(item.selections[selectionKey].cost
-                      *
-                      item.quantity)}}
-                    </div>
-                  </ion-col>
-                </ion-grid>
+                    <div><b>{{selectionKey}}:</b></div>
+                    <ion-col class="startSlot subText">
+                      {{item.selections[selectionKey].value}}
+                    </ion-col>
+                    <ion-col class="endSlot">
+                      <div *ngIf="item.selections[selectionKey].cost">${{displayAmount(item.selections[selectionKey].cost
+                        *
+                        item.quantity)}}
+                      </div>
+                    </ion-col>
+                  </ion-grid>
                 </div>
                 <div class="subText" *ngFor="let addOnKey of getAddOnKeys(item)">
                   <ion-grid>
-                  <div><b>{{addOnKey}}:</b></div>
+                    <div><b>{{addOnKey}}:</b></div>
                     <ion-row *ngFor="let v of getAddOnValues(item, addOnKey)">
                       <ion-col class="startSlot half-width">
                         {{v.value}}
@@ -146,11 +142,10 @@
           </div>
           <b>Total:</b> ${{displayTotal()}}
         </div>
-<!--        <ion-button color="frese" class="pay-button" (click)="Pay()">Finalize Order</ion-button>-->
+        <!--        <ion-button color="frese" class="pay-button" (click)="Pay()">Finalize Order</ion-button>-->
         <ion-item class="pay-button" color="frese">
           <button appDebounceClick class="full_button" (debounceClick)="Pay()" [debounceTime]="700">Finalize Order</button>
         </ion-item>
-
       </div>
     </ion-row>
   </ion-grid>
