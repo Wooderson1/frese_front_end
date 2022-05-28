@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DataServiceService} from "../services/data-service.service";
-import {AlertController, ModalController, PopoverController} from "@ionic/angular";
+import {AlertController, isPlatform, ModalController, PopoverController} from "@ionic/angular";
 import {PayNowPage} from "../pay-now/pay-now.page";
 import {SpinnerService} from "../services/spinner.service";
+import {PopoverComponent} from "../popover/popover.component";
 
 @Component({
   selector: 'app-specials',
@@ -17,6 +18,7 @@ export class SpecialsPage implements OnInit {
   cart = {items:[],total:0, subtotal: 0};
   products = [];
   mobile = false;
+  menuToggled = false;
   constructor(public dataService: DataServiceService,
               private spinnerService: SpinnerService,
               private modalController: ModalController,
@@ -26,8 +28,15 @@ export class SpecialsPage implements OnInit {
               public popoverController: PopoverController) {
   }
 
+  disableButton(item) {
+    return item.quantity == 0;
+  }
 
   async Pay() {
+    if(this.cart.items.length === 0) {
+      await this.presentAlertMessage("Oops! looks like your cart is empty.");
+      return;
+    }
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
 
@@ -215,6 +224,26 @@ export class SpecialsPage implements OnInit {
     };
   }
 
+  getTotalQuantity() {
+    return this.cart.items.reduce((prev , x) => prev + x.quantity, 0);
+  }
+
+  async openPopover(event) {
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+    });
+    return await popover.present();
+  }
+
+  onMobile() {
+    return isPlatform('mobile');
+  }
+
+  toggleMenu() {
+    console.log("TOGLE" );
+    this.menuToggled = !this.menuToggled;
+  }
+
   async ngOnInit() {
     if (window.screen.width < 600) { // 768px portrait
       this.mobile = true;
@@ -260,7 +289,7 @@ export class SpecialsPage implements OnInit {
         text: 'Okay',
         cssClass: 'primary',
         handler: () => {
-          binded();
+          binded && binded();
         }
       }
       ]

@@ -2,11 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {Product, Item} from './item.model';
 import {DataServiceService} from '../services/data-service.service';
 
-import {AlertController, ModalController, PopoverController} from '@ionic/angular';
+import {AlertController, isPlatform, ModalController, PopoverController} from '@ionic/angular';
 import {PopoverComponent} from '../popover/popover.component';
 import {CheckOutComponent} from '../check-out/check-out.component';
 import {PayNowPage} from "../pay-now/pay-now.page";
 import {SpinnerService} from "../services/spinner.service";
+import { initData } from "../helpers/image-formatter";
 
 @Component({
   selector: 'app-frese-bakery',
@@ -27,6 +28,7 @@ export class FreseBakeryPage implements OnInit {
   availableItems;
   productTypes;
   TAX_CONSTANT = .08;
+  menuToggled = false;
 
 
   orderItem;
@@ -40,6 +42,20 @@ export class FreseBakeryPage implements OnInit {
               private alertController: AlertController,
               public popoverController: PopoverController) {
   }
+
+
+  getTotalQuantity() {
+    return this.cart.items.reduce((prev , x) => prev + x.quantity, 0);
+  }
+
+  toggleMenu() {
+    this.menuToggled = !this.menuToggled;
+  }
+
+  onMobile() {
+    return isPlatform('mobile');
+  }
+
 
   increment(cart) {
     cart.price += (cart.price / cart.quantity);
@@ -86,14 +102,14 @@ export class FreseBakeryPage implements OnInit {
     window.location.reload();
   }
   async presentAlertMessage(msg, func = null) {
-    const binded = func.bind(this);
+    const binded = func && func.bind(this);
     const alert = await this.alertController.create({
       message: msg,
       buttons: [{
         text: 'Okay',
         cssClass: 'primary',
         handler: () => {
-          binded();
+          binded && binded();
         }
       }
       ]
@@ -102,6 +118,10 @@ export class FreseBakeryPage implements OnInit {
   }
 
   async Pay() {
+    if(this.cart.items.length === 0) {
+      await this.presentAlertMessage("Oops! looks like your cart is empty.");
+      return;
+    }
     console.log("HI");
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
@@ -222,6 +242,7 @@ export class FreseBakeryPage implements OnInit {
     });
   }
   deleteItem(index) {
+    console.log("HERE");
     this.cart.items.splice(index, 1);
   }
   getItemCost(item) {
@@ -231,8 +252,28 @@ export class FreseBakeryPage implements OnInit {
       return item.price;
     }
   }
+  addItem(item) {
+    let foundIdentical = false;
+    this.cart.items.forEach(i => {
+      let oldQuantity = i.quantity;
+      i.quantity = 1;
+      if(JSON.stringify(i) == JSON.stringify(item)) {
+        i.quantity = oldQuantity +1;
+        foundIdentical = true;
+        return;
+      } else {
+        i.quantity = oldQuantity;
+      }
+    })
+    if(foundIdentical) { return; }
+    this.cart.items.push(item);
+  }
   // Update cart
   async updateCart(newItem) {
+    if(newItem.quantity === 0) {
+      await this.presentAlertMessage("Whoops we don't have that many left, we've updated your cart");
+      return;
+    }
     if(this.checkForSelectionCount(newItem)) {
       console.log("Have not selected all of the required selections");
 
@@ -251,7 +292,7 @@ export class FreseBakeryPage implements OnInit {
     }
     let item = this.formatCartItem(newItem);
     console.log("ITEM ", item);
-    this.cart.items.push(item);
+    this.addItem(item);
   }
 
   // check out logic goes here

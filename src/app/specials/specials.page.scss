@@ -17,11 +17,33 @@
   max-width: 250px;
   height: 50%;
 }
+.total-menu {
+  position: fixed;
+  bottom: 0;
+  max-width: 390px;
+  min-width: 350px;
+  //right:0;
+  //width: inherit;
+}
 
+.menu {
+  max-width: 390px;
+  min-width: 350px;
 
-.float {
-  position:fixed;
+  height: 100%;
+  z-index: 999;
+  float: right;
+  position: absolute;
+  top: 0;
   right: 0;
+}
+
+.full {
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background-color: blue;
+  position: relative;
 }
 .total {
   position: fixed;
@@ -33,6 +55,9 @@
 .cart {
   text-align: center;
 }
+.float {
+  width: 100%;
+}
 
 .half-width {
   width: 50%;
@@ -41,6 +66,32 @@
 .startSlot.padded {
   padding-left: 2%;
 }
+
+.soldout {
+  color: red;
+}
+
+.badge {
+  z-index: 99;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  //top: -0.1rem;
+  //right: -0.1rem;
+  //opacity: 0.9;
+  border-radius: 50%;
+  padding: 0;
+}
+.badge-text {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
 .price-font {
   font-size: 80%;
   padding: 5px;
