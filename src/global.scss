@@ -26,8 +26,6 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark mode variables go here */
-    color: black;
   }
 }
 
@@ -39,6 +37,12 @@
   --ion-color-shade: var(--ion-color-frese-shade) !important;
   --ion-color-tint: var(--ion-color-frese-tint) !important;
   }
+ion-icon {
+  color: white;
+}
+ion-app{
+  --ion-background-color: orange !important;
+}
 ion-toolbar {
   --background: black;
   --color: white;
