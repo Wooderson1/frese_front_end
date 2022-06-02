@@ -64,7 +64,8 @@ ion-menu{
   width:inherit;
   height:200px;
   //max-width: 250px;
-  object-fit:cover;
+  object-fit:scale-down;
+  overflow: hidden;
 }
 
 

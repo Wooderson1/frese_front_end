@@ -6,8 +6,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:sandbox": "NODE_ENV=sandbox ng serve",
     "build": "ng build",
+    "build-docker": "docker build -t frese/app-order .",
+    "browser": "ionic cordova platform add browser && ionic cordova build browser",
+    "run-docker": "docker run --network host frese/app-order",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
