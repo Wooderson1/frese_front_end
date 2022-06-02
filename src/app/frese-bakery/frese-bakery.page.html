@@ -1,7 +1,7 @@
 <div class="full">
   <div class="menu" *ngIf="!onMobile() || menuToggled">
-    <ion-header color="dark">
-      <ion-toolbar color='dark'>
+    <ion-header>
+      <ion-toolbar>
         <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
         <div slot="end" class="ion-padding-end">
           <ion-buttons slot="start">
@@ -12,7 +12,7 @@
         </div>
       </ion-toolbar>
     </ion-header>
-    <ion-header color="dark">
+    <ion-header>
 
     <ion-toolbar class="cart">
       <ion-title>
@@ -93,8 +93,8 @@
     <!--</ion-menu>-->
   </div>
   <div class="ion-page" id="main">
-    <ion-header color="dark">
-      <ion-toolbar color='dark'>
+    <ion-header>
+      <ion-toolbar>
         <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
         <div slot="end" *ngIf="!onMobile()">
           <ion-button color="frese" (click)="openPopover($event)">
