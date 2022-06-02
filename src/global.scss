@@ -24,6 +24,13 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css"; @import "~@ionic/angular/css/flex-utils.css";
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark mode variables go here */
+    color: black;
+  }
+}
+
 .ion-color-frese {
   --ion-color-base: var(--ion-color-frese) !important;
   --ion-color-base-rgb: var(--ion-color-frese-rgb) !important;
