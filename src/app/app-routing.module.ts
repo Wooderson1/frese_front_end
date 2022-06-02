@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import {HttpClientModule} from '@angular/common/http';
+import {HashLocationStrategy, LocationStrategy} from "@angular/common";
 
 const routes: Routes = [
   {
@@ -28,9 +29,10 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    HttpClientModule,
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, {useHash: true, preloadingStrategy: PreloadAllModules})
+
   ],
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
