@@ -1,11 +1,13 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Component, OnInit } from '@angular/core';
-import { Product, Item } from './item.model';
+import {Component, OnInit} from '@angular/core';
+import {Product, Item} from './item.model';
 import {DataServiceService} from '../services/data-service.service';
 
-import { PopoverController } from '@ionic/angular';
-import { PopoverComponent } from '../popover/popover.component';
-import { CheckOutComponent } from '../check-out/check-out.component';
+import {AlertController, isPlatform, ModalController, PopoverController} from '@ionic/angular';
+import {PopoverComponent} from '../popover/popover.component';
+import {CheckOutComponent} from '../check-out/check-out.component';
+import {PayNowPage} from "../pay-now/pay-now.page";
+import {SpinnerService} from "../services/spinner.service";
+import { initData } from "../helpers/image-formatter";
 
 @Component({
   selector: 'app-frese-bakery',
@@ -16,76 +18,44 @@ export class FreseBakeryPage implements OnInit {
 
   // entrees
   products: Product[] = [
-    {
-      id: 1,
-      title: 'Pizza',
-      description: 'Cheese Pizza',
-      price: 16,
-      typeId: 1,
-      active: true,
-      quantity: -1,
-      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUFdG_GWYyNQwkncDqLEZqmFdXCysA6_MSXw&usqp=CAU',
-      createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z',
-      addOns: [{ value: 'Pepperoni', cost: 2 },
-               { value: 'Mushroom', cost: 3 }]
-    },
-    {
-      id: 2,
-      title: 'sandwich',
-      description: 'Reuben Sandwich',
-      price: 10,
-      typeId: 1,
-      active: true,
-      quantity: -1,
-      // eslint-disable-next-line max-len
-      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwMWYdg4XRgclhhNNOfIAzkQPRfUMUQ14aNYgY0e0lRzVsuYt1eT6D5Hs1IIcl-ixgpD8&usqp=CAU',
-      createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z',
-      addOns: null
-    },
-    {
-      id: 3,
-      title: 'cake',
-      description: 'Chocolate Cake',
-      price: 5,
-      typeId: 2,
-      active: true,
-      quantity: -1,
-      // eslint-disable-next-line max-len
-      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_M2Olw8zrmIr7FhqI9iBAFnXIuSkAgPr-_g&usqp=CAU',
-      createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z',
-      addOns: null
-    },
-    {
-      id: 4,
-      title: 'mozz stick',
-      description: 'Mozzarella Sticks',
-      price: 7,
-      typeId: 3,
-      active: true,
-      quantity: -1,
-      // eslint-disable-next-line max-len
-      photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpAT7FjKcL1e6HmNrzrOpQEjsOSENKSkcplg&usqp=CAU',
-      createdAt: '2021-07-07T02:39:33.000Z',
-      updatedAt: '2021-07-07T02:51:28.000Z',
-      addOns: null
-    }
   ];
-cart: Item = {name: 'Mark Woodhall',
-             phone: '(909)273-1901',
-             email: 'woodhallmark800@gmail.com',
-             items: []};
-cartMap = new Map();
-availableItems;
-productTypes;
-todaysDate = new Date().toISOString();
-// set total balance to 0 to start
-total = 0;
+  product_selections = {};
+  product_add_ons = {};
+  cart:any = {
+    items: []
+  };
+  cartMap = new Map();
+  availableItems;
+  productTypes;
+  TAX_CONSTANT = .08;
+  menuToggled = false;
 
-  constructor( public dataService: DataServiceService,
-               public popoverController: PopoverController) { }
+
+  orderItem;
+  todaysDate = new Date().toISOString();
+// set total balance to 0 to start
+  total = 0;
+
+  constructor(public dataService: DataServiceService,
+              private spinnerService: SpinnerService,
+              private modalController: ModalController,
+              private alertController: AlertController,
+              public popoverController: PopoverController) {
+  }
+
+
+  getTotalQuantity() {
+    return this.cart.items.reduce((prev , x) => prev + x.quantity, 0);
+  }
+
+  toggleMenu() {
+    this.menuToggled = !this.menuToggled;
+  }
+
+  onMobile() {
+    return isPlatform('mobile');
+  }
+
 
   increment(cart) {
     cart.price += (cart.price / cart.quantity);
@@ -96,18 +66,93 @@ total = 0;
   decrement(cart) {
     if (cart.quantity === 1) {
       this.total -= cart.price;
-        for (let x = 0; x < this.cart.items.length; ++x) {
-          if (this.cartMap.get(cart.id) === this.cart.items[x].description) {
-            console.log('deleted: ' + this.cartMap.delete(cart.id));
-            this.cart.items.splice(x, 1);
-          }
+      for (let x = 0; x < this.cart.items.length; ++x) {
+        if (this.cartMap.get(cart.id) === this.cart.items[x].description) {
+          console.log('deleted: ' + this.cartMap.delete(cart.id));
+          this.cart.items.splice(x, 1);
         }
-    }
-    else {
+      }
+    } else {
       this.total -= (cart.price / cart.quantity);
       cart.price -= (cart.price / cart.quantity);
       --cart.quantity;
     }
+  }
+
+  addOnKeys(product) {
+    return Object.keys(product.product_add_on_values);
+  }
+  selectionKeys(product) {
+    return Object.keys(product.product_selection_values);
+  }
+
+  getAddOns(item, addOnKey) {
+    console.log("ITEM ", item);
+    console.log("KEY ", addOnKey);
+  }
+
+  hasSelections(product) {
+    return Object.keys(product.product_selection_values).length > 0;
+  }
+  hasAddOns(product) {
+    return Object.keys(product.product_add_on_values).length > 0;
+  }
+
+  refreshPage() {
+    window.location.reload();
+  }
+  async presentAlertMessage(msg, func = null) {
+    const binded = func && func.bind(this);
+    const alert = await this.alertController.create({
+      message: msg,
+      buttons: [{
+        text: 'Okay',
+        cssClass: 'primary',
+        handler: () => {
+          binded && binded();
+        }
+      }
+      ]
+    });
+    await alert.present();
+  }
+
+  async Pay() {
+    if(this.cart.items.length === 0) {
+      await this.presentAlertMessage("Oops! looks like your cart is empty.");
+      return;
+    }
+    console.log("HI");
+    this.cart.total = this.getTotal();
+    this.cart.subtotal = this.getSubtotal();
+
+    const orderRes = await this.dataService.createOrder(this.cart).toPromise();
+    if (!orderRes.id) {
+      await this.presentAlertMessage("Something went wrong creating your order, please try again");
+      return;
+    }
+    const modal = await this.modalController.create({
+      component: PayNowPage,
+      componentProps: {
+        orderId: orderRes.id,
+        total: this.cart.total,
+        subtotal: this.cart.subtotal,
+      }
+    });
+    modal.onDidDismiss().then(async (detail: any) => {
+      this.spinnerService.hideSpinner();
+      if (detail.data && detail.data.success) {
+        await this.presentAlertMessage("Thank you for your order!", this.refreshPage);
+      }
+    });
+    await modal.present();
+  }
+
+  getProductsForType(type) {
+    if (!this.availableItems) {
+      return;
+    }
+    return this.availableItems.filter(t => t.typeId === type.id);
   }
 
   // update price for add on
@@ -128,8 +173,8 @@ total = 0;
 
     // update prices for every add on added
     for (const x of $event.target.value) {
-        item.price += Number(x) * item.quantity;
-        this.total += Number(x) * item.quantity;
+      item.price += Number(x) * item.quantity;
+      this.total += Number(x) * item.quantity;
     }
 
     // log the add ons available for the item
@@ -142,30 +187,112 @@ total = 0;
     }
   }
 
-  // Update cart
-  updateCart(item) {
-    // if item is not in the cart yet
-    if (!this.cartMap.has(item.id) || item.addOns) {
-      const newProduct: Product = {id: item.id, title: item.title, description: item.description,
-                             price: item.price, typeId: item.typeId, active: item.active,
-                             quantity: 1, photoUrl: item.photoUrl, createdAt: item.createdAt,
-                             updatedAt: item.updatedAt, selections: item.selections, addOns: item.addOns};
-
-      this.cart.items.push(newProduct);
-      this.cartMap.set(item.id, item.description);
-    }
-    // if it is in the cart already, update values
-    else {
-      for (let x = 0; x < this.cart.items.length; ++x) {
-        if (this.cartMap.get(item.id) === this.cart.items[x].description) {
-          this.cart.items[x].quantity += 1;
-          this.cart.items[x].price += item.price;
-          console.log('cart updated at array index: ' + x);
-        }
+  formatSelections(item) {
+    let vals = {};
+    Object.keys(item.product_selection_values).forEach(key => {
+      if (item.product_selection_values[key].selected) {
+        vals[key] = {
+            value: item.product_selection_values[key].selected.value,
+            cost: item.product_selection_values[key].selected.cost
+          };
+        item.product_selection_values[key].selected = null;
       }
+    });
+    return vals;
+  }
+  formatAddOns(item) {
+    let vals = {};
+    Object.keys(item.product_add_on_values).forEach(key => {
+      if (item.product_add_on_values[key].selected) {
+        vals[key] = item.product_add_on_values[key].selected.map(val => {
+          return {
+            value: val.value,
+            cost: val.cost
+          }
+        });
+        item.product_add_on_values[key].selected = null;
+      }
+    });
+    return vals;
+  }
+  formatSize(item) {
+    if(!item.product_size_selected) { return null; }
+    let id = item.product_size_selected.id;
+    item.product_size_selected = item.product_sizes[0];
+    return id;
+  }
+
+  formatCartItem(item) {
+    return {
+      price: this.getItemCost(item),
+      productId: item.id,
+      product_name: item.title,
+      quantity: 1,
+      product_size_id: this.formatSize(item),
+      selections: this.formatSelections(item),
+      add_ons: this.formatAddOns(item),
+    };
+  }
+  getAddOnValues(item, key) {
+    return item.add_ons[key];
+  }
+  checkForSelectionCount(item) {
+    return Object.keys(item.product_selection_values).some(key => {
+      return !item.product_selection_values[key].selected
+    });
+  }
+  deleteItem(index) {
+    console.log("HERE");
+    this.cart.items.splice(index, 1);
+  }
+  getItemCost(item) {
+    if(item.product_size_selected) {
+      return item.product_size_selected.cost;
+    } else {
+      return item.price;
     }
-    // update cart total
-    this.total += item.price;
+  }
+  addItem(item) {
+    let foundIdentical = false;
+    this.cart.items.forEach(i => {
+      let oldQuantity = i.quantity;
+      i.quantity = 1;
+      if(JSON.stringify(i) == JSON.stringify(item)) {
+        i.quantity = oldQuantity +1;
+        foundIdentical = true;
+        return;
+      } else {
+        i.quantity = oldQuantity;
+      }
+    })
+    if(foundIdentical) { return; }
+    this.cart.items.push(item);
+  }
+  // Update cart
+  async updateCart(newItem) {
+    if(newItem.quantity === 0) {
+      await this.presentAlertMessage("Whoops we don't have that many left, we've updated your cart");
+      return;
+    }
+    if(this.checkForSelectionCount(newItem)) {
+      console.log("Have not selected all of the required selections");
+
+      const alert = await this.alertController.create({
+        header: 'Whoops!',
+        message: 'Please make a selection',
+        buttons: [
+          {
+            text: 'Dismiss',
+            handler: () => {
+            }
+          }
+        ]
+      });
+      return alert.present();
+    }
+    let item = this.formatCartItem(newItem);
+    console.log("ITEM ", item);
+    this.addItem(item);
   }
 
   // check out logic goes here
@@ -173,7 +300,7 @@ total = 0;
 
     console.log('Checkout with: ');
     if (final.items) {
-       for (const x of final.items){
+      for (const x of final.items) {
         console.log(x.description);
       }
     }
@@ -193,6 +320,26 @@ total = 0;
     return await popover.present();
   }
 
+  formatAOV(val) {
+    let keys = Object.keys(val);
+    keys.forEach(k => {
+      val[k].forEach(v => v["selected"] = false);
+    });
+    return val;
+  }
+
+  formatMenu(menu) {
+    return this.initializeSelectedSizes(menu);
+  }
+  initializeSelectedSizes(menu) {
+    menu.forEach((item) => {
+      if(item.product_sizes && item.product_sizes.length > 0) {
+        item.product_size_selected = item.product_sizes[0];
+      }
+    });
+    return menu;
+  }
+
   ngOnInit() {
     this.dataService.getProductTypes().subscribe(types => {
       console.log(types);
@@ -200,8 +347,70 @@ total = 0;
     });
 
     this.dataService.getActiveMenu().subscribe(productResults => {
-      console.log(productResults);
-      this.availableItems = productResults;
+      this.availableItems = this.formatMenu(productResults);
+      console.log(this.availableItems);
     });
+  }
+
+  round(value: number, digits = 2) {
+    value = value * Math.pow(10, digits);
+    value = Math.round(value);
+    value = value / Math.pow(10, digits);
+    return value;
+  }
+
+  displayTotal() {
+    return this.getTotal().toFixed(2);
+  }
+
+  displaySubtotal() {
+    return this.getSubtotal().toFixed(2);
+  }
+
+  ssdisplayAmount(amount) {
+    console.log("AMT ", amount);
+    return amount.toFixed(2);
+  }
+  displayAmount(amount) {
+    return amount.toFixed(2);
+  }
+
+
+  getTotal() {
+    let subtotal = this.getSubtotal();
+    return this.round(subtotal + this.getTax(subtotal));
+  }
+
+  getSubtotal() {
+    let total = 0;
+    for (const item of this.cart.items) {
+      let item_cost = item.price;
+      Object.keys(item.selections).forEach(key => {
+        if (item.selections[key].cost) {
+          item_cost += item.selections[key].cost;
+        }
+      });
+      Object.keys(item.add_ons).forEach(key => {
+        for (const value of item.add_ons[key]) {
+          if (value.cost) {
+            item_cost += value.cost;
+          }
+        }
+      });
+      total += item_cost * item.quantity;
+    }
+    return this.round(total);
+  }
+
+  getTax(total) {
+    return this.round(total * this.TAX_CONSTANT);
+  }
+
+  getSelectionKeys(item) {
+    return Object.keys(item.selections);
+  }
+
+  getAddOnKeys(item) {
+    return Object.keys(item.add_ons);
   }
 }

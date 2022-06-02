@@ -6,6 +6,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import {DebounceClickDirective} from "./helpers/debounce-click.directive";
 
 @NgModule({
   declarations: [AppComponent],

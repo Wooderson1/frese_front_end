@@ -4,35 +4,18 @@
 }
 
 .item-row {
-  //width: 25%;
+  //width: 30%;
   max-height: 100%;
-  padding: 0;
-  //max-height: 100%;
-  max-width: 100%;
-  width: 200px;
-  //max-width: 39%;
-}
-ion-menu{
-  --width: 50%;
-  --side-max-width: 18%;
-  --side-min-width: 270px
+  max-width: 250px;
 }
 
-.customMenu {
+.full_size_row {
   height: 100%;
-  position: fixed;
-  right: 0;
-  width: 80%;
-  margin-top: 60px;
-  transform: translateX(80%);
 }
 
-.full {
-  width: 100%;
-  height: 100%;
-  z-index: 999;
-  background-color: blue;
-  position: relative;
+.item-image {
+  max-width: 250px;
+  height: 50%;
 }
 .total-menu {
   position: fixed;
@@ -55,33 +38,25 @@ ion-menu{
   right: 0;
 }
 
-
-.full_size_row {
+.full {
+  width: 100%;
   height: 100%;
-}
-
-.item-image {
-  width:inherit;
-  height:200px;
-  //max-width: 250px;
-  object-fit:scale-down;
-  overflow: hidden;
-}
-
-
-.float {
-  position:fixed;
-  right: 0;
+  z-index: 999;
+  background-color: blue;
+  position: relative;
 }
 .total {
-    position: fixed;
-    bottom: 0;
-    right:0;
-    width: 25%;
+  position: fixed;
+  bottom: 0;
+  right:0;
+  width: 25%;
 }
 
 .cart {
   text-align: center;
+}
+.float {
+  width: 100%;
 }
 
 .half-width {
@@ -91,6 +66,32 @@ ion-menu{
 .startSlot.padded {
   padding-left: 2%;
 }
+
+.soldout {
+  color: red;
+}
+
+.badge {
+  z-index: 99;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  //top: -0.1rem;
+  //right: -0.1rem;
+  //opacity: 0.9;
+  border-radius: 50%;
+  padding: 0;
+}
+.badge-text {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
 .price-font {
   font-size: 80%;
   padding: 5px;
@@ -120,35 +121,6 @@ ion-menu{
   float: right;
 }
 
-.soldout {
-  color: red;
-}
-
-.full-width {
-  width: inherit;
-  padding: 0;
-}
-
-.badge {
-  z-index: 99;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  //top: -0.1rem;
-  //right: -0.1rem;
-  //opacity: 0.9;
-  border-radius: 50%;
-  padding: 0;
-}
-.badge-text {
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  text-align: center;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
 .pay-button {
   width: 100%;
   padding: 0;

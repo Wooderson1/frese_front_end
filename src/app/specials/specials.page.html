@@ -5,9 +5,9 @@
         <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
         <div slot="end" class="ion-padding-end">
           <ion-buttons slot="start">
-              <ion-button *ngIf="onMobile()" (click)="toggleMenu()">
-                <ion-icon name="close"></ion-icon>
-              </ion-button>
+            <ion-button *ngIf="onMobile()" (click)="toggleMenu()">
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
           </ion-buttons>
         </div>
       </ion-toolbar>
@@ -64,9 +64,9 @@
             </ion-label>
           </ion-item>
           <ion-item-options side="end">
-<!--            <div>-->
-<!--              <ion-icon (click)="deleteItem(ii)" name="trash"></ion-icon>-->
-<!--            </div>-->
+            <!--            <div>-->
+            <!--              <ion-icon (click)="deleteItem(ii)" name="trash"></ion-icon>-->
+            <!--            </div>-->
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
@@ -112,72 +112,70 @@
       </ion-toolbar>
     </ion-header>
     <ion-content color="light">
-      <ion-grid>
+      <ion-grid class="full_size_row">
         <ion-row class="full_size_row">
           <!--  Avaiable Items  -->
-          <ion-col>
+          <ion-col size="9">
             <ion-grid>
-              <ion-row *ngFor="let type of this.productTypes">
-                <ion-grid>
-                  <ion-row>
-                    <ion-title> {{ type.name }}</ion-title>
-                    <br>
-                  </ion-row>
-                  <ion-row>
-                    <div *ngFor="let item of getProductsForType(type)">
-                      <ion-card class="item-row" *ngIf="item.typeId === type.id">
-                        <ion-img class="item-image" *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
-                        <ng-template #noPhoto>
-                          <ion-img class="item-image" src="assets/images/pizza.jpg"></ion-img>
-                        </ng-template>
-                        <ion-card-header class="bottom">
-                          <ion-card-title>{{item.title}}</ion-card-title>
-                          <!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
-                          <ion-card-subtitle>Price: ${{getItemCost(item)}}</ion-card-subtitle>
-                        </ion-card-header>
-                        <ion-list *ngIf="item.product_sizes.length > 0">
-                          <div class="subText">Select a Size</div>
-                          <ion-select [(ngModel)]="item.product_size_selected"
-                                      placeholder="{{item.product_size_selected}}">
-                            <ion-select-option *ngFor="let v of item.product_sizes" [value]="v">
-                              <ion-label>{{v.size}}</ion-label>
+              <ion-grid>
+                <ion-row>
+                  <div *ngFor="let item of products">
+                    <ion-card class="item-row">
+                      <ion-img class="item-image" *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
+                      <ng-template #noPhoto>
+                        <ion-img class="item-image" src="assets/images/pizza.jpg"></ion-img>
+                      </ng-template>
+                      <ion-card-header>
+                        <ion-card-title>{{item.title}}</ion-card-title>
+                        <!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
+                        <ion-card-subtitle>Price: ${{getItemCost(item)}}</ion-card-subtitle>
+                        <ion-card-subtitle *ngIf="item.quantity > 0">Amount left: {{item.quantity}}</ion-card-subtitle>
+                        <ion-card-subtitle class="soldout" *ngIf="item.quantity <= 0">SOLD OUT</ion-card-subtitle>
+                      </ion-card-header>
+                      <ion-list *ngIf="item.product_sizes.length > 0">
+                        <div class="subText">Select a Size</div>
+                        <ion-select [(ngModel)]="item.product_size_selected"
+                                    placeholder="{{item.product_size_selected}}">
+                          <ion-select-option *ngFor="let v of item.product_sizes" [value]="v">
+                            <ion-label>{{v.size}}</ion-label>
+                          </ion-select-option>
+                        </ion-select>
+                      </ion-list>
+
+                      <ion-list *ngIf="hasSelections(item)">
+                        <div class="subText">Selections</div>
+                        <div class="select-opt" *ngFor="let selectionKey of selectionKeys(item)">
+                          <ion-select [(ngModel)]="item.product_selection_values[selectionKey].selected"
+                                      [placeholder]="selectionKey">
+                            <ion-select-option *ngFor="let v of item.product_selection_values[selectionKey]"
+                                               [value]="v">
+                              {{v.value}}
+                              <br>
+                              <p *ngIf="v.cost">${{v.cost}}</p>
                             </ion-select-option>
                           </ion-select>
-                        </ion-list>
-
-                        <ion-list *ngIf="hasSelections(item)">
-                          <div class="subText">Selections</div>
-                          <div class="select-opt" *ngFor="let selectionKey of selectionKeys(item)">
-                            <ion-select [(ngModel)]="item.product_selection_values[selectionKey].selected"
-                                        [placeholder]="selectionKey">
-                              <ion-select-option *ngFor="let v of item.product_selection_values[selectionKey]"
-                                                 [value]="v">
-                                {{v.value}}
-                                <br>
-                                <p *ngIf="v.cost">${{v.cost}}</p>
-                              </ion-select-option>
-                            </ion-select>
-                          </div>
-                        </ion-list>
-                        <ion-list *ngIf="hasAddOns(item)">
-                          <div class="subText">Extras</div>
-                          <div class="select-opt" *ngFor="let addOnKey of addOnKeys(item)">
-                            <ion-select multiple=true [(ngModel)]="item.product_add_on_values[addOnKey].selected"
-                                        [placeholder]="addOnKey">
-                              <ion-select-option *ngFor="let v of item.product_add_on_values[addOnKey]" [value]="v">
-                                {{v.value}}
-                                <br>
-                                <p *ngIf="v.cost">${{v.cost}}</p>
-                              </ion-select-option>
-                            </ion-select>
-                          </div>
-                        </ion-list>
-                        <ion-button color='frese' (click)="updateCart(item)">Add to Cart</ion-button>
-                      </ion-card>
-                    </div>
-                  </ion-row>
-                </ion-grid>
-              </ion-row>
+                        </div>
+                      </ion-list>
+                      <ion-list *ngIf="hasAddOns(item)">
+                        <div class="subText">Extras</div>
+                        <div class="select-opt" *ngFor="let addOnKey of addOnKeys(item)">
+                          <ion-select multiple=true [(ngModel)]="item.product_add_on_values[addOnKey].selected"
+                                      [placeholder]="addOnKey">
+                            <ion-select-option *ngFor="let v of item.product_add_on_values[addOnKey]" [value]="v">
+                              {{v.value}}
+                              <br>
+                              <p *ngIf="v.cost">${{v.cost}}</p>
+                            </ion-select-option>
+                          </ion-select>
+                        </div>
+                      </ion-list>
+                      <ion-button disabled="{{disableButton(item)}}" color='frese' (click)="updateCart(item)">Add to
+                        Cart
+                      </ion-button>
+                    </ion-card>
+                  </div>
+                </ion-row>
+              </ion-grid>
             </ion-grid>
             <ng-template #loading>
               <ion-spinner name="lines"></ion-spinner>

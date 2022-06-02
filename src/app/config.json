@@ -1,5 +1,6 @@
 {
   "App": {
+    "xbaseUrl": "http://localhost:3000/api",
     "baseUrl": "https://frese-bakery-backend-app-eqjx4stexa-uc.a.run.app/api"
   }
 }

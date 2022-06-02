@@ -12,6 +12,18 @@ const routes: Routes = [
     path: 'frese-bakery',
     loadChildren: () => import('./frese-bakery/frese-bakery.module').then( m => m.FreseBakeryPageModule)
   },
+  {
+    path: 'pay-now',
+    loadChildren: () => import('./pay-now/pay-now.module').then( m => m.PayNowPageModule)
+  },
+  {
+    path: 'date-picker',
+    loadChildren: () => import('./date-picker/date-picker.module').then( m => m.DatePickerPageModule)
+  },
+  {
+    path: 'specials/:specialsId',
+    loadChildren: () => import('./specials/specials.module').then( m => m.SpecialsPageModule)
+  },
 ];
 
 @NgModule({
