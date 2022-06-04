@@ -114,7 +114,7 @@ export class PayNowPage {
     let paymentData;
     try {
       paymentData = await this.dataService.processPayment({
-        amount: 100,
+        amount: this.total*100,
         currency: 'usd',
         token: token.id,
         orderId: this.orderId,
