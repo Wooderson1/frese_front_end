@@ -15,7 +15,7 @@ import * as moment from "moment";
   styleUrls: ['./pay-now.page.scss'],
 })
 export class PayNowPage {
-  stripe = Stripe('pk_test_51KasQqEZvpspKOfSlXnGLRy8IxkOOIZfo5bSREuWGPiK4HCkRyPaSy3m6TqFll4shlG3czSvOiE6eeUEUBG4Ueat00nSgYii4r');
+  stripe = Stripe('pk_live_51KasQqEZvpspKOfSzW7sdVtBJmH1pVuJ7MkqdkFvwMqH1FG2RkSdpI5qDqEzsxeNgUOwODddzocbKqlRu90DAnMA00Y537FNq1');
   card: any;
   customerInfo: any = {};
   orderId;
