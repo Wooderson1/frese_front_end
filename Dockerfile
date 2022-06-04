@@ -1,6 +1,7 @@
 FROM node:15-alpine as build
 WORKDIR /app
 COPY . .
+COPY config.xml config.xml
 RUN npm install -g cordova ionic && cordova telemetry off
 RUN npm install
 RUN npm run browser
