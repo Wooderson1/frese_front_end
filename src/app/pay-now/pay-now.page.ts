@@ -35,7 +35,7 @@ export class PayNowPage {
 
   async ngOnInit() {
     this.setupStripe();
-    this.availableTimes = await this.dataService.getAvailableTimeSlots().toPromise();
+    // this.availableTimes = await this.dataService.getAvailableSpecialSlots().toPromise();
     this.pickupDate = moment(Object.keys(this.availableTimes)[0]).toDate();
   }
 

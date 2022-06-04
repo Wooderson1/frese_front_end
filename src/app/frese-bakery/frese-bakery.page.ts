@@ -131,9 +131,16 @@ export class FreseBakeryPage implements OnInit {
       await this.presentAlertMessage("Something went wrong creating your order, please try again");
       return;
     }
+    const availableTimes = await this.dataService.getAvailableTimeSlots().toPromise();
+    console.log("AT ", Object.keys(availableTimes));
+    if(Object.keys(availableTimes).length <= 0) {
+      await this.presentAlertMessage("Sorry it seems like we're too busy to take new orders at this time! Please try again later.", this.refreshPage);
+      return;
+    }
     const modal = await this.modalController.create({
       component: PayNowPage,
       componentProps: {
+        availableTimes,
         orderId: orderRes.id,
         total: this.cart.total,
         subtotal: this.cart.subtotal,

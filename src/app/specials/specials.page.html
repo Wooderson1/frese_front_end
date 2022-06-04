@@ -14,8 +14,10 @@
     </ion-header>
     <ion-content class="full-width">
       <ion-toolbar class="cart">
-        <ion-title>Cart</ion-title>
-        <ion-subtitle>*Swipe left to delete</ion-subtitle>
+        <ion-title>
+          <span>Cart</span> <br>
+          <small>* Swipe left to delete</small>
+        </ion-title>
       </ion-toolbar>
       <ion-list>
         <ion-item-sliding (ionSwipe)="deleteItem(ii)" *ngFor="let item of cart.items; let ii=index">

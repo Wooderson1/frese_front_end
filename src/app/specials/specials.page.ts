@@ -45,9 +45,11 @@ export class SpecialsPage implements OnInit {
       await this.presentAlertMessage("Something went wrong creating your order, please try again");
       return;
     }
+    const availableTimes = await this.dataService.getAvailableSpecialSlots(this.specialsId).toPromise();
     const modal = await this.modalController.create({
       component: PayNowPage,
       componentProps: {
+        availableTimes,
         orderId: orderRes.id,
         total: this.cart.total,
         subtotal: this.cart.subtotal,

@@ -18,7 +18,7 @@
       <ion-card-title>Order Details</ion-card-title>
       <ion-item>Total: ${{ displayAmount(total) }}</ion-item>
       <ion-item>
-        <ion-icon (click)="setPickupTime()" slot="end" name="calendar"></ion-icon>
+        <ion-icon (click)="setPickupTime()" slot="end" [style.color]="'#000000'" name="calendar"></ion-icon>
         <ion-label>Pickup Time: {{formatDate()}}</ion-label>
       </ion-item>
       <ion-item lines="none">

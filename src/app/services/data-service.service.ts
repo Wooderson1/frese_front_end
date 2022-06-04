@@ -34,6 +34,9 @@ export class DataServiceService {
   getAvailableTimeSlots(): Observable<any> {
     return this.orderService.getAvailableTimeSlots();
   }
+  getAvailableSpecialSlots(id): Observable<any> {
+    return this.orderService.getAvailableSpecialSlots(id);
+  }
 
   getSpecialById(id) : Observable<any> {
     return this.orderService.getSpecialById(id)

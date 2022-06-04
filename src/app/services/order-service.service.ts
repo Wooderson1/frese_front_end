@@ -33,4 +33,7 @@ export class OrderServiceService {
   getAvailableTimeSlots() {
     return this.http.get(`${this.apiUrl}/orders/availableTimes`);
   }
+  getAvailableSpecialSlots(id) {
+    return this.http.get(`${this.apiUrl}/orders/availableSpecialTimes/${id}`);
+  }
 }
