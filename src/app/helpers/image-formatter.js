@@ -26,7 +26,7 @@ module.exports.initData = function(canvasId = 'image-canvas', imageData, orienta
 
 function addToCanvas(canvasId = 'image-canvas', imageData, orientation='top-left') {
   if(!imageData) {
-    console.log("NO DATA");
+
     this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
     return;
   }
@@ -83,7 +83,7 @@ function addToCanvas(canvasId = 'image-canvas', imageData, orientation='top-left
       this.context.rotate(rot * Math.PI / 180);
       this.context.fillRect(bx, by, bw, bh);
       this.context.drawImage(imageObj, delta.x, delta.y, delta.w, delta.h);
-      console.log("DRAWING IMAGE");
+
       this.imageUrl = this.canvas.toDataURL('image/jpeg', 1);
     };
     imageObj.src = imageData;

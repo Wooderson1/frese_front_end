@@ -68,7 +68,7 @@ export class FreseBakeryPage implements OnInit {
       this.total -= cart.price;
       for (let x = 0; x < this.cart.items.length; ++x) {
         if (this.cartMap.get(cart.id) === this.cart.items[x].description) {
-          console.log('deleted: ' + this.cartMap.delete(cart.id));
+
           this.cart.items.splice(x, 1);
         }
       }
@@ -87,8 +87,8 @@ export class FreseBakeryPage implements OnInit {
   }
 
   getAddOns(item, addOnKey) {
-    console.log("ITEM ", item);
-    console.log("KEY ", addOnKey);
+
+
   }
 
   hasSelections(product) {
@@ -122,7 +122,7 @@ export class FreseBakeryPage implements OnInit {
       await this.presentAlertMessage("Oops! looks like your cart is empty.");
       return;
     }
-    console.log("HI");
+
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
 
@@ -168,8 +168,8 @@ export class FreseBakeryPage implements OnInit {
       }
     }
 
-    console.log('event:' + $event.target.value);
-    console.log('item: ' + item.description);
+
+
 
     // update prices for every add on added
     for (const x of $event.target.value) {
@@ -181,7 +181,7 @@ export class FreseBakeryPage implements OnInit {
     for (const y of this.cart.items) {
       if (y.addOns) {
         for (const option of y.addOns) {
-          console.log('addOns: ' + option.value);
+
         }
       }
     }
@@ -242,7 +242,7 @@ export class FreseBakeryPage implements OnInit {
     });
   }
   deleteItem(index) {
-    console.log("HERE");
+
     this.cart.items.splice(index, 1);
   }
   getItemCost(item) {
@@ -275,7 +275,7 @@ export class FreseBakeryPage implements OnInit {
       return;
     }
     if(this.checkForSelectionCount(newItem)) {
-      console.log("Have not selected all of the required selections");
+
 
       const alert = await this.alertController.create({
         header: 'Whoops!',
@@ -291,17 +291,17 @@ export class FreseBakeryPage implements OnInit {
       return alert.present();
     }
     let item = this.formatCartItem(newItem);
-    console.log("ITEM ", item);
+
     this.addItem(item);
   }
 
   // check out logic goes here
   async checkOut(final) {
 
-    console.log('Checkout with: ');
+
     if (final.items) {
       for (const x of final.items) {
-        console.log(x.description);
+
       }
     }
 
@@ -342,13 +342,13 @@ export class FreseBakeryPage implements OnInit {
 
   ngOnInit() {
     this.dataService.getProductTypes().subscribe(types => {
-      console.log(types);
+
       this.productTypes = types;
     });
 
     this.dataService.getActiveMenu().subscribe(productResults => {
       this.availableItems = this.formatMenu(productResults);
-      console.log(this.availableItems);
+
     });
   }
 
@@ -368,7 +368,7 @@ export class FreseBakeryPage implements OnInit {
   }
 
   ssdisplayAmount(amount) {
-    console.log("AMT ", amount);
+
     return amount.toFixed(2);
   }
   displayAmount(amount) {

@@ -27,11 +27,11 @@ export class CheckOutComponent implements OnInit {
   }
 
   done() {
-    console.log('Email: ' + this.email);
-    console.log('Phone number: ' + this.phone);
-    console.log('Date/Time of Pickup' + this.todaysDate);
-    console.log('Card or in sotre payment: ' + this.payment);
-    console.log(this.value);
+
+
+
+
+
     //window.location.reload();
   }
 }

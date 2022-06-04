@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-
+import * as validateEmail from '../helpers/emailValidator';
+import * as validatePhone from '../helpers/phoneValidator';
 declare var Stripe;
 import {HttpClient} from "@angular/common/http";
 import {DataServiceService} from "../services/data-service.service";
@@ -63,7 +64,7 @@ export class PayNowPage {
       }
     });
     m.onDidDismiss().then(async (detail: any) => {
-      console.log(detail);
+
       if (detail.data === undefined) {
         return;
       }
@@ -73,10 +74,17 @@ export class PayNowPage {
   }
 
   async requiredFieldsCompleted() {
-    console.log(this.customerInfo);
+
     if (!this.customerInfo.name || !this.customerInfo.email || !this.customerInfo.phone) {
       await this.presentAlertMessage("Please fill out the required fields.");
       return false;
+    } else if(!validateEmail(this.customerInfo.email)) {
+      await this.presentAlertMessage("Please enter a valid email");
+      return false;
+    } else if(!validatePhone(this.customerInfo.phone)) {
+      await this.presentAlertMessage("Please enter a valid phone number");
+      return false;
+
     }
     return true;
   }
@@ -115,16 +123,16 @@ export class PayNowPage {
         name: this.customerInfo.name
       }).toPromise();
     } catch (err) {
-      console.log("ERR");
+
       await this.presentAlertMessage("We had trouble processing your payment. Please try again");
       return;
     }
-    console.log("PAYMENT ", paymentData);
+
     try {
 
       if (paymentData.status !== "succeeded") {
         this.spinnerService.hideSpinner();
-        console.log("payment failed ", paymentData);
+
         await this.presentAlertMessage("We had trouble processing your payment. Please try again");
         return;
       } else {
@@ -164,7 +172,7 @@ export class PayNowPage {
     };
 
     this.card = elements.create('card', {style: style});
-    console.log(this.card);
+
     this.card.mount('#card-element');
 
     this.card.addEventListener('change', event => {
@@ -179,7 +187,7 @@ export class PayNowPage {
     var form = document.getElementById('payment-form');
     form.addEventListener('submssit', async event => {
       event.preventDefault();
-      console.log(event)
+
 
       if (!(await this.requiredFieldsCompleted())) {
         return;
@@ -190,7 +198,7 @@ export class PayNowPage {
           var errorElement = document.getElementById('card-errors');
           errorElement.textContent = result.error.message;
         } else {
-          console.log("R ", result);
+
           this.makePayment(result.token);
         }
       });
@@ -207,7 +215,7 @@ export class PayNowPage {
         var errorElement = document.getElementById('card-errors');
         errorElement.textContent = result.error.message;
       } else {
-        console.log("R ", result);
+
         this.makePayment(result.token);
       }
     });

@@ -73,7 +73,7 @@ export class DatePickerPage implements OnInit {
   }
 
   getHoursForDay() {
-    console.log("SEL ", this.selections);
+
     const days = Object.keys(this.availableTimes).filter(date => {
       const d = new Date(date);
       return (d.getDate() === parseInt(this.selections.day) && d.getMonth() === parseInt(this.selections.month));
@@ -81,7 +81,7 @@ export class DatePickerPage implements OnInit {
       const d = new Date(date);
       return d.getHours();
     });
-    console.log("D ", [...new Set(days)]);
+
     return [...new Set(days)];
   }
   getDaysForMonth() {
@@ -106,7 +106,7 @@ export class DatePickerPage implements OnInit {
         {
           text: 'Ok',
           handler: (value: any) => {
-            console.log("New ", field, " = ", value[name].value);
+
             this.selections[field] = value[name].value;
             binded(field);
           }
@@ -205,7 +205,7 @@ export class DatePickerPage implements OnInit {
   }
   async showDayPicker() {
     const formattedDays = this.formatArrForPicker(this.getDaysForMonth());
-    console.log("DAY S", formattedDays);
+
     const options = this.getPickerOptions("Day", formattedDays, "day");
     let picker = await this.pickerController.create(options);
     await picker.present();
@@ -228,13 +228,13 @@ export class DatePickerPage implements OnInit {
   //   await picker.present();
   //
   //   picker.addEventListener('ionPickerColChange', async (event: any) => {
-  //     console.log("event ", event);
+  //
   //     if (event.detail.name === "Month") {
   //       let index = event.detail.selectedIndex;
   //       const vals = this.getMonthValues();
   //       this.selectedMonth = vals[index];
   //       const val = this.formatArrForPicker(this.getDaysForMonth());
-  //       console.log("v ", val);
+  //
   //       picker.columns[1].options = val;
   //       let opts = this.getPickerOptions();
   //       picker = await this.pickerController.create(opts);

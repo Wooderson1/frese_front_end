@@ -56,7 +56,7 @@ export class SpecialsPage implements OnInit {
     modal.onDidDismiss().then(async (detail: any) => {
       this.spinnerService.hideSpinner();
       if (detail.data && detail.data.success) {
-        await this.presentAlertMessage("Thank you for your order!", this.refreshPage);
+        await this.presentAlertMessage("Thank you for your order! We will email you a receipt.", this.refreshPage);
       }
     });
     await modal.present();
@@ -240,10 +240,20 @@ export class SpecialsPage implements OnInit {
   }
 
   toggleMenu() {
-    console.log("TOGLE" );
+
     this.menuToggled = !this.menuToggled;
   }
-
+  formatMenu(menu) {
+    return this.initializeSelectedSizes(menu);
+  }
+  initializeSelectedSizes(menu) {
+    menu.forEach((item) => {
+      if(item.product_sizes && item.product_sizes.length > 0) {
+        item.product_size_selected = item.product_sizes[0];
+      }
+    });
+    return menu;
+  }
   async ngOnInit() {
     if (window.screen.width < 600) { // 768px portrait
       this.mobile = true;
@@ -252,8 +262,8 @@ export class SpecialsPage implements OnInit {
     this.specialsId = Number(routeParams.get('specialsId'));
     try {
       const res = await this.dataService.getSpecialById(this.specialsId).toPromise();
-      this.products = res.products;
-      console.log(this.products);
+      this.products = this.formatMenu(res.products);
+
     } catch(err) {
       await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
     }
