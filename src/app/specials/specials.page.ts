@@ -270,6 +270,9 @@ export class SpecialsPage implements OnInit {
 
     } catch(err) {
       console.log("debug err, ", JSON.stringify(err));
+      if(err === "overlay does not exist") {
+        return;
+      }
       await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
     }
   }
