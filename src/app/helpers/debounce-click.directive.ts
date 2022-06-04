@@ -29,6 +29,7 @@ export class DebounceClickDirective implements OnInit, OnDestroy {
     this.spinner.showSpinner();
     event.preventDefault();
     event.stopPropagation();
+    console.log("HERE");
     this.clicks.next(event);
     this.spinner.hideSpinner();
   }
