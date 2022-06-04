@@ -269,6 +269,7 @@ export class SpecialsPage implements OnInit {
       await this.spinnerService.hideSpinner();
 
     } catch(err) {
+      console.log("debug err, ", JSON.stringify(err));
       await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
     }
   }
