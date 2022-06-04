@@ -26,6 +26,7 @@ export class SpecialsPage implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               public popoverController: PopoverController) {
+    this.spinnerService.showSpinner().then(() => {});
   }
 
   disableButton(item) {
@@ -265,6 +266,7 @@ export class SpecialsPage implements OnInit {
     try {
       const res = await this.dataService.getSpecialById(this.specialsId).toPromise();
       this.products = this.formatMenu(res.products);
+      await this.spinnerService.hideSpinner();
 
     } catch(err) {
       await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
