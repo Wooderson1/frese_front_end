@@ -25,6 +25,14 @@ const routes: Routes = [
     path: 'specials/:specialsId',
     loadChildren: () => import('./specials/specials.module').then( m => m.SpecialsPageModule)
   },
+  {
+    path: 'specials',
+    redirectTo: 'specials/'
+  },
+  {
+    path: '**',
+    redirectTo: 'frese-bakery'
+  }
 ];
 
 @NgModule({

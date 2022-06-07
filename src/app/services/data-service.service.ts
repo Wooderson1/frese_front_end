@@ -38,6 +38,9 @@ export class DataServiceService {
     return this.orderService.getAvailableSpecialSlots(id);
   }
 
+  getActiveSpecial() : Observable<any> {
+    return this.orderService.getActiveSpecial();
+  }
   getSpecialById(id) : Observable<any> {
     return this.orderService.getSpecialById(id)
   }

@@ -264,7 +264,16 @@ export class SpecialsPage implements OnInit {
     const routeParams = this.route.snapshot.paramMap;
     this.specialsId = Number(routeParams.get('specialsId'));
     try {
-      const res = await this.dataService.getSpecialById(this.specialsId).toPromise();
+      let res;
+      if(this.specialsId === 0) {
+        res = await this.dataService.getActiveSpecial().toPromise();
+      } else {
+        res = await this.dataService.getSpecialById(this.specialsId).toPromise();
+      }
+      let endDate = new Date(res.end);
+      if(endDate < new Date()) {
+        await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
+      }
       this.products = this.formatMenu(res.products);
       await this.spinnerService.hideSpinner();
 
