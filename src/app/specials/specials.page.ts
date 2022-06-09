@@ -272,6 +272,7 @@ export class SpecialsPage implements OnInit {
       }
       let endDate = new Date(res.end);
       if(endDate < new Date()) {
+        await this.spinnerService.hideSpinner();
         await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
       }
       this.products = this.formatMenu(res.products);
@@ -282,6 +283,7 @@ export class SpecialsPage implements OnInit {
       if(err === "overlay does not exist") {
         return;
       }
+      await this.spinnerService.hideSpinner();
       await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
     }
   }
