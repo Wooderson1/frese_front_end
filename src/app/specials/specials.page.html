@@ -129,6 +129,7 @@
                       </ng-template>
                       <ion-card-header>
                         <ion-card-title>{{item.title}}</ion-card-title>
+                        <ion-card-subtitle>{{item.description}}</ion-card-subtitle>
                         <!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
                         <ion-card-subtitle>Price: ${{getItemCost(item)}}</ion-card-subtitle>
                         <ion-card-subtitle *ngIf="item.quantity > 0">Amount left: {{item.quantity}}</ion-card-subtitle>
