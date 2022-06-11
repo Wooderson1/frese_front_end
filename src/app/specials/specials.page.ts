@@ -268,6 +268,7 @@ export class SpecialsPage implements OnInit {
       if(this.specialsId === 0) {
         res = await this.dataService.getActiveSpecial().toPromise();
         this.specialsId = res.id;
+        console.log("SP ", this.specialsId);
       } else {
         res = await this.dataService.getSpecialById(this.specialsId).toPromise();
       }
