@@ -319,6 +319,7 @@ export class SpecialsPage implements OnInit {
       buttons: [{
         text: 'Okay',
         cssClass: 'primary',
+        role: 'cancel',
         handler: () => {
           binded && binded();
         }
