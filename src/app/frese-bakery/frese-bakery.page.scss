@@ -2,25 +2,13 @@
 .add-to-cart {
   //justify-content: flex-end
 }
-
 .item-image {
-  align-items: center;
-
-  //width:200px;
-  //height:200px;
+  width:inherit;
+  height:200px;
   //max-width: 250px;
   object-fit:cover;
   overflow: hidden;
-  object-position: center center;
 }
-
-.outer {
-  object-fit:cover;
-  width: 200px;
-  height: 200px;
-  overflow: hidden;
-}
-
 .item-row {
   //overflow: hidden;
   //width: 25%;

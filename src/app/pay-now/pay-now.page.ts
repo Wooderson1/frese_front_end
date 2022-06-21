@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import * as validateEmail from '../helpers/emailValidator';
 import * as validatePhone from '../helpers/phoneValidator';
 declare var Stripe;
@@ -14,6 +14,7 @@ import {error} from "protractor";
   selector: 'app-pay-now',
   templateUrl: './pay-now.page.html',
   styleUrls: ['./pay-now.page.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PayNowPage {
   stripe = Stripe('pk_live_51KasQqEZvpspKOfSzW7sdVtBJmH1pVuJ7MkqdkFvwMqH1FG2RkSdpI5qDqEzsxeNgUOwODddzocbKqlRu90DAnMA00Y537FNq1');
@@ -157,7 +158,6 @@ export class PayNowPage {
   ngOnDestroy() {
     if (this.card) {
       // We remove event listener here to keep memory clean
-      this.card.removeEventListener('change', this.cardHandler);
       this.card.destroy();
     }
   }
@@ -194,7 +194,7 @@ export class PayNowPage {
     });
 
     var form = document.getElementById('payment-form');
-    form.addEventListener('submssit', async event => {
+    form.addEventListener('submit', async event => {
       event.preventDefault();
 
 
