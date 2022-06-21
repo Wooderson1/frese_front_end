@@ -35,9 +35,11 @@ export class PayNowPage {
   }
 
   async ngOnInit() {
+    this.pickupDate = moment(Object.keys(this.availableTimes)[0]).toDate();
+  }
+  async ngAfterViewInit() {
     this.setupStripe();
     // this.availableTimes = await this.dataService.getAvailableSpecialSlots().toPromise();
-    this.pickupDate = moment(Object.keys(this.availableTimes)[0]).toDate();
   }
 
   cancelPayment() {
@@ -152,7 +154,13 @@ export class PayNowPage {
 
     }
   }
-
+  ngOnDestroy() {
+    if (this.card) {
+      // We remove event listener here to keep memory clean
+      this.card.removeEventListener('change', this.cardHandler);
+      this.card.destroy();
+    }
+  }
   setupStripe() {
     let elements = this.stripe.elements();
     var style = {
