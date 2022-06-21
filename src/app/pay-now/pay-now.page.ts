@@ -8,6 +8,7 @@ import {AlertController, ModalController} from "@ionic/angular";
 import {SpinnerService} from "../services/spinner.service";
 import {DatePickerPage} from "../date-picker/date-picker.page";
 import * as moment from "moment";
+import {error} from "protractor";
 
 @Component({
   selector: 'app-pay-now',
@@ -214,6 +215,7 @@ export class PayNowPage {
       if (result.error) {
         var errorElement = document.getElementById('card-errors');
         errorElement.textContent = result.error.message;
+        console.log(JSON.stringify(errorElement));
       } else {
 
         this.makePayment(result.token);

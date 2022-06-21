@@ -131,7 +131,9 @@
                   <ion-row>
                     <div *ngFor="let item of getProductsForType(type)">
                       <ion-card class="item-row" *ngIf="item.typeId === type.id">
-                        <ion-img class="item-image" *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
+                        <div class="outer">
+                          <img class="item-image" *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl">
+                        </div>
                         <ng-template #noPhoto>
                           <ion-img class="item-image" src="assets/images/pizza.jpg"></ion-img>
                         </ng-template>

@@ -3,7 +3,26 @@
   //justify-content: flex-end
 }
 
+.item-image {
+  align-items: center;
+
+  //width:200px;
+  //height:200px;
+  //max-width: 250px;
+  object-fit:cover;
+  overflow: hidden;
+  object-position: center center;
+}
+
+.outer {
+  object-fit:cover;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+}
+
 .item-row {
+  //overflow: hidden;
   //width: 25%;
   max-height: 100%;
   padding: 0;
@@ -60,13 +79,6 @@ ion-menu{
   height: 100%;
 }
 
-.item-image {
-  width:inherit;
-  height:200px;
-  //max-width: 250px;
-  object-fit:cover;
-  overflow: hidden;
-}
 
 
 .float {
