@@ -120,7 +120,6 @@ export class DatePickerPage implements OnInit {
         },
       ]
     };
-
   }
 
   getMonthValues() {

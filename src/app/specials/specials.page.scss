@@ -3,19 +3,25 @@
   //justify-content: flex-end
 }
 
-.item-row {
-  //width: 30%;
-  max-height: 100%;
-  max-width: 250px;
-}
-
 .full_size_row {
   height: 100%;
 }
-
 .item-image {
-  max-width: 250px;
-  height: 50%;
+  width:inherit;
+  height:200px;
+  //max-width: 250px;
+  object-fit:cover;
+  overflow: hidden;
+}
+.item-row {
+  //overflow: hidden;
+  //width: 25%;
+  max-height: 100%;
+  padding: 0;
+  //max-height: 100%;
+  max-width: 100%;
+  width: 200px;
+  //max-width: 39%;
 }
 .total-menu {
   position: fixed;
