@@ -47,6 +47,7 @@ export class SpecialsPage implements OnInit {
       return;
     }
     const availableTimes = await this.dataService.getAvailableSpecialSlots(this.specialsId).toPromise();
+
     const modal = await this.modalController.create({
       component: PayNowPage,
       componentProps: {
@@ -257,12 +258,7 @@ export class SpecialsPage implements OnInit {
     });
     return menu;
   }
-  async ngOnInit() {
-    if (window.screen.width < 600) { // 768px portrait
-      this.mobile = true;
-    }
-    const routeParams = this.route.snapshot.paramMap;
-    this.specialsId = Number(routeParams.get('specialsId'));
+  async validateSpecial() {
     try {
       let res;
       if(this.specialsId === 0) {
@@ -282,12 +278,22 @@ export class SpecialsPage implements OnInit {
 
     } catch(err) {
       console.log("debug err, ", JSON.stringify(err));
-      if(err === "overlay does not exist") {
-        return;
+      if(err !== "overlay does not exist") {
+        // await this.spinnerService.hideSpinner();
+        console.log('here')
+        await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
       }
-      await this.spinnerService.hideSpinner();
-      await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
     }
+  }
+  async ionViewWillEnter() {
+    await this.validateSpecial();
+  }
+  async ngOnInit() {
+    if (window.screen.width < 600) { // 768px portrait
+      this.mobile = true;
+    }
+    const routeParams = this.route.snapshot.paramMap;
+    this.specialsId = Number(routeParams.get('specialsId'));
   }
   addOnKeys(product) {
     return Object.keys(product.product_add_on_values);
