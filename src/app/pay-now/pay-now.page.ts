@@ -1,6 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import * as validateEmail from '../helpers/emailValidator';
 import * as validatePhone from '../helpers/phoneValidator';
+
 declare var Stripe;
 import {HttpClient} from "@angular/common/http";
 import {DataServiceService} from "../services/data-service.service";
@@ -28,6 +29,8 @@ export class PayNowPage {
   pickupDate;
   formattedDate;
   availableTimes;
+  cart;
+  purchaseInProgress = false;
 
   constructor(private http: HttpClient,
               private spinnerService: SpinnerService,
@@ -39,6 +42,7 @@ export class PayNowPage {
   async ngOnInit() {
     this.pickupDate = moment(Object.keys(this.availableTimes)[0]).toDate();
   }
+
   async ngAfterViewInit() {
     this.setupStripe();
     // this.availableTimes = await this.dataService.getAvailableSpecialSlots().toPromise();
@@ -83,10 +87,10 @@ export class PayNowPage {
     if (!this.customerInfo.name || !this.customerInfo.email || !this.customerInfo.phone) {
       await this.presentAlertMessage("Please fill out the required fields.");
       return false;
-    } else if(!validateEmail(this.customerInfo.email)) {
+    } else if (!validateEmail(this.customerInfo.email)) {
       await this.presentAlertMessage("Please enter a valid email");
       return false;
-    } else if(!validatePhone(this.customerInfo.phone)) {
+    } else if (!validatePhone(this.customerInfo.phone)) {
       await this.presentAlertMessage("Please enter a valid phone number");
       return false;
 
@@ -117,51 +121,42 @@ export class PayNowPage {
   async makePayment(token) {
     this.spinnerService.showSpinner();
     let paymentData;
+    this.cart.email = this.customerInfo.email;
+    this.cart.phone = this.customerInfo.phone;
+    this.cart.name = this.customerInfo.name;
+    this.cart.pickupTime = this.pickupDate;
+    this.cart.notes = this.orderNotes;
     try {
-      paymentData = await this.dataService.processPayment({
-        amount: this.total*100,
+      paymentData = await this.dataService.processPaymentAndCreateOrder({
+        amount: this.total * 100,
+        cart: this.cart,
         currency: 'usd',
         token: token.id,
-        orderId: this.orderId,
-        email: this.customerInfo.email,
-        phone: this.customerInfo.phone,
-        name: this.customerInfo.name
       }).toPromise();
     } catch (err) {
-
       await this.presentAlertMessage("We had trouble processing your payment. Please try again");
+      this.purchaseInProgress = false;
       return;
     }
 
-    try {
+    if (paymentData.status !== "succeeded") {
+      this.spinnerService.hideSpinner();
 
-      if (paymentData.status !== "succeeded") {
-        this.spinnerService.hideSpinner();
+      await this.presentAlertMessage("We had trouble processing your payment. Please try again");
+      this.purchaseInProgress = false;
 
-        await this.presentAlertMessage("We had trouble processing your payment. Please try again");
-        return;
-      } else {
-        await this.dataService.updateOrderDetails(this.orderId, {
-          notes: this.orderNotes,
-          pickupTime: this.pickupDate
-        }).toPromise();
-        this.modalController.dismiss({success: true});
-      }
-    } catch (err) {
-      this.dataService.updateOrderDetails(this.orderId, {
-        notes: this.orderNotes,
-        pickupTime: this.pickupDate
-      }).toPromise();
-      this.modalController.dismiss({success: true});
-
+      return;
     }
+    this.modalController.dismiss({success: true});
   }
+
   ngOnDestroy() {
     if (this.card) {
       // We remove event listener here to keep memory clean
       this.card.destroy();
     }
   }
+
   setupStripe() {
     let elements = this.stripe.elements();
     var style = {
@@ -203,7 +198,7 @@ export class PayNowPage {
         return;
       }
 
-        this.stripe.createToken(this.card).then(result => {
+      this.stripe.createToken(this.card).then(result => {
         if (result.error) {
           var errorElement = document.getElementById('card-errors');
           errorElement.textContent = result.error.message;
@@ -216,7 +211,9 @@ export class PayNowPage {
   }
 
   async Pay() {
+    this.purchaseInProgress = true;
     if (!(await this.requiredFieldsCompleted())) {
+      this.purchaseInProgress = false;
       return;
     }
 
@@ -224,9 +221,8 @@ export class PayNowPage {
       if (result.error) {
         var errorElement = document.getElementById('card-errors');
         errorElement.textContent = result.error.message;
-        console.log(JSON.stringify(errorElement));
+        this.purchaseInProgress = false;
       } else {
-
         this.makePayment(result.token);
       }
     });

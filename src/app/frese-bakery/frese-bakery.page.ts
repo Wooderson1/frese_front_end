@@ -132,7 +132,6 @@ export class FreseBakeryPage implements OnInit {
       return;
     }
     const availableTimes = await this.dataService.getAvailableTimeSlots().toPromise();
-    console.log("AT ", Object.keys(availableTimes));
     if(Object.keys(availableTimes).length <= 0) {
       await this.presentAlertMessage("Sorry it seems like we're too busy to take new orders at this time! Please try again later.", this.refreshPage);
       return;

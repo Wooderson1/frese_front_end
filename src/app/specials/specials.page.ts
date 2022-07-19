@@ -41,18 +41,19 @@ export class SpecialsPage implements OnInit {
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
 
-    const orderRes = await this.dataService.createOrder(this.cart).toPromise();
-    if (!orderRes.id) {
-      await this.presentAlertMessage("Something went wrong creating your order, please try again");
-      return;
-    }
+    // const orderRes = await this.dataService.createOrder(this.cart).toPromise();
+    // if (!orderRes.id) {
+    //   await this.presentAlertMessage("Something went wrong creating your order, please try again");
+    //   return;
+    // }
     const availableTimes = await this.dataService.getAvailableSpecialSlots(this.specialsId).toPromise();
 
     const modal = await this.modalController.create({
       component: PayNowPage,
       componentProps: {
         availableTimes,
-        orderId: orderRes.id,
+        cart: this.cart,
+        // orderId: orderRes.id,
         total: this.cart.total,
         subtotal: this.cart.subtotal,
       }
@@ -264,7 +265,6 @@ export class SpecialsPage implements OnInit {
       if(this.specialsId === 0) {
         res = await this.dataService.getActiveSpecial().toPromise();
         this.specialsId = res.id;
-        console.log("SP ", this.specialsId);
       } else {
         res = await this.dataService.getSpecialById(this.specialsId).toPromise();
       }
@@ -277,10 +277,8 @@ export class SpecialsPage implements OnInit {
       await this.spinnerService.hideSpinner();
 
     } catch(err) {
-      console.log("debug err, ", JSON.stringify(err));
       if(err !== "overlay does not exist") {
         // await this.spinnerService.hideSpinner();
-        console.log('here')
         await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
       }
     }

@@ -12,6 +12,13 @@
 button {
   color: var(--ion-color-contrast);
 }
+.full_button:disabled,
+.pay-button:disabled,
+button[disabled]{
+  //border: 1px solid #999999;
+  //background-color: #cccccc;
+  //color: #666666;
+}
 .full_button{
   background-color: var(--ion-color-frese);
   width: 100%;

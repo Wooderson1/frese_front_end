@@ -10,6 +10,9 @@ export class StripeService {
   apiUrl = config.App.baseUrl;
   constructor(public http: HttpClient) { }
 
+  processPaymentAndCreateOrder(data) {
+    return this.http.post(`${this.apiUrl}/processOrderAndPay`, data)
+  }
   processPayment(data) {
     const {phone, email, amount, currency, token, orderId, name } = data;
     return this.http.post(`${this.apiUrl}/stripe/charge`, {

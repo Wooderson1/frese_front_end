@@ -50,4 +50,7 @@ export class DataServiceService {
   processPayment(data): Observable<any> {
     return this.stripeService.processPayment(data);
   }
+  processPaymentAndCreateOrder(data): Observable<any> {
+    return this.stripeService.processPaymentAndCreateOrder(data);
+  }
 }
