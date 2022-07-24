@@ -22,7 +22,8 @@ export class PayNowPage {
   // stripe = Stripe('pk_test_51KasQqEZvpspKOfSlXnGLRy8IxkOOIZfo5bSREuWGPiK4HCkRyPaSy3m6TqFll4shlG3czSvOiE6eeUEUBG4Ueat00nSgYii4r');
   card: any;
   customerInfo: any = {};
-  orderId;
+  coupon;
+  order;
   createdOrder;
   orderNotes;
   total;
@@ -30,6 +31,7 @@ export class PayNowPage {
   formattedDate;
   availableTimes;
   cart;
+  couponApplied = false;
   purchaseInProgress = false;
 
   constructor(private http: HttpClient,
@@ -37,6 +39,11 @@ export class PayNowPage {
               private alertController: AlertController,
               private modalController: ModalController,
               private dataService: DataServiceService) {
+    // this.customerInfo = {
+    //   name: "test",
+    //   email: "test@email.com",
+    //   phone: "1231231231"
+    // }
   }
 
   async ngOnInit() {
@@ -50,6 +57,17 @@ export class PayNowPage {
 
   cancelPayment() {
     this.modalController.dismiss();
+  }
+  async applyCoupon() {
+    const response = await this.dataService.applyCoupon(this.order.id, this.coupon).toPromise();
+    if(response.error) {
+      await this.presentAlertMessage(response.error, null);
+      this.coupon = null;
+      return;
+    } else {
+      this.couponApplied = true;
+    }
+    this.order = response.message;
   }
 
   formatDate() {
@@ -121,17 +139,21 @@ export class PayNowPage {
   async makePayment(token) {
     this.spinnerService.showSpinner();
     let paymentData;
-    this.cart.email = this.customerInfo.email;
-    this.cart.phone = this.customerInfo.phone;
-    this.cart.name = this.customerInfo.name;
-    this.cart.pickupTime = this.pickupDate;
-    this.cart.notes = this.orderNotes;
+    // this.cart.email = this.customerInfo.email;
+    // this.cart.phone = this.customerInfo.phone;
+    // this.cart.name = this.customerInfo.name;
+    // this.cart.pickupTime = this.pickupDate;
+    // this.cart.notes = this.orderNotes;
     try {
-      paymentData = await this.dataService.processPaymentAndCreateOrder({
-        amount: this.total * 100,
-        cart: this.cart,
+      paymentData = await this.dataService.processPayment({
+        amount: this.order.total * 100,
+        // cart: this.cart,
         currency: 'usd',
         token: token.id,
+        orderId: this.order.id,
+        email: this.customerInfo.email,
+        phone: this.customerInfo.phone,
+        name: this.customerInfo.name
       }).toPromise();
     } catch (err) {
       await this.presentAlertMessage("We had trouble processing your payment. Please try again");
@@ -146,7 +168,18 @@ export class PayNowPage {
       this.purchaseInProgress = false;
 
       return;
+    } else {
+      await this.dataService.updateOrderDetails(this.order.id, {
+        notes: this.orderNotes,
+        pickupTime: this.pickupDate
+      }).toPromise();
+      this.modalController.dismiss({success: true});
     }
+  } catch(err) {
+    this.dataService.updateOrderDetails(this.order.id, {
+      notes: this.orderNotes,
+      pickupTime: this.pickupDate
+    }).toPromise();
     this.modalController.dismiss({success: true});
   }
 

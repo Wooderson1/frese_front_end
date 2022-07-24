@@ -41,20 +41,20 @@ export class SpecialsPage implements OnInit {
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
 
-    // const orderRes = await this.dataService.createOrder(this.cart).toPromise();
-    // if (!orderRes.id) {
-    //   await this.presentAlertMessage("Something went wrong creating your order, please try again");
-    //   return;
-    // }
+    const orderRes = await this.dataService.createOrder(this.cart).toPromise();
+    console.log("TITS ", orderRes.id);
+    if (!orderRes.id) {
+      await this.presentAlertMessage("Something went wrong creating your order, please try again");
+      return;
+    }
     const availableTimes = await this.dataService.getAvailableSpecialSlots(this.specialsId).toPromise();
 
     const modal = await this.modalController.create({
       component: PayNowPage,
       componentProps: {
         availableTimes,
-        cart: this.cart,
-        // orderId: orderRes.id,
-        total: this.cart.total,
+        // cart: this.cart,
+        order: orderRes,
         subtotal: this.cart.subtotal,
       }
     });

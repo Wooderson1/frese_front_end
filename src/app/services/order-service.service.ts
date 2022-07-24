@@ -18,6 +18,9 @@ export class OrderServiceService {
   getActiveMenu() {
     return this.http.get(`${this.apiUrl}/activeProductsAndSizes`);
   }
+  applyCoupon(orderId, coupon) {
+    return this.http.post(`${this.apiUrl}/orders/${orderId}/coupon/${coupon}/apply`, {});
+  }
   createOrder(o) {
     o.status = "pending";
     return this.http.post(`${this.apiUrl}/orders`, o)

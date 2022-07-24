@@ -44,6 +44,9 @@ export class DataServiceService {
   getSpecialById(id) : Observable<any> {
     return this.orderService.getSpecialById(id)
   }
+  applyCoupon(orderId, coupon) : Observable<any> {
+    return this.orderService.applyCoupon(orderId, coupon);
+  }
 
   // Stripe
 
