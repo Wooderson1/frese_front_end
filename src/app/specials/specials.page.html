@@ -133,7 +133,7 @@
                         <!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
                         <ion-card-subtitle>Price: ${{displayAmount(getItemCost(item))}}</ion-card-subtitle>
                         <ion-card-subtitle *ngIf="item.quantity > 0">Amount left: {{item.quantity}}</ion-card-subtitle>
-                        <ion-card-subtitle class="soldout" *ngIf="item.quantity <= 0">SOLD OUT</ion-card-subtitle>
+                        <ion-card-subtitle class="soldout" *ngIf="item.quantity === 0">SOLD OUT</ion-card-subtitle>
                       </ion-card-header>
                       <ion-list *ngIf="item.product_sizes.length > 0">
                         <div class="subText">Select a Size</div>
