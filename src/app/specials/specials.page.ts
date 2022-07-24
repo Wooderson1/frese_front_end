@@ -42,7 +42,6 @@ export class SpecialsPage implements OnInit {
     this.cart.subtotal = this.getSubtotal();
 
     const orderRes = await this.dataService.createOrder(this.cart).toPromise();
-    console.log("TITS ", orderRes.id);
     if (!orderRes.id) {
       await this.presentAlertMessage("Something went wrong creating your order, please try again");
       return;
@@ -159,7 +158,7 @@ export class SpecialsPage implements OnInit {
   }
   // Update cart
   async updateCart(newItem) {
-    if(newItem.quantity <= 0) {
+    if(newItem.quantity === 0) {
       await this.presentAlertMessage("Whoops we don't have that many left, we've updated your cart");
       return;
     }
