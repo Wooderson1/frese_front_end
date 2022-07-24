@@ -137,8 +137,9 @@
                         </ng-template>
                         <ion-card-header class="bottom">
                           <ion-card-title>{{item.title}}</ion-card-title>
+                          <ion-card-subtitle>{{item.description}}</ion-card-subtitle>
                           <!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
-                          <ion-card-subtitle>Price: ${{getItemCost(item)}}</ion-card-subtitle>
+                          <ion-card-subtitle>Price: ${{displayAmount(getItemCost(item))}}</ion-card-subtitle>
                         </ion-card-header>
                         <ion-list *ngIf="item.product_sizes.length > 0">
                           <div class="subText">Select a Size</div>
