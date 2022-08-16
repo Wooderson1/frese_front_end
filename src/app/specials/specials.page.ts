@@ -5,6 +5,7 @@ import {AlertController, isPlatform, ModalController, PopoverController} from "@
 import {PayNowPage} from "../pay-now/pay-now.page";
 import {SpinnerService} from "../services/spinner.service";
 import {PopoverComponent} from "../popover/popover.component";
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-specials',
@@ -19,11 +20,14 @@ export class SpecialsPage implements OnInit {
   products = [];
   mobile = false;
   menuToggled = false;
+  types;
+  specialTypeId;
   constructor(public dataService: DataServiceService,
               private spinnerService: SpinnerService,
               private modalController: ModalController,
               private alertController: AlertController,
               private router: Router,
+              private storage: Storage,
               private route: ActivatedRoute,
               public popoverController: PopoverController) {
     this.spinnerService.showSpinner().then(() => {});
@@ -31,6 +35,20 @@ export class SpecialsPage implements OnInit {
 
   disableButton(item) {
     return item.quantity == 0;
+  }
+
+  sortBySpecial(products) {
+    const specialTypeId = this.types.find(element => {
+      return element.name === "Special";
+    })
+    return products.sort((a,b) => {
+      console.log(a.typeId);
+      console.log(specialTypeId.id);
+      if(a.typeId ===specialTypeId.id) {
+        return -1;
+      }
+      return 1;
+    })
   }
 
   async Pay() {
@@ -267,16 +285,19 @@ export class SpecialsPage implements OnInit {
       } else {
         res = await this.dataService.getSpecialById(this.specialsId).toPromise();
       }
+      console.log(res);
       let endDate = new Date(res.end);
       if(endDate < new Date()) {
         await this.spinnerService.hideSpinner();
         await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
       }
       this.products = this.formatMenu(res.products);
+      this.products = this.sortBySpecial(this.products);
       await this.spinnerService.hideSpinner();
 
     } catch(err) {
       if(err !== "overlay does not exist") {
+        console.log(err);
         // await this.spinnerService.hideSpinner();
         await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
       }
@@ -286,11 +307,15 @@ export class SpecialsPage implements OnInit {
     await this.validateSpecial();
   }
   async ngOnInit() {
+    console.log("INIT")
     if (window.screen.width < 600) { // 768px portrait
       this.mobile = true;
     }
     const routeParams = this.route.snapshot.paramMap;
     this.specialsId = Number(routeParams.get('specialsId'));
+    this.types = await this.storage.get('types');
+    console.log(this.types);
+
   }
   addOnKeys(product) {
     return Object.keys(product.product_add_on_values);

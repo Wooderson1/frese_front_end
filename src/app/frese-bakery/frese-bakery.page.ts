@@ -156,7 +156,7 @@ export class FreseBakeryPage implements OnInit {
 
   getProductsForType(type) {
     if (!this.availableItems) {
-      return;
+      return [];
     }
     return this.availableItems.filter(t => t.typeId === type.id);
   }

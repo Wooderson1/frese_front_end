@@ -8,20 +8,38 @@
 }
 .item-image {
   width:inherit;
-  height:200px;
+  //height:100px;
   //max-width: 250px;
   object-fit:cover;
   overflow: hidden;
 }
+ion-grid {
+  --ion-grid-padding-sm: 20px;
+  --ion-grid-padding-md: 30px;
+  --ion-grid-padding-lg: 40px;
+  --ion-grid-padding-xl: 60px;
+}
+.col {
+  hegith: 100%;
+}
+.fancy-button {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border-radius: 0px;
+  position: absolute;
+  bottom: 0;
+}
 .item-row {
   //overflow: hidden;
   //width: 25%;
-  max-height: 100%;
-  padding: 0;
   //max-height: 100%;
-  max-width: 100%;
-  width: 200px;
+  //padding: 0;
+  //max-height: 100%;
+  //max-width: 100%;
+  //width: 200px;
   //max-width: 39%;
+  height: 100%;
 }
 .total-menu {
   position: fixed;
