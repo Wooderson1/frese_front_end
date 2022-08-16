@@ -42,8 +42,6 @@ export class SpecialsPage implements OnInit {
       return element.name === "Special";
     })
     return products.sort((a,b) => {
-      console.log(a.typeId);
-      console.log(specialTypeId.id);
       if(a.typeId ===specialTypeId.id) {
         return -1;
       }
@@ -285,7 +283,6 @@ export class SpecialsPage implements OnInit {
       } else {
         res = await this.dataService.getSpecialById(this.specialsId).toPromise();
       }
-      console.log(res);
       let endDate = new Date(res.end);
       if(endDate < new Date()) {
         await this.spinnerService.hideSpinner();
@@ -297,7 +294,7 @@ export class SpecialsPage implements OnInit {
 
     } catch(err) {
       if(err !== "overlay does not exist") {
-        console.log(err);
+        console.log("Err in specials page ", err);
         // await this.spinnerService.hideSpinner();
         // await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
       }
