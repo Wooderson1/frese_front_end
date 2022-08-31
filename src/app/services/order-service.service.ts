@@ -33,6 +33,11 @@ export class OrderServiceService {
     return this.http.get(`${this.apiUrl}/specials/${id}`)
   }
 
+  unsubscribe(email) {
+    return this.http.patch(`${this.apiUrl}/users`, {
+      email
+    });
+  }
   updateOrderDetails(orderId, body) {
     return this.http.patch(`${this.apiUrl}/orders/${orderId}/updateOrderDetails`, body);
   }

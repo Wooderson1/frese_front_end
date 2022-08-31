@@ -37,6 +37,9 @@ export class DataServiceService {
   getAvailableSpecialSlots(id): Observable<any> {
     return this.orderService.getAvailableSpecialSlots(id);
   }
+  unsubscribe(email): Observable<any> {
+    return this.orderService.unsubscribe(email);
+  }
 
   getActiveSpecial() : Observable<any> {
     return this.orderService.getActiveSpecial();

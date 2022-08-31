@@ -30,9 +30,13 @@ const routes: Routes = [
     redirectTo: 'specials/'
   },
   {
+    path: 'unsubscribe/:email',
+    loadChildren: () => import('./unsubscribe/unsubscribe.module').then( m => m.UnsubscribePageModule)
+  },
+  {
     path: '**',
     redirectTo: 'frese-bakery'
-  }
+  },
 ];
 
 @NgModule({
