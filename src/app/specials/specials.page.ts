@@ -99,7 +99,7 @@ export class SpecialsPage implements OnInit {
   }
   getTotal() {
     let subtotal = this.getSubtotal();
-    return this.round(subtotal + this.getTax(subtotal));
+    return this.round(subtotal + this.getTax());
   }
 
 
@@ -109,9 +109,35 @@ export class SpecialsPage implements OnInit {
   getAddOnValues(item, key) {
     return item.add_ons[key];
   }
+  shouldBeTaxed(item) {
+    const BreadType = this.types.find(element => {
+      return element.name === "Bread";
+    })
+    return item.typeId !== BreadType.id;
+  }
 
-  getTax(total) {
-    return this.round(total * this.TAX_CONSTANT);
+  getTax() {
+    let total = 0;
+    for (const item of this.cart.items) {
+      let item_cost = item.price;
+      Object.keys(item.selections).forEach(key => {
+        if (item.selections[key].cost) {
+          item_cost += item.selections[key].cost;
+        }
+      });
+      Object.keys(item.add_ons).forEach(key => {
+        for (const value of item.add_ons[key]) {
+          if (value.cost) {
+            item_cost += value.cost;
+          }
+        }
+      });
+      if(this.shouldBeTaxed(item)) {
+        total += item_cost * item.quantity * this.TAX_CONSTANT;
+      } else {
+      }
+    }
+    return this.round(total);
   }
 
   displaySubtotal() {
@@ -241,6 +267,7 @@ export class SpecialsPage implements OnInit {
       product_size_id: this.formatSize(item),
       selections: this.formatSelections(item),
       add_ons: this.formatAddOns(item),
+      typeId: item.typeId,
     };
   }
 
@@ -304,14 +331,12 @@ export class SpecialsPage implements OnInit {
     await this.validateSpecial();
   }
   async ngOnInit() {
-    console.log("INIT")
     if (window.screen.width < 600) { // 768px portrait
       this.mobile = true;
     }
     const routeParams = this.route.snapshot.paramMap;
     this.specialsId = Number(routeParams.get('specialsId'));
     this.types = await this.storage.get('types');
-    console.log(this.types);
 
   }
   addOnKeys(product) {
