@@ -93,12 +93,6 @@
     <ion-header>
       <ion-toolbar>
         <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
-        <div slot="end" *ngIf="!onMobile()">
-<!--          <ion-button color="frese" (click)="openPopover($event)">-->
-<!--            <ion-icon slot="start" name="information-circle-outline"></ion-icon>-->
-<!--            About Us-->
-<!--          </ion-button>-->
-        </div>
         <div slot="end" class="ion-padding-end">
           <ion-buttons slot="start">
             <ion-badge (click)="toggleMenu()" *ngIf="cart.items.length>0" class="badge" color="frese">

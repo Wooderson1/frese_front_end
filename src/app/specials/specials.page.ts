@@ -296,7 +296,7 @@ export class SpecialsPage implements OnInit {
       if(err !== "overlay does not exist") {
         console.log("Err in specials page ", err);
         // await this.spinnerService.hideSpinner();
-        // await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
+        await this.presentAlertMessage("That special is not currently active, please check out our full menu here!", this.goHome);
       }
     }
   }

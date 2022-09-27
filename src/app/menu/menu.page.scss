@@ -1,0 +1,23 @@
+.active-item {
+  color: var(--ion-color-frese);
+  font-weight: 500;
+  ion-icon {
+    color: var(--ion-color-frese);
+  }
+}
+.iconColor {
+  ion-icon {
+    color: var(--ion-color-frese);
+  }
+}
+
+@media(min-width: 768px) {
+  ion-router-outlet {
+    margin-top: 100px;
+  }
+}
+@media(max-width: 768px) {
+  ion-router-outlet {
+    margin-top: 56px;
+  }
+}
