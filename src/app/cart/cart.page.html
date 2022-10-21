@@ -17,19 +17,18 @@
         <ion-label>
           <ion-grid>
             <ion-row>
-              <ion-col size="1">
-                  <ion-button (click)="this.orderService.updateCart(item, -1)">
+              <ion-col class="no-padding" size="1">
+                  <button class="incrementButtons" (click)="this.orderService.updateCart(item, -1)">
                 <ion-icon class="centerMe" name="remove-outline"></ion-icon>
-                </ion-button>
-
+                </button>
               </ion-col>
               <ion-col class="centerMe" size="1">
                 <div>{{item.quantity}}</div>
               </ion-col>
-              <ion-col size="1">
-                <ion-button (click)="this.updateCart(item, 1)">
+              <ion-col class="no-padding" size="1">
+                <button class="incrementButtons" (click)="this.updateCart(item, 1)">
                   <ion-icon class="centerMe" name="add-outline"></ion-icon>
-                </ion-button>
+                </button>
               </ion-col>
               <ion-col size="7" class="verticalAlign">
                 <div class="product-title">{{item.product_name}}</div>
