@@ -1,4 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
+import {OrderService} from "../../services/order.service";
+import {ModalController} from "@ionic/angular";
+import {PayNowPage} from "../../pay-now/pay-now.page";
+import { CartPage } from 'src/app/cart/cart.page';
 
 @Component({
   selector: 'app-header',
@@ -7,24 +11,47 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  @Input()title: string;
+  @Input()titleTest: string;
+  orderBody: any;
+  specialsId;
   menuToggled = false;
   items = 3;
   cart = {
-    items: [1,2,3]
+    items: []
   }
+  isModalOpen = false;
 
-  constructor() { }
+  constructor(public orderService: OrderService, private cartController: ModalController) { }
+
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
+  }
 
   ngOnInit() {
+    this.orderService.orderUpdated.subscribe((vals) => {
+      const {order, specialsId} = vals;
+      this.cart = order;
+      this.specialsId = specialsId;
+    })
     // this.cart.items = [1,2,3];
   }
-  toggleMenu() {
-    console.log("TOGGLE");
+  async toggleMenu() {
     this.menuToggled = !this.menuToggled;
+    const modal = await this.cartController.create({
+      component: CartPage,
+      componentProps: {
+        cart: this.cart,
+        specialsId: this.specialsId
+      }
+    });
+    modal.onDidDismiss().then(async (detail: any) => {
+    });
+    await modal.present();
   }
 
   getTotalQuantity() {
-    return 3;
+    return this.cart.items.reduce((prev , x) => prev + x.quantity, 0);
+  }
+  ngOnChanges(changes: SimpleChanges) {
   }
 }

@@ -1,0 +1,186 @@
+
+.add-to-cart {
+  //justify-content: flex-end
+}
+
+.full_size_row {
+  height: 100%;
+}
+.item-image {
+  width:inherit;
+  //height:100px;
+  //max-width: 250px;
+  object-fit:cover;
+  overflow: hidden;
+}
+.products-ion-grid {
+  --ion-grid-padding-sm: 20px;
+  --ion-grid-padding-md: 30px;
+  --ion-grid-padding-lg: 40px;
+  --ion-grid-padding-xl: 60px;
+}
+.col {
+  hegith: 100%;
+}
+.fancy-button {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border-radius: 0px;
+  position: absolute;
+  bottom: 0;
+}
+.item-row {
+  //overflow: hidden;
+  //width: 25%;
+  //max-height: 100%;
+  //padding: 0;
+  //max-height: 100%;
+  //max-width: 100%;
+  //width: 200px;
+  //max-width: 39%;
+  height: 100%;
+}
+.total-menu {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  //max-width: 390px;
+  //min-width: 350px;
+  //right:0;
+  //width: inherit;
+}
+
+.menu {
+  max-width: 390px;
+  min-width: 350px;
+
+  height: 100%;
+  z-index: 999;
+  float: right;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.full {
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background-color: blue;
+  position: relative;
+}
+.total {
+  position: fixed;
+  bottom: 0;
+  right:0;
+  width: 25%;
+}
+
+.float {
+  width: 100%;
+}
+
+.half-width {
+  width: 50%;
+  margin: 0px;
+}
+.startSlot.padded {
+  padding-left: 2%;
+}
+
+.soldout {
+  color: red;
+}
+
+.badge {
+  z-index: 99;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  //top: -0.1rem;
+  //right: -0.1rem;
+  //opacity: 0.9;
+  border-radius: 50%;
+  padding: 0;
+}
+.badge-text {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.price-font {
+  font-size: 80%;
+  padding: 5px;
+}
+
+.type {
+  font-size: 1vw;
+  text-align: center;
+}
+.margin {
+  padding-right: 5px;
+}
+
+.padded{
+  padding-left: 2%;
+}
+.product-title {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;}
+.subText {
+  font-size: 80%;
+  color: darkgray;
+  padding: 5px;
+}
+.verticalAlign{
+  display: flex;
+  //justify-content: center;
+  align-items: center;
+}
+.centerMe {
+  display: flex;
+  justify-content: center;
+  align-items: center;  text-align: center;
+}
+.pushRight {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+.endSlot {
+  width: 40%;
+  text-align: right;
+  justify-content: right;
+  color: darkgray;
+  float: right;
+}
+
+.pay-button {
+  width: 100%;
+  padding: 0;
+  border-radius: 10px;
+  --padding-end: 0px;
+  --padding-start: 0px;
+  --inner-padding-end: 0px;
+}
+button {
+  color: var(--ion-color-contrast);
+}
+.full_button{
+  background-color: var(--ion-color-frese);
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  font-size: 1.3em;
+  border-radius: 25px;
+
+}

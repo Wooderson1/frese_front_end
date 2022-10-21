@@ -1,5 +1,6 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, Input, OnInit, SimpleChanges} from '@angular/core';
 import {MenuController, Platform} from "@ionic/angular";
+import {OrderService} from "../services/order.service";
 
 @Component({
   selector: 'app-menu',
@@ -7,27 +8,36 @@ import {MenuController, Platform} from "@ionic/angular";
   styleUrls: ['./menu.page.scss'],
 })
 export class MenuPage implements OnInit {
-
+  titleTest = '';
   menuItems = [
-    {
-      title: 'Order Now',
-      icon: 'home',
-      url: '/'
-    },
+    // {
+    //   title: 'Order Now',
+    //   icon: 'home',
+    //   url: '/'
+    // },
+    // {
+    //   title: 'Home',
+    //   icon: 'home',
+    //   url: '/home'
+    // },
     {
       title: 'Special',
-      icon: 'list',
-      url: '/specials'
+      icon: 'star',
+      url: '/specials',
     },
     {
       title: 'Menu',
-      icon: 'information',
-      url: '/menu'
+      icon: 'pizza',
+      url: '/food-menu',
     }
   ]
-  title: 'Home';
   constructor(private menuController: MenuController, private plt: Platform) { }
-
+  ngOnChanges(changes: SimpleChanges) {
+    console.log("C ", changes);
+  }
+  updateTitle(title: string) {
+    this.titleTest = this.menuItems.filter(item => item.url == title)[0].title;
+  }
   ngOnInit() {
     const width = this.plt.width();
     this.toggleMenu(width);

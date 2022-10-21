@@ -16,6 +16,6 @@ import {DebounceClickDirective} from "../helpers/debounce-click.directive";
     FreseBakeryPageRoutingModule
   ],
   entryComponents: [PopoverComponent, CheckOutComponent],
-  declarations: [FreseBakeryPage, PopoverComponent, CheckOutComponent, DebounceClickDirective]
+  declarations: [FreseBakeryPage, PopoverComponent, CheckOutComponent]
 })
 export class FreseBakeryPageModule {}

@@ -10,7 +10,7 @@
 
 <!--        <ion-label>Version: 1.0.23</ion-label>-->
         <ion-menu-toggle *ngFor="let p of menuItems; let i = index">
-          <ion-item button class="iconColor" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}">
+          <ion-item button (click)="updateTitle(p.url)" class="iconColor" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}">
 
             <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
             <ion-label>{{ p.title }}</ion-label>
@@ -29,7 +29,7 @@
     </ion-content>
   </ion-menu>
 
-  <app-header></app-header>
+  <app-header [titleTest]="titleTest"></app-header>
   <ion-router-outlet id="main">
 
   </ion-router-outlet>

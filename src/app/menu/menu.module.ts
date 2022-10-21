@@ -8,7 +8,6 @@ import { MenuPageRoutingModule } from './menu-routing.module';
 import { SharedComponentsModule} from "../components/shared-components.module";
 
 import { MenuPage } from './menu.page';
-
 @NgModule({
   imports: [
     CommonModule,

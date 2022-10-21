@@ -3,34 +3,47 @@
     <ion-buttons slot="start">
       <ion-menu-button menu="myMenu"></ion-menu-button>
     </ion-buttons>
-    <ion-title> {{ title }}</ion-title>
-<!--    <ion-buttons slot="end">-->
-<!--      <ion-button (click)="toggleMenu()">-->
-<!--        <ion-icon slot="icon-only" name="cart"></ion-icon>-->
-<!--        <ion-badge class="badge" color="frese">-->
-<!--          <div class="badge-text">-->
-<!--            {{getTotalQuantity()}}-->
-<!--          </div>-->
-<!--        </ion-badge>-->
-<!--      </ion-button>-->
-<!--    </ion-buttons>-->
+    <ion-title> {{ titleTest }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleMenu()">
+        <ion-icon slot="icon-only" name="cart"></ion-icon>
+        <ion-badge class="badge" color="frese" *ngIf="cart.items.length>0">
+          <div class="badge-text">
+            {{getTotalQuantity()}}
+          </div>
+        </ion-badge>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-row class="customColor header ion-align-items-center">
   <ion-col class="fullCol" size="2">
     <img class="photo" src="../../../assets/images/freseLogo.png">
   </ion-col>
   <ion-col size="8" class="ion-text-left">
-    <ion-button class="menuButton" fill="clear" routerLink="/freses-bakery" routerDirection="root" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact:true}">
-      Order Now
-    </ion-button>
+<!--    <ion-button class="menuButton" fill="clear" routerLink="/freses-bakery" routerDirection="root" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact:true}">-->
+<!--      Order Now-->
+<!--    </ion-button>-->
+<!--    <ion-button class="menuButton" fill="clear" routerLink="/home" routerDirection="root" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact:true}">-->
+<!--      Home-->
+<!--    </ion-button>-->
     <ion-button class="menuButton" fill="clear" routerLink="/specials" routerDirection="root" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact:true}">
       Specials
     </ion-button>
-    <ion-button class="menuButton" fill="clear" routerLink="/menu" routerDirection="root" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact:true}">
+    <ion-button class="menuButton" fill="clear" routerLink="/food-menu" routerDirection="root" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact:true}">
       Menu
     </ion-button>
-
+  </ion-col>
+  <ion-col class="fullCol" size="2">
+    <ion-buttons class="buttons">
+      <ion-button (click)="toggleMenu()">
+        <ion-icon slot="icon-only" name="cart"></ion-icon>
+        <ion-badge class="badge" color="frese" *ngIf="cart.items.length>0">
+          <div class="badge-text">
+            {{getTotalQuantity()}}
+          </div>
+        </ion-badge>
+      </ion-button>
+    </ion-buttons>
   </ion-col>
 </ion-row>

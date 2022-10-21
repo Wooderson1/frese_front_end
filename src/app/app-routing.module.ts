@@ -13,6 +13,18 @@ const routes: Routes = [
     path: '',
     loadChildren: () => import('./menu/menu.module').then( m => m.MenuPageModule)
   },
+  {
+    path: 'cart',
+    loadChildren: () => import('./pages/cart/cart.module').then( m => m.CartPageModule)
+  },
+  {
+    path: 'food-menu',
+    loadChildren: () => import('./pages/food-menu/food-menu.module').then( m => m.FoodMenuPageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+  },
   // {
   //   path: 'frese-bakery',
   //   loadChildren: () => import('./frese-bakery/frese-bakery.module').then( m => m.FreseBakeryPageModule)

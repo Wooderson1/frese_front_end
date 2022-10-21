@@ -26,6 +26,8 @@ export class SpinnerService {
 
   public async hideSpinner(){
     this.isLoading = false;
+    if(!this.loadingController) {
     return await this.loadingController.dismiss().then(() => console.log('dismissed'));
+    }
   }
 }

@@ -7,7 +7,8 @@ import {PopoverComponent} from '../popover/popover.component';
 import {CheckOutComponent} from '../check-out/check-out.component';
 import {PayNowPage} from "../pay-now/pay-now.page";
 import {SpinnerService} from "../services/spinner.service";
-import { initData } from "../helpers/image-formatter";
+import {OrderService} from "../services/order.service";
+import {initData} from "../helpers/image-formatter";
 
 @Component({
   selector: 'app-frese-bakery',
@@ -17,11 +18,10 @@ import { initData } from "../helpers/image-formatter";
 export class FreseBakeryPage implements OnInit {
 
   // entrees
-  products: Product[] = [
-  ];
+  products: Product[] = [];
   product_selections = {};
   product_add_ons = {};
-  cart:any = {
+  cart: any = {
     items: []
   };
   cartMap = new Map();
@@ -29,7 +29,7 @@ export class FreseBakeryPage implements OnInit {
   productTypes;
   TAX_CONSTANT = .08;
   menuToggled = false;
-
+  titleTest = "TESTICLES";
 
   orderItem;
   todaysDate = new Date().toISOString();
@@ -37,6 +37,7 @@ export class FreseBakeryPage implements OnInit {
   total = 0;
 
   constructor(public dataService: DataServiceService,
+              public orderService: OrderService,
               private spinnerService: SpinnerService,
               private modalController: ModalController,
               private alertController: AlertController,
@@ -45,7 +46,7 @@ export class FreseBakeryPage implements OnInit {
 
 
   getTotalQuantity() {
-    return this.cart.items.reduce((prev , x) => prev + x.quantity, 0);
+    return this.cart.items.reduce((prev, x) => prev + x.quantity, 0);
   }
 
   toggleMenu() {
@@ -82,6 +83,7 @@ export class FreseBakeryPage implements OnInit {
   addOnKeys(product) {
     return Object.keys(product.product_add_on_values);
   }
+
   selectionKeys(product) {
     return Object.keys(product.product_selection_values);
   }
@@ -94,6 +96,7 @@ export class FreseBakeryPage implements OnInit {
   hasSelections(product) {
     return Object.keys(product.product_selection_values).length > 0;
   }
+
   hasAddOns(product) {
     return Object.keys(product.product_add_on_values).length > 0;
   }
@@ -101,6 +104,7 @@ export class FreseBakeryPage implements OnInit {
   refreshPage() {
     window.location.reload();
   }
+
   async presentAlertMessage(msg, func = null) {
     const binded = func && func.bind(this);
     const alert = await this.alertController.create({
@@ -118,7 +122,7 @@ export class FreseBakeryPage implements OnInit {
   }
 
   async Pay() {
-    if(this.cart.items.length === 0) {
+    if (this.cart.items.length === 0) {
       await this.presentAlertMessage("Oops! looks like your cart is empty.");
       return;
     }
@@ -132,7 +136,7 @@ export class FreseBakeryPage implements OnInit {
       return;
     }
     const availableTimes = await this.dataService.getAvailableTimeSlots().toPromise();
-    if(Object.keys(availableTimes).length <= 0) {
+    if (Object.keys(availableTimes).length <= 0) {
       await this.presentAlertMessage("Sorry it seems like we're too busy to take new orders at this time! Please try again later.", this.refreshPage);
       return;
     }
@@ -175,8 +179,6 @@ export class FreseBakeryPage implements OnInit {
     }
 
 
-
-
     // update prices for every add on added
     for (const x of $event.target.value) {
       item.price += Number(x) * item.quantity;
@@ -198,14 +200,15 @@ export class FreseBakeryPage implements OnInit {
     Object.keys(item.product_selection_values).forEach(key => {
       if (item.product_selection_values[key].selected) {
         vals[key] = {
-            value: item.product_selection_values[key].selected.value,
-            cost: item.product_selection_values[key].selected.cost
-          };
+          value: item.product_selection_values[key].selected.value,
+          cost: item.product_selection_values[key].selected.cost
+        };
         item.product_selection_values[key].selected = null;
       }
     });
     return vals;
   }
+
   formatAddOns(item) {
     let vals = {};
     Object.keys(item.product_add_on_values).forEach(key => {
@@ -221,8 +224,11 @@ export class FreseBakeryPage implements OnInit {
     });
     return vals;
   }
+
   formatSize(item) {
-    if(!item.product_size_selected) { return null; }
+    if (!item.product_size_selected) {
+      return null;
+    }
     let id = item.product_size_selected.id;
     item.product_size_selected = item.product_sizes[0];
     return id;
@@ -239,48 +245,58 @@ export class FreseBakeryPage implements OnInit {
       add_ons: this.formatAddOns(item),
     };
   }
+
   getAddOnValues(item, key) {
     return item.add_ons[key];
   }
+
   checkForSelectionCount(item) {
     return Object.keys(item.product_selection_values).some(key => {
       return !item.product_selection_values[key].selected
     });
   }
+
   deleteItem(index) {
 
     this.cart.items.splice(index, 1);
   }
+
   getItemCost(item) {
-    if(item.product_size_selected) {
+    if (item.product_size_selected) {
       return item.product_size_selected.cost;
     } else {
       return item.price;
     }
   }
+
   addItem(item) {
     let foundIdentical = false;
     this.cart.items.forEach(i => {
       let oldQuantity = i.quantity;
       i.quantity = 1;
-      if(JSON.stringify(i) == JSON.stringify(item)) {
-        i.quantity = oldQuantity +1;
+      if (JSON.stringify(i) == JSON.stringify(item)) {
+        i.quantity = oldQuantity + 1;
         foundIdentical = true;
         return;
       } else {
         i.quantity = oldQuantity;
       }
     })
-    if(foundIdentical) { return; }
+    if (foundIdentical) {
+      this.orderService.setOrder(this.cart);
+      return;
+    }
     this.cart.items.push(item);
+    this.orderService.setOrder(this.cart);
   }
+
   // Update cart
   async updateCart(newItem) {
-    if(newItem.quantity === 0) {
+    if (newItem.quantity === 0) {
       await this.presentAlertMessage("Whoops we don't have that many left, we've updated your cart");
       return;
     }
-    if(this.checkForSelectionCount(newItem)) {
+    if (this.checkForSelectionCount(newItem)) {
 
 
       const alert = await this.alertController.create({
@@ -337,9 +353,10 @@ export class FreseBakeryPage implements OnInit {
   formatMenu(menu) {
     return this.initializeSelectedSizes(menu);
   }
+
   initializeSelectedSizes(menu) {
     menu.forEach((item) => {
-      if(item.product_sizes && item.product_sizes.length > 0) {
+      if (item.product_sizes && item.product_sizes.length > 0) {
         item.product_size_selected = item.product_sizes[0];
       }
     });
@@ -377,6 +394,7 @@ export class FreseBakeryPage implements OnInit {
 
     return amount.toFixed(2);
   }
+
   displayAmount(amount) {
     return amount.toFixed(2);
   }
