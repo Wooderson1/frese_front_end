@@ -11,6 +11,7 @@ import {ProductsService} from "../products.service";
 
 @Component({
   selector: 'app-specials',
+  
   templateUrl: './specials.page.html',
   styleUrls: ['./specials.page.scss'],
 })
