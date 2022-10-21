@@ -5,7 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { CartPageRoutingModule } from './cart-routing.module';
-import {DebounceClickDirective} from "../helpers/debounce-click.directive";
+
+import { CartPage } from './cart.page';
 
 @NgModule({
   imports: [
@@ -14,6 +15,6 @@ import {DebounceClickDirective} from "../helpers/debounce-click.directive";
     IonicModule,
     CartPageRoutingModule
   ],
-  declarations: [DebounceClickDirective]
+  declarations: [CartPage]
 })
 export class CartPageModule {}

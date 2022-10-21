@@ -10,6 +10,7 @@ import {SpinnerService} from "../services/spinner.service";
 import {DatePickerPage} from "../date-picker/date-picker.page";
 import * as moment from "moment";
 import {error} from "protractor";
+import {OrderService} from "../services/order.service";
 
 @Component({
   selector: 'app-pay-now',
@@ -38,21 +39,19 @@ export class PayNowPage {
               private spinnerService: SpinnerService,
               private alertController: AlertController,
               private modalController: ModalController,
+              private orderService: OrderService,
               private dataService: DataServiceService) {
-    // this.customerInfo = {
-    //   name: "test",
-    //   email: "test@email.com",
-    //   phone: "1231231231"
-    // }
   }
 
   async ngOnInit() {
+    if(this.orderService.getSpecialId()) {
+      this.availableTimes = await this.dataService.getAvailableSpecialSlots(this.orderService.getSpecialId()).toPromise();
+    }
     this.pickupDate = moment(Object.keys(this.availableTimes)[0]).toDate();
   }
 
   async ngAfterViewInit() {
     this.setupStripe();
-    // this.availableTimes = await this.dataService.getAvailableSpecialSlots().toPromise();
   }
 
   cancelPayment() {
@@ -139,11 +138,16 @@ export class PayNowPage {
   async makePayment(token) {
     this.spinnerService.showSpinner();
     let paymentData;
-    // this.cart.email = this.customerInfo.email;
-    // this.cart.phone = this.customerInfo.phone;
-    // this.cart.name = this.customerInfo.name;
-    // this.cart.pickupTime = this.pickupDate;
-    // this.cart.notes = this.orderNotes;
+    console.log({
+      amount: this.order.total * 100,
+      // cart: this.cart,
+      currency: 'usd',
+      token: token.id,
+      orderId: this.order.id,
+      email: this.customerInfo.email,
+      phone: this.customerInfo.phone,
+      name: this.customerInfo.name
+    })
     try {
       paymentData = await this.dataService.processPayment({
         amount: this.order.total * 100,
@@ -157,6 +161,8 @@ export class PayNowPage {
       }).toPromise();
     } catch (err) {
       await this.presentAlertMessage("We had trouble processing your payment. Please try again");
+      console.log("PD ", paymentData);
+      console.log("PxD ", err);
       this.purchaseInProgress = false;
       return;
     }
@@ -165,6 +171,7 @@ export class PayNowPage {
       this.spinnerService.hideSpinner();
 
       await this.presentAlertMessage("We had trouble processing your payment. Please try again");
+      console.log("PD ", paymentData);
       this.purchaseInProgress = false;
 
       return;

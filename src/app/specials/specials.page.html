@@ -1,126 +1,9 @@
 <div class="full">
-  <div class="menu" *ngIf="menuToggled">
-    <ion-header>
-      <ion-toolbar>
-        <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
-        <div slot="end" class="ion-padding-end">
-          <ion-buttons slot="start">
-            <ion-button (click)="toggleMenu()">
-              <ion-icon name="close"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </div>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="full-width">
-      <ion-toolbar class="cart">
-        <ion-title>
-          <span>Cart</span> <br>
-          <small>* Swipe left to delete</small>
-        </ion-title>
-      </ion-toolbar>
-      <ion-list>
-        <ion-item-sliding (ionSwipe)="deleteItem(ii)" *ngFor="let item of cart.items; let ii=index">
-          <ion-item *ngIf="item">
-            <ion-label>
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="2">
-                    <div>{{item.quantity}}</div>
-                  </ion-col>
-                  <ion-col>
-                    <div>{{item.product_name}}</div>
-                  </ion-col>
-                  <ion-col>
-                    <div>${{displayAmount(item.price * item.quantity)}}</div>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-              <div class="subText" *ngFor="let selectionKey of getSelectionKeys(item)">
-                <ion-grid>
-                  <div><b>{{selectionKey}}:</b></div>
-                  <ion-col class="startSlot subText">
-                    {{item.selections[selectionKey].value}}
-                  </ion-col>
-                  <ion-col class="endSlot">
-                    <div *ngIf="item.selections[selectionKey].cost">${{displayAmount(item.selections[selectionKey].cost
-                      *
-                      item.quantity)}}
-                    </div>
-                  </ion-col>
-                </ion-grid>
-              </div>
-              <div class="subText" *ngFor="let addOnKey of getAddOnKeys(item)">
-                <ion-grid>
-                  <div><b>{{addOnKey}}:</b></div>
-                  <ion-row *ngFor="let v of getAddOnValues(item, addOnKey)">
-                    <ion-col class="startSlot half-width">
-                      {{v.value}}
-                    </ion-col>
-                    <ion-col class="margin endSlot">
-                      <div *ngIf="v.cost">${{displayAmount(v.cost * item.quantity)}}</div>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </div>
-            </ion-label>
-          </ion-item>
-          <ion-item-options side="end">
-            <!--            <div>-->
-            <!--              <ion-icon (click)="deleteItem(ii)" name="trash"></ion-icon>-->
-            <!--            </div>-->
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-list>
-      <div class="total-menu">
-        <div class="startSlot">
-          <div class="subText">
-            Subtotal: ${{displaySubtotal()}}<br>
-            Est. Tax: ${{displayAmount(getTax())}}<br>
-          </div>
-          <b>Total:</b> ${{displayTotal()}}
-        </div>
-        <!--        <ion-button color="frese" class="pay-button" (click)="Pay()">Finalize Order</ion-button>-->
-        <ion-item class="pay-button" color="frese">
-          <button appDebounceClick class="full_button" (debounceClick)="Pay()" [debounceTime]="1000">Finalize Order
-          </button>
-        </ion-item>
-      </div>
-    </ion-content>
-    <!--</ion-menu>-->
-  </div>
   <div class="ion-page" id="main">
-    <ion-header>
-      <ion-toolbar>
-        <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
-        <div slot="end" *ngIf="!onMobile()">
-<!--          <ion-button color="frese" (click)="openPopover($event)">-->
-<!--            <ion-icon slot="start" name="information-circle-outline"></ion-icon>-->
-<!--            About Us-->
-<!--          </ion-button>-->
-        </div>
-        <div slot="end" class="ion-padding-end">
-          <ion-buttons slot="start">
-            <ion-badge (click)="toggleMenu()" *ngIf="cart.items.length>0" class="badge" color="frese">
-              <div class="badge-text">
-                {{getTotalQuantity()}}
-              </div>
-            </ion-badge>
-            <ion-button class="full-width" (click)="toggleMenu()">
-              <ion-icon name="cart"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </div>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content color="light">
-<!--      <ion-grid mode="md" class="full_size_row">-->
-<!--        <ion-row class="full_size_row">-->
-<!--          &lt;!&ndash;  Avaiable Items  &ndash;&gt;-->
-<!--          <ion-col size="12">-->
+    <ion-content *ngIf="this.orderService.getSpecialId()" color="light">
               <ion-grid class="products-ion-grid">
                 <ion-row class="ion-justify-content-center">
-                  <ion-col class="col" size="12" size-sm="6" size-md="3" size-lg="3" size-xl="2" *ngFor="let item of products">
+                  <ion-col class="col" size="12" size-sm="6" size-md="3" size-lg="3" size-xl="2" *ngFor="let item of this.productsService.getProducts()">
                     <ion-card class="item-row">
                       <ion-img class="item-image" *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
                       <ng-template #noPhoto>
@@ -130,7 +13,7 @@
                         <ion-card-title>{{item.title}}</ion-card-title>
                         <ion-card-subtitle>{{item.description}}</ion-card-subtitle>
                         <!--                      <ion-card-subtitle *ngIf="item.price">${{item.price}}</ion-card-subtitle>-->
-                        <ion-card-subtitle>Price: ${{displayAmount(getItemCost(item))}}</ion-card-subtitle>
+                        <ion-card-subtitle>Price: ${{displayAmount(this.orderService.getItemCost(item))}}</ion-card-subtitle>
                         <ion-card-subtitle *ngIf="item.quantity > 0">Amount left: {{item.quantity}}</ion-card-subtitle>
                         <ion-card-subtitle class="soldout" *ngIf="item.quantity === 0">SOLD OUT</ion-card-subtitle>
                       </ion-card-header>
@@ -171,7 +54,7 @@
                           </ion-select>
                         </div>
                       </ion-list>
-                      <ion-button class="fancy-button" disabled="{{disableButton(item)}}" color='frese' (click)="updateCart(item)">Add to
+                      <ion-button class="fancy-button" disabled="{{disableButton(item)}}" color='frese' (click)="addToCart(item)">Add to
                         Cart
                       </ion-button>
                     </ion-card>
@@ -181,9 +64,11 @@
             <ng-template #loading>
               <ion-spinner name="lines"></ion-spinner>
             </ng-template>
-<!--          </ion-col>-->
-<!--        </ion-row>-->
-<!--      </ion-grid>-->
+    </ion-content>
+    <ion-content *ngIf="!this.orderService.getSpecialId()" class="noSpecial" color="light">
+      <h2>
+      Sorry we don't have any special active currently! Please check our calendar for the next special!
+      </h2>
     </ion-content>
   </div>
 </div>

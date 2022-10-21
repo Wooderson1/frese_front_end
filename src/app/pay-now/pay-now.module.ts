@@ -16,6 +16,6 @@ import {DebounceClickDirective} from "../helpers/debounce-click.directive";
     IonicModule,
     PayNowPageRoutingModule
   ],
-  declarations: [PayNowPage, DebounceClickDirective]
+  declarations: [PayNowPage]
 })
 export class PayNowPageModule {}

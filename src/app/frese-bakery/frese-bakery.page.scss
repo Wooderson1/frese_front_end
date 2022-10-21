@@ -1,4 +1,29 @@
+@media(min-width: 768px) {
+  .cart {
+    text-align: center;
+    background-color: red;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    right: 0;
+    top: -11px;
+    z-index: 9999;
+    margin-right: 30px;
+  }
 
+}
+@media(max-width: 768px) {
+  .cart {
+    text-align: center;
+    background-color: blue;
+    position: relative;
+    top: 10px;
+    right: 10px;
+    width: 2px;
+    height: 2px;
+    z-index: 1000;
+  }
+}
 .add-to-cart {
   //justify-content: flex-end
 }

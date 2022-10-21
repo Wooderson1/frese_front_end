@@ -4,16 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CartPageRoutingModule } from './cart-routing.module';
-import {DebounceClickDirective} from "../helpers/debounce-click.directive";
+import { FoodMenuPageRoutingModule } from './food-menu-routing.module';
+
+import { FoodMenuPage } from './food-menu.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CartPageRoutingModule
+    FoodMenuPageRoutingModule
   ],
-  declarations: [DebounceClickDirective]
+  declarations: [FoodMenuPage]
 })
-export class CartPageModule {}
+export class FoodMenuPageModule {}

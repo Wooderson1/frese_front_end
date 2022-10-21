@@ -37,6 +37,9 @@
   --ion-color-shade: var(--ion-color-frese-shade) !important;
   --ion-color-tint: var(--ion-color-frese-tint) !important;
   }
+ion-content {
+  //--ion-background-color: #333333 !important
+}
 ion-icon {
   color: white;
 }
@@ -48,9 +51,9 @@ ion-toolbar {
   --color: white;
 }
 ion-header {
-  background-color: red;
-  --background: orange;
-  --color: red;
+  //background-color: red;
+  //--background: orange;
+  //--color: red;
 }
 button {
 

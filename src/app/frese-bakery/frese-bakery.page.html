@@ -1,3 +1,15 @@
+<div slot="end" class="cart ion-padding-end">
+  <ion-buttons slot="start">
+    <ion-badge (click)="toggleMenu()" *ngIf="cart.items.length>0" class="badge" color="frese">
+      <div class="badge-text">
+        {{getTotalQuantity()}}
+      </div>
+    </ion-badge>
+    <ion-button class="full-width" (click)="toggleMenu()">
+      <ion-icon name="cart"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</div>
 <div class="full">
   <div class="menu" *ngIf="!onMobile() || menuToggled">
     <ion-header>
@@ -85,37 +97,14 @@
         </div>
         <!--        <ion-button color="frese" class="pay-button" (click)="Pay()">Finalize Order</ion-button>-->
         <ion-item class="pay-button" color="frese">
-          <button appDebounceClick class="full_button" (debounceClick)="Pay()" [debounceTime]="1000">Finalize Order
-          </button>
+          <ion-button class="full_button" (click)="Pay()">Finalize Order
+          </ion-button>
         </ion-item>
       </div>
     </ion-content>
     <!--</ion-menu>-->
   </div>
   <div class="ion-page" id="main">
-    <ion-header>
-      <ion-toolbar>
-        <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
-        <div slot="end" *ngIf="!onMobile()">
-          <ion-button color="frese" (click)="openPopover($event)">
-            <ion-icon slot="start" name="information-circle-outline"></ion-icon>
-            About Us
-          </ion-button>
-        </div>
-        <div slot="end" class="ion-padding-end" *ngIf="onMobile()">
-          <ion-buttons slot="start">
-            <ion-badge (click)="toggleMenu()" *ngIf="cart.items.length>0" class="badge" color="frese">
-              <div class="badge-text">
-                {{getTotalQuantity()}}
-              </div>
-            </ion-badge>
-            <ion-button class="full-width" (click)="toggleMenu()">
-              <ion-icon name="cart"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </div>
-      </ion-toolbar>
-    </ion-header>
     <ion-content color="light">
       <ion-grid mode="md">
         <ion-row class="full_size_row">

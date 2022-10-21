@@ -1,9 +1,87 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>cart</ion-title>
+<ion-content class="full-width">
+  <ion-toolbar class="cart">
+    <ion-title>
+      <span>Cart</span> <br>
+    </ion-title>
+    <ion-buttons slot="end">
+
+    <ion-button slot="end" (click)="closeModal()">
+      <ion-icon [style.color]="'#ffffff'" name="close-outline"></ion-icon>
+    </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-</ion-header>
+  <ion-list>
+<!--    <ion-item-sliding (ionSwipe)="deleteItem(ii)" *ngFor="let item of cart.items; let ii=index">-->
+    <ion-item-sliding *ngFor="let item of cart.items; let ii=index">
+      <ion-item *ngIf="item">
+        <ion-label>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="1">
+                  <ion-button (click)="this.orderService.updateCart(item, -1)">
+                <ion-icon class="centerMe" name="remove-outline"></ion-icon>
+                </ion-button>
 
-<ion-content>
-
+              </ion-col>
+              <ion-col class="centerMe" size="1">
+                <div>{{item.quantity}}</div>
+              </ion-col>
+              <ion-col size="1">
+                <ion-button (click)="this.updateCart(item, 1)">
+                  <ion-icon class="centerMe" name="add-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+              <ion-col size="7" class="verticalAlign">
+                <div class="product-title">{{item.product_name}}</div>
+              </ion-col>
+              <ion-col class="pushRight">
+                <div class="pushRight">${{displayAmount(item.price * item.quantity)}}</div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <div class="subText" *ngFor="let selectionKey of getSelectionKeys(item)">
+            <ion-grid>
+              <div><b>{{selectionKey}}:</b></div>
+              <ion-col class="startSlot subText">
+                {{item.selections[selectionKey].value}}
+              </ion-col>
+              <ion-col class="endSlot">
+                <div *ngIf="item.selections[selectionKey].cost">${{displayAmount(item.selections[selectionKey].cost
+                  *
+                  item.quantity)}}
+                </div>
+              </ion-col>
+            </ion-grid>
+          </div>
+          <div class="subText" *ngFor="let addOnKey of getAddOnKeys(item)">
+            <ion-grid>
+              <div><b>{{addOnKey}}:</b></div>
+              <ion-row *ngFor="let v of getAddOnValues(item, addOnKey)">
+                <ion-col class="startSlot half-width">
+                  {{v.value}}
+                </ion-col>
+                <ion-col class="margin endSlot">
+                  <div *ngIf="v.cost">${{displayAmount(v.cost * item.quantity)}}</div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </ion-label>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
+  <div class="total-menu">
+    <div class="startSlot">
+      <div class="subText">
+        Subtotal: ${{displaySubtotal()}}<br>
+        Est. Tax: ${{displayAmount(getTax(getSubtotal()))}}<br>
+      </div>
+      <b>Total:</b> ${{displayTotal()}}
+    </div>
+    <!--        <ion-button color="frese" class="pay-button" (click)="Pay()">Finalize Order</ion-button>-->
+    <ion-item class="pay-button" color="frese">
+      <button appDebounceClick class="full_button" (debounceClick)="Pay()" [debounceTime]="1000">Finalize Order
+      </button>
+    </ion-item>
+  </div>
 </ion-content>

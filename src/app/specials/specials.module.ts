@@ -16,6 +16,6 @@ import {DebounceClickDirective} from "../helpers/debounce-click.directive";
     IonicModule,
     SpecialsPageRoutingModule
   ],
-  declarations: [SpecialsPage, DebounceClickDirective]
+  declarations: [SpecialsPage]
 })
 export class SpecialsPageModule {}
