@@ -65,7 +65,7 @@
               <ion-spinner name="lines"></ion-spinner>
             </ng-template>
     </ion-content>
-    <ion-content *ngIf="!this.orderService.getSpecialId()" class="noSpecial" color="light">
+    <ion-content *ngIf="[] === this.orderService.getSpecialId()" class="noSpecial" color="light">
       <h2>
       Sorry we don't have any special active currently! Please check our calendar for the next special!
       </h2>

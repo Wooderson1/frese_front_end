@@ -25,18 +25,18 @@ export class AppComponent {
     await this.storage.create();
     this.types = await this.dataService.getProductTypes().toPromise();
     try {
-
-    const res = await this.dataService.getActiveSpecial().toPromise();
-    if(!res || new Date(res.end) < new Date()) {
-      this.orderService.setSpecialId(null);
-      return;
-    }
-    this.orderService.setSpecialId(res.id);
-    let temp = this.formatMenu(res.products);
-    temp = this.sortBySpecial(temp);
-    this.productsService.setProducts(temp);
+      const res = await this.dataService.getActiveSpecial().toPromise();
+      this.orderService.setLoading(false);
+      if(!res || new Date(res.end) < new Date()) {
+        this.orderService.setSpecialId([]);
+        return;
+      }
+      this.orderService.setSpecialId(res.id);
+      let temp = this.formatMenu(res.products);
+      temp = this.sortBySpecial(temp);
+      this.productsService.setProducts(temp);
     } catch (err) {
-      this.orderService.setSpecialId(null);
+      this.orderService.setSpecialId([]);
     }
 
     await this.storage.set('types', this.types);

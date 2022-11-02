@@ -8,7 +8,8 @@ import { ProductsService } from '../products.service';
 export class OrderService {
 
   order = {items: [], total: 0, subtotal: 0};
-  specialsId;
+  specialsId = null;
+  specialLoading = true;
   orderUpdated = new EventEmitter();
 
   constructor(private storage: Storage, private productsService: ProductsService) {
@@ -150,6 +151,10 @@ export class OrderService {
     this.orderUpdated.emit({order: this.order, specialsId: this.specialsId});
   }
 
+  setLoading(x) {
+    this.specialLoading = x;
+    this.orderUpdated.emit({loading: this.specialLoading})
+  }
   setOrder(x) {
     this.order = x;
     this.orderUpdated.emit({order: this.order, specialsId: this.specialsId});

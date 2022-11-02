@@ -11,7 +11,7 @@ import {ProductsService} from "../products.service";
 
 @Component({
   selector: 'app-specials',
-  
+
   templateUrl: './specials.page.html',
   styleUrls: ['./specials.page.scss'],
 })
@@ -39,6 +39,13 @@ export class SpecialsPage implements OnInit {
 
   disableButton(item) {
     return item.quantity == 0;
+  }
+  async ionViewDidEnter() {
+    // await this.spinnerService.showSpinner();
+    // while(this.orderService.specialLoading) {
+    //   console.log(".");
+    // }
+    // await this.spinnerService.hideSpinner();
   }
 
   sortBySpecial(products) {
@@ -199,9 +206,17 @@ export class SpecialsPage implements OnInit {
   }
 
   async ngOnInit() {
+    if(this.orderService.specialLoading) {
+      await this.spinnerService.showSpinner();
+    }
     this.productsService.productsUpdated.subscribe((vals) => {
       this.products = vals;
     });
+    this.orderService.orderUpdated.subscribe((vals) => {
+      if(vals && !vals.loading) {
+        this.spinnerService.hideSpinner();
+      }
+    })
 
       if (window.screen.width < 600) { // 768px portrait
       this.mobile = true;
