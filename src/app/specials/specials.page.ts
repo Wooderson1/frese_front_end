@@ -208,14 +208,19 @@ export class SpecialsPage implements OnInit {
   async ngOnInit() {
     if(this.orderService.specialLoading) {
       await this.spinnerService.showSpinner();
+    } else {
+      await this.spinnerService.hideSpinner();
     }
     this.productsService.productsUpdated.subscribe((vals) => {
       this.products = vals;
     });
+    if(this.orderService.getSpecialId()) {
+      await this.spinnerService.hideSpinner();
+    }
     this.orderService.orderUpdated.subscribe((vals) => {
-      if(vals && !vals.loading) {
-        this.spinnerService.hideSpinner();
-      }
+      this.spinnerService.hideSpinner();
+    }, () => {}, () => {
+      this.spinnerService.hideSpinner();
     })
 
       if (window.screen.width < 600) { // 768px portrait
