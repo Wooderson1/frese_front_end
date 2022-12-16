@@ -1,6 +1,7 @@
 import {Injectable, EventEmitter, SimpleChanges} from '@angular/core';
 import {Storage} from "@ionic/storage";
 import { ProductsService } from '../products.service';
+import { SpecialsProductsService } from '../specials-products.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +11,17 @@ export class OrderService {
   order = {items: [], total: 0, subtotal: 0};
   specialsId = null;
   specialLoading = true;
+  menuLoading = true;
   orderUpdated = new EventEmitter();
 
-  constructor(private storage: Storage, private productsService: ProductsService) {
+  constructor(private storage: Storage,
+              private specialsProductsService: SpecialsProductsService,
+              private productsService: ProductsService) {
   }
   async ngOnInit() {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
   }
 
   checkForSelectionCount(item) {
@@ -27,12 +30,24 @@ export class OrderService {
     });
   }
 
+  activeSpecial() {
+    return this.specialsId;
+  }
+
   getSpecialId() {
     return this.specialsId;
   }
 
+  getSpecialProducts() {
+    const specialProductIds = this.specialsProductsService.getProducts().map(p => p.id)
+    return this.productsService.products.filter(p => {
+      return specialProductIds.includes(p.id);
+    });
+  }
+
   async updateCart(item, increment) {
-    const q = this.productsService.findMatchingProduct(item.productId).quantity;
+    const match = this.productsService.findMatchingProduct(item.productId);
+    const q = match.quantity;
     if(q === 0 && increment > 0) {
       return "Whoops we don't have that many left, we've updated your cart";
     }
@@ -49,6 +64,22 @@ export class OrderService {
     }
     matchingItem.quantity += increment;
 
+  }
+
+  containsSpecialProducts() {
+    const specialTypeId = this.productsService.types.find(element => {
+      return element.name === "Special";
+    })
+    return this.order.items.some(item => {
+      return item.typeId === specialTypeId.id;
+    })
+  }
+
+  async loadRegularTimes() {
+    await this.productsService.loadAvailableTimes();
+  }
+  async loadSpecialTimes() {
+    await this.specialsProductsService.loadAvailableTimes(this.specialsId);
   }
 
   async addToCart(newItem) {
@@ -151,6 +182,10 @@ export class OrderService {
     this.orderUpdated.emit({order: this.order, specialsId: this.specialsId});
   }
 
+  setMenuLoading(x) {
+    this.menuLoading = x;
+    this.orderUpdated.emit({loading: this.menuLoading})
+  }
   setLoading(x) {
     this.specialLoading = x;
     this.orderUpdated.emit({loading: this.specialLoading})

@@ -4,30 +4,31 @@ import {DataServiceService} from "./services/data-service.service";
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsService {
+export class SpecialsProductsService {
 
   products;
-  types;
   productsUpdated = new EventEmitter();
   availableTimes;
-
   constructor(private dataService: DataServiceService) {
+  }
+
+  async loadAvailableTimes(specialId) {
+    this.availableTimes = await this.dataService.getAvailableSpecialSlots(specialId).toPromise();
+  }
+  getAvailableTimes() {
+    return this.availableTimes;
   }
   getAvailableTimesCount() {
     if(!this.availableTimes) { return 0; }
     return Object.keys(this.availableTimes).length;
   }
 
-  setProducts(p, types) {
-    this.types = types;
+  setProducts(p) {
     this.products = p;
   }
-  async loadAvailableTimes() {
-    this.availableTimes = await this.dataService.getAvailableTimeSlots().toPromise();
-  }
+
   getProducts() {
-    const special = this.types.find(t => t.name === "Special");
-    return this.products.filter(p => p.typeId !== special.id)
+    return this.products;
   }
 
   findMatchingProduct(p) {
@@ -36,7 +37,6 @@ export class ProductsService {
 
   updateProductQuantity(itemId, increment) {
     const p = this.findMatchingProduct(itemId);
-
     if(p.quantity === -1){ return; }
     p.quantity -= increment;
     this.productsUpdated.emit(this.products);

@@ -10,11 +10,11 @@ import {OrderService} from "../services/order.service";
 export class MenuPage implements OnInit {
   titleTest = '';
   menuItems = [
-    // {
-    //   title: 'Order Now',
-    //   icon: 'home',
-    //   url: '/'
-    // },
+    {
+      title: 'Order Now',
+      icon: 'home',
+      url: '/frese-bakery',
+    },
     // {
     //   title: 'Home',
     //   icon: 'home',

@@ -7,7 +7,8 @@ import {SpinnerService} from "../services/spinner.service";
 import {PopoverComponent} from "../popover/popover.component";
 import {Storage} from '@ionic/storage';
 import {OrderService} from "../services/order.service";
-import {ProductsService} from "../products.service";
+import {SpecialsProductsService} from "../specials-products.service";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-specials',
@@ -27,13 +28,12 @@ export class SpecialsPage implements OnInit {
 
   constructor(public dataService: DataServiceService,
               private spinnerService: SpinnerService,
-              public productsService: ProductsService,
+              public specialsProductsService: SpecialsProductsService,
               private modalController: ModalController,
               public orderService: OrderService,
               private alertController: AlertController,
               private router: Router,
               private storage: Storage,
-              private route: ActivatedRoute,
               public popoverController: PopoverController) {
   }
 
@@ -43,7 +43,6 @@ export class SpecialsPage implements OnInit {
   async ionViewDidEnter() {
     // await this.spinnerService.showSpinner();
     // while(this.orderService.specialLoading) {
-    //   console.log(".");
     // }
     // await this.spinnerService.hideSpinner();
   }
@@ -89,7 +88,6 @@ export class SpecialsPage implements OnInit {
     const BreadType = this.types.find(element => {
       return element.name === "Bread";
     })
-    console.log(item.typeId !== BreadType.id);
     return item.typeId !== BreadType.id;
   }
   getTax() {
@@ -149,6 +147,13 @@ export class SpecialsPage implements OnInit {
 
   getSelectionKeys(item) {
     return Object.keys(item.selections);
+  }
+
+  specialExists() {
+    return this.orderService.activeSpecial();
+  }
+  timesAvailable() {
+    return this.specialsProductsService.getAvailableTimesCount() > 0;
   }
 
   async addToCart(newItem) {
@@ -211,17 +216,16 @@ export class SpecialsPage implements OnInit {
     } else {
       await this.spinnerService.hideSpinner();
     }
-    this.productsService.productsUpdated.subscribe((vals) => {
+    this.specialsProductsService.productsUpdated.subscribe((vals) => {
       this.products = vals;
     });
     if(this.orderService.getSpecialId()) {
       await this.spinnerService.hideSpinner();
     }
-    this.orderService.orderUpdated.subscribe((vals) => {
-      this.spinnerService.hideSpinner();
-    }, () => {}, () => {
-      this.spinnerService.hideSpinner();
-    })
+    let timeout = 200;
+    let i = 0;
+    while(this.orderService.specialLoading && i++ < timeout) {
+    }    await this.spinnerService.hideSpinner();
 
       if (window.screen.width < 600) { // 768px portrait
       this.mobile = true;

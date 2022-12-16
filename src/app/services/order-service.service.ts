@@ -16,7 +16,7 @@ export class OrderServiceService {
     return this.http.get(`${this.apiUrl}/productsAndSizes`);
   }
   getActiveMenu() {
-    return this.http.get(`${this.apiUrl}/activeProductsAndSizes`);
+    return this.http.get(`${this.apiUrl}/activeProductsAndSizesIncludingSpecials`);
   }
   applyCoupon(orderId, coupon) {
     return this.http.post(`${this.apiUrl}/orders/${orderId}/coupon/${coupon}/apply`, {});
@@ -42,7 +42,7 @@ export class OrderServiceService {
     return this.http.patch(`${this.apiUrl}/orders/${orderId}/updateOrderDetails`, body);
   }
   getAvailableTimeSlots() {
-    return this.http.get(`${this.apiUrl}/orders/availableTimes`);
+    return this.http.get(`${this.apiUrl}/orders/availableTimes/6`);
   }
   getAvailableSpecialSlots(id) {
     return this.http.get(`${this.apiUrl}/orders/availableSpecialTimes/${id}`);

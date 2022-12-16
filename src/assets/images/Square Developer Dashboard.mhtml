@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sign In</title>
+    <meta name="description" content="">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+<meta name="multipassui/config/environment" content="%7B%22modulePrefix%22%3A%22multipassui%22%2C%22environment%22%3A%22production%22%2C%22rootURL%22%3A%22%2F%22%2C%22locationType%22%3A%22auto%22%2C%22captchaKey%22%3A%226LfpJvIaAAAAABzKm7BfQiloQLaQXjjKn9fctiWd%22%2C%22oneTrustKey%22%3A%22c4657020-c7d1-4a14-a091-267a7ee4863e%22%2C%22cookieDomain%22%3A%22.squareup.com%22%2C%22EmberENV%22%3A%7B%22FEATURES%22%3A%7B%7D%2C%22EXTEND_PROTOTYPES%22%3A%7B%22Date%22%3Afalse%7D%2C%22_APPLICATION_TEMPLATE_WRAPPER%22%3Afalse%2C%22_DEFAULT_ASYNC_OBSERVERS%22%3Atrue%2C%22_JQUERY_INTEGRATION%22%3Afalse%2C%22_TEMPLATE_ONLY_GLIMMER_COMPONENTS%22%3Atrue%7D%2C%22eventstream%22%3A%7B%22name%22%3A%22multipass%22%2C%22environment%22%3A%22production%22%7D%2C%22cdp%22%3A%7B%22apiKey%22%3A%226c294f35-6704-42cd-9105-d087b8265b10%22%7D%2C%22APP%22%3A%7B%22hosts%22%3A%7B%22api%22%3A%22https%3A%2F%2Fapi.squareup.com%22%2C%22root%22%3A%22https%3A%2F%2Fsquareup.com%22%7D%2C%22links%22%3A%7B%22PASSWORD_POLICIES_PATH%22%3A%22%2Fhelp%2Farticle%2F6212%22%2C%22CONTACT_US_PATH%22%3A%22%2Fhelp%2Fus%2Fen%2Fcontact%3Fprefill%3DInvoice%2BInstallments%2BBuyer%22%2C%22DASHBOARD_PATH%22%3A%22%2Fdashboard%22%2C%22SIGN_UP_PATH%22%3A%22%2Fsignup%22%2C%22CAPTCHA_BASE_URL%22%3A%22https%3A%2F%2Fwww.google.com%2Frecaptcha%2Fenterprise.js%22%2C%22ENABLE_COOKIES_URL%22%3A%22%2Fhelp%2F%7Bcountry%7D%2F%7Blanguage%7D%2Farticle%2F5245-square-dashboard-troubleshooting%23Enable-Cookies%22%2C%22FORGOT_EMAIL_URL%22%3A%22%2Fhelp%2F%7Bcountry%7D%2F%7Blanguage%7D%2Fcontact%3Fpanel%3D36405A439AFD%22%2C%22INFO_POLICY_URL%22%3A%22%2Fhelp%2F%7Bcountry%7D%2F%7Blanguage%7D%2Farticle%2F3798-square-s-information-collection-policies%22%2C%22TWO_FACTOR_HELP_URL%22%3A%22%2Fhelp%2F%7Bcountry%7D%2F%7Blanguage%7D%2Farticle%2F5593-2-step-verification%22%2C%22SOS_SUPPORT_CONTACT_URL%22%3A%22%2Fhelp%2Fcontact%3Fprefill%3DSOS_user_logged_out%22%2C%22SQUARE_HOME_URL%22%3A%22%2F%7Bcountry%7D%2F%7Blanguage%7D%22%2C%22SQUARE_PAYROLL_SIGN_UP_URL%22%3A%22%2Fhelp%2F%7Bcountry%7D%2F%7Blanguage%7D%2Farticle%2F5336%22%2C%22WEEBLY_BRIDGE_HELP_URL%22%3A%22%2Fhelp%2F%7Bcountry%7D%2F%7Blanguage%7D%2Farticle%2F7182-weebly-and-square-general-faq%22%7D%2C%22sentry%22%3A%7B%22URL%22%3A%22https%3A%2F%2Ffdb6d44c9be5412fb2bcd77808aec056%40o160250.ingest.sentry.io%2F5963152%22%7D%2C%22settings%22%3A%7B%22SHAKE_TIME_MS%22%3A600%2C%22BUTTON_DEBOUNCE_DEFAULT_MS%22%3A500%2C%22DEFAULT_MAX_TWO_FACTOR_MINUTES%22%3A2147483647%7D%2C%22validation%22%3A%7B%22MIN_PASSWORD_LENGTH%22%3A8%2C%22MAX_PASSWORD_UTF8_BYTES%22%3A128%2C%22MIN_VERIFICATION_CODE_LENGTH%22%3A6%7D%2C%22name%22%3A%22multipassui%22%2C%22version%22%3A%220.0.1%2B3ef64ac7%22%2C%22captchaKey%22%3A%226LfpJvIaAAAAABzKm7BfQiloQLaQXjjKn9fctiWd%22%7D%2C%22contentSecurityPolicy%22%3A%7B%22default-src%22%3A%22'none'%22%2C%22script-src%22%3A%5B%22'self'%22%2C%22https%3A%2F%2Fwww.google.com%2Frecaptcha%2F%22%2C%22https%3A%2F%2Fwww.gstatic.com%2Frecaptcha%2F%22%2C%22https%3A%2F%2Fmultipassui-production-c.squarecdn.com%22%2C%22https%3A%2F%2Fcdn.cookielaw.org%2F%22%2C%22https%3A%2F%2F*.onetrust.com%2F%22%2C%22https%3A%2F%2Fsquareup.com%22%5D%2C%22frame-src%22%3A%5B%22https%3A%2F%2Fwww.google.com%2Frecaptcha%2F%22%2C%22https%3A%2F%2Frecaptcha.google.com%2Frecaptcha%2F%22%2C%22https%3A%2F%2Fsquareup.com%2F149e9513-01fa-4fb0-aad4-566afd725d1b%2F2d206a39-8ed7-437e-a3be-862e0f06eea3%2Ffp%22%5D%2C%22font-src%22%3A%5B%22'self'%22%2C%22https%3A%2F%2Fsquare-fonts-production-f.squarecdn.com%22%5D%2C%22connect-src%22%3A%5B%22'self'%22%2C%22*.sentry.io%22%2C%22https%3A%2F%2Fapi.squareup.com%22%2C%22https%3A%2F%2Fsquareup.com%22%2C%22*.squarecloudservices.com%22%2C%22https%3A%2F%2Fcdn.cookielaw.org%2F%22%2C%22https%3A%2F%2F*.onetrust.com%2F%22%5D%2C%22style-src%22%3A%5B%22'self'%22%2C%22'unsafe-inline'%22%2C%22https%3A%2F%2Fmultipassui-production-c.squarecdn.com%22%2C%22https%3A%2F%2Fsquare-fonts-production-f.squarecdn.com%22%5D%2C%22img-src%22%3A%5B%22'self'%22%2C%22data%3A%22%2C%22blob%3A%22%2C%22https%3A%2F%2Fmultipassui-production-c.squarecdn.com%22%2C%22https%3A%2F%2Fapi.squareup.com%22%2C%22https%3A%2F%2Fcdn.cookielaw.org%2F%22%2C%22https%3A%2F%2F*.onetrust.com%2F%22%5D%2C%22media-src%22%3Anull%7D%2C%22contentSecurityPolicyMeta%22%3Atrue%2C%22contentSecurityPolicyHeader%22%3A%22Content-Security-Policy-Report-Only%22%2C%22exportApplicationGlobal%22%3Afalse%7D" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://multipassui-production-c.squarecdn.com https://cdn.cookielaw.org/ https://*.onetrust.com/ https://squareup.com; frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/ https://squareup.com/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/fp; font-src 'self' https://square-fonts-production-f.squarecdn.com; connect-src 'self' *.sentry.io https://api.squareup.com https://squareup.com *.squarecloudservices.com https://cdn.cookielaw.org/ https://*.onetrust.com/; style-src 'self' 'unsafe-inline' https://multipassui-production-c.squarecdn.com https://square-fonts-production-f.squarecdn.com; img-src 'self' data: blob: https://multipassui-production-c.squarecdn.com https://api.squareup.com https://cdn.cookielaw.org/ https://*.onetrust.com/; ">
+<meta name="api-uri" content="https://api.squareup.com">
+      <script nonce="Y53hGqe+umlQt48E099uUw=="
+        src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
+        type="text/javascript"
+        charset="UTF-8"
+        data-domain-script=c4657020-c7d1-4a14-a091-267a7ee4863e
+      ></script>
+    
+
+    <link rel="stylesheet" href="https://square-fonts-production-f.squarecdn.com/square-sans.min.css">
+    <link rel="stylesheet" href="https://multipassui-production-c.squarecdn.com/assets/vendor-0a827332a0b3139a805e2327b716dc1f.css" integrity="sha256-iLeiM1+pqSy/bmGkPb4IOu7vQouHWDIcbh7gNPsPllI= sha512-zm/GOxv0YHxWSluMDoIYV/zhoe1JTrwlfI+RLiSP6Ub3piZEt/bc4bz6b64XCGrp6itsopEkg1Lx4vNRqu9cMQ==" crossorigin="anonymous"  >
+    <link rel="stylesheet" href="https://multipassui-production-c.squarecdn.com/assets/multipassui-8ee7c5bf77639d79b05b33509dd78a4f.css" integrity="sha256-Vx5jRi84dToaO14TgvpAmcrZ4gfeGUeTiUTDNYGwMiU= sha512-8BVt9Y7DPobQDsOZMQ0ey5ztodKbv1nn4c00psSMYFzarkStgdWd9vZkNfA0MUs5K/fEEdstMDflmFU/RPEdUQ==" crossorigin="anonymous"  >
+    <link rel="stylesheet" href="https://multipassui-production-c.squarecdn.com/assets/noscript-5a8cd87db5ae9aba9c343d402cff9f6a.css" integrity="sha256-pLCbMWk2W9WX879ZBqYnBFCDvYMLrP2IewFkbcTZP7I= sha512-KyuLe+S7/bArqmz7hkkpp3hpmK6K24pw17HyQzlwDrWn/g++r7av0gZr/4gqxPkcWxddCnnGm4u2KTh6KBZ8xA==" crossorigin="anonymous"  >
+    <link rel="icon" href="https://multipassui-production-c.squarecdn.com/assets/favicon-d810985ef4dc1c0bd5811e36d13c8ca3.ico">
+
+    
+  </head>
+  <body market-features="typography">
+    <noscript>
+      <div class="noscript">
+        <div class="no-script__container">
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M0 8C0 6.76133 0 6.14199 0.0820777 5.62377C0.533888 2.77115 2.77115 0.533888 5.62377 0.0820777C6.14199 0 6.76133 0 8 0H32C33.2387 0 33.858 0 34.3762 0.0820777C37.2288 0.533888 39.4661 2.77115 39.9179 5.62377C40 6.14199 40 6.76133 40 8V32C40 33.2387 40 33.858 39.9179 34.3762C39.4661 37.2288 37.2288 39.4661 34.3762 39.9179C33.858 40 33.2387 40 32 40H8C6.76133 40 6.14199 40 5.62377 39.9179C2.77115 39.4661 0.533888 37.2288 0.0820777 34.3762C0 33.858 0 33.2387 0 32V8ZM8 9.89474C8 8.8483 8.8483 8 9.89474 8H30.1053C31.1517 8 32 8.8483 32 9.89474V30.1053C32 31.1517 31.1517 32 30.1053 32H9.89474C8.8483 32 8 31.1517 8 30.1053V9.89474ZM15.0519 15.7329C15 15.8926 15 16.09 15 16.4848V23.5152C15 23.91 15 24.1074 15.0519 24.2671C15.1568 24.59 15.41 24.8432 15.7329 24.9481C15.8926 25 16.09 25 16.4848 25H23.5152C23.91 25 24.1074 25 24.2671 24.9481C24.59 24.8432 24.8432 24.59 24.9481 24.2671C25 24.1074 25 23.91 25 23.5152V16.4848C25 16.09 25 15.8926 24.9481 15.7329C24.8432 15.41 24.59 15.1568 24.2671 15.0519C24.1074 15 23.91 15 23.5152 15H16.4848C16.09 15 15.8926 15 15.7329 15.0519C15.41 15.1568 15.1568 15.41 15.0519 15.7329Z"/>
+            </svg>
+            <p> JavaScript is required for functionality of this site.
+              <a href="https://www.enable-javascript.com/" target="_blank"> Learn how to enable JavaScript.</a>
+            </p>
+        </div>
+      </div>
+    </noscript>
+    
+
+    <script nonce="Y53hGqe+umlQt48E099uUw==" src="https://multipassui-production-c.squarecdn.com/assets/vendor-6f70fcd060a8ecef5f015adc4f3fb6bf.js" integrity="sha256-DtphzAn4XzEG8tyenbzH3Eznbqg8+MVWjiyXz1OBjlw= sha512-6g/G9khm6wWmYtrTWBRFiIgfaMF+BBQXlpDfptui1bBG2qqDxk411xyTQ6R4JJF8KcfCMkr7Ty2way4DS9E6Sw==" crossorigin="anonymous"  ></script>
+    <script nonce="Y53hGqe+umlQt48E099uUw==" src="https://multipassui-production-c.squarecdn.com/assets/multipassui-ee32a93fbd57ae2d0f2e00991fb051ad.js" integrity="sha256-ge342uinFZCrWqlrxK1OFU2v4MTKbBgAosG29+vj9i4= sha512-zzQ15AtLVGjUS3TQABzWLJljXnSVt3o9/kjrT8O3A2h5+yPWi9W/LysuQsQYsKiIHXTcndwlhDnmZ5rCsQmHXA==" crossorigin="anonymous"  ></script>
+
+    
+  </body>
+</html>

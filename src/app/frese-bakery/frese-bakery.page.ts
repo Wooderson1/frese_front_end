@@ -9,6 +9,7 @@ import {PayNowPage} from "../pay-now/pay-now.page";
 import {SpinnerService} from "../services/spinner.service";
 import {OrderService} from "../services/order.service";
 import {initData} from "../helpers/image-formatter";
+import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-frese-bakery',
@@ -25,7 +26,6 @@ export class FreseBakeryPage implements OnInit {
     items: []
   };
   cartMap = new Map();
-  availableItems;
   productTypes;
   TAX_CONSTANT = .08;
   menuToggled = false;
@@ -41,6 +41,7 @@ export class FreseBakeryPage implements OnInit {
               private spinnerService: SpinnerService,
               private modalController: ModalController,
               private alertController: AlertController,
+              private productsService: ProductsService,
               public popoverController: PopoverController) {
   }
 
@@ -159,10 +160,10 @@ export class FreseBakeryPage implements OnInit {
   }
 
   getProductsForType(type) {
-    if (!this.availableItems) {
+    if (!this.productsService.getProducts()) {
       return [];
     }
-    return this.availableItems.filter(t => t.typeId === type.id);
+    return this.productsService.getProducts().filter(t => t.typeId === type.id);
   }
 
   // update price for add on
@@ -290,6 +291,27 @@ export class FreseBakeryPage implements OnInit {
     this.orderService.setOrder(this.cart);
   }
 
+  async addToCart(newItem) {
+    let resp = await this.orderService.addToCart(newItem);
+    if(resp === "Whoops we don't have that many left, we've updated your cart") {
+      await this.presentAlertMessage("Whoops we don't have that many left, we've updated your cart");
+    }
+    if(resp === "Please make a selection") {
+      const alert = await this.alertController.create({
+        header: 'Whoops!',
+        message: 'Please make a selection',
+        buttons: [
+          {
+            text: 'Dismiss',
+            handler: () => {
+            }
+          }
+        ]
+      });
+      return alert.present();
+    }
+  }
+
   // Update cart
   async updateCart(newItem) {
     if (newItem.quantity === 0) {
@@ -297,7 +319,6 @@ export class FreseBakeryPage implements OnInit {
       return;
     }
     if (this.checkForSelectionCount(newItem)) {
-
 
       const alert = await this.alertController.create({
         header: 'Whoops!',
@@ -363,16 +384,23 @@ export class FreseBakeryPage implements OnInit {
     return menu;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if(this.orderService.menuLoading) {
+      await this.spinnerService.showSpinner();
+    } else {
+      await this.spinnerService.hideSpinner();
+    }
+    this.productsService.productsUpdated.subscribe((vals) => {
+    })
     this.dataService.getProductTypes().subscribe(types => {
-
       this.productTypes = types;
     });
+    let timeout = 200;
+    let i = 0;
+    while(this.orderService.menuLoading && i++ < timeout) {
+    }
+    await this.spinnerService.hideSpinner();
 
-    this.dataService.getActiveMenu().subscribe(productResults => {
-      this.availableItems = this.formatMenu(productResults);
-
-    });
   }
 
   round(value: number, digits = 2) {

@@ -11,6 +11,8 @@ import {DatePickerPage} from "../date-picker/date-picker.page";
 import * as moment from "moment";
 import {error} from "protractor";
 import {OrderService} from "../services/order.service";
+import {SpecialsProductsService} from "../specials-products.service";
+import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-pay-now',
@@ -40,14 +42,28 @@ export class PayNowPage {
               private alertController: AlertController,
               private modalController: ModalController,
               private orderService: OrderService,
+              private specialsProductsService: SpecialsProductsService,
+              private productsService: ProductsService,
               private dataService: DataServiceService) {
   }
 
   async ngOnInit() {
-    if(this.orderService.getSpecialId()) {
-      this.availableTimes = await this.dataService.getAvailableSpecialSlots(this.orderService.getSpecialId()).toPromise();
+    /*
+    1. a special exists with slots
+    2. a special exists, no slots
+    3. no special exists, use regular hours
+     */
+    if(this.orderService.activeSpecial() && !this.orderService.containsSpecialProducts()) {
+      this.availableTimes = this.productsService.availableTimes;
+      this.pickupDate = this.productsService.getAvailableTimesCount() > 0 ? moment(Object.keys(this.availableTimes)[0]).toDate() : null;
+
+    } else if(this.orderService.activeSpecial()) {
+      this.availableTimes = this.specialsProductsService.availableTimes;
+      this.pickupDate = this.specialsProductsService.getAvailableTimesCount() > 0 ? moment(Object.keys(this.availableTimes)[0]).toDate() : null;
+    } else { // No special
+      this.availableTimes = this.productsService.availableTimes;
+      this.pickupDate = this.productsService.getAvailableTimesCount() > 0 ? moment(Object.keys(this.availableTimes)[0]).toDate() : null;
     }
-    this.pickupDate = moment(Object.keys(this.availableTimes)[0]).toDate();
   }
 
   async ngAfterViewInit() {
@@ -71,6 +87,7 @@ export class PayNowPage {
 
   formatDate() {
     const d = this.pickupDate;
+    if(!this.pickupDate) { return "Unable to accept new orders at this time!";}
     const hours = d.getHours() > 12 ? (d.getHours() - 12).toLocaleString('en-US', {minimumIntegerDigits: 2}) : d.getHours();
     const minutes = d.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2});
     const AMPM = d.getHours() >= 12 ? 'PM' : 'AM';
@@ -138,16 +155,6 @@ export class PayNowPage {
   async makePayment(token) {
     this.spinnerService.showSpinner();
     let paymentData;
-    console.log({
-      amount: this.order.total * 100,
-      // cart: this.cart,
-      currency: 'usd',
-      token: token.id,
-      orderId: this.order.id,
-      email: this.customerInfo.email,
-      phone: this.customerInfo.phone,
-      name: this.customerInfo.name
-    })
     try {
       paymentData = await this.dataService.processPayment({
         amount: this.order.total * 100,
@@ -161,8 +168,6 @@ export class PayNowPage {
       }).toPromise();
     } catch (err) {
       await this.presentAlertMessage("We had trouble processing your payment. Please try again");
-      console.log("PD ", paymentData);
-      console.log("PxD ", err);
       this.purchaseInProgress = false;
       return;
     }
@@ -171,7 +176,6 @@ export class PayNowPage {
       this.spinnerService.hideSpinner();
 
       await this.presentAlertMessage("We had trouble processing your payment. Please try again");
-      console.log("PD ", paymentData);
       this.purchaseInProgress = false;
 
       return;

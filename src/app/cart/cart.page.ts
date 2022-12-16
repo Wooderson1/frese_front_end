@@ -41,8 +41,7 @@ export class CartPage implements OnInit {
   }
   async ngOnInit() {
     this.types = await this.storage.get('types');
-  }
-  async presentAlertMessage(msg, func = null) {
+  }  async presentAlertMessage(msg, func = null) {
     const binded = func && func.bind(this);
     const alert = await this.alertController.create({
       message: msg,

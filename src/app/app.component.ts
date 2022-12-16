@@ -3,6 +3,7 @@ import { Stripe } from '@capacitor-community/stripe';
 import {DataServiceService} from "./services/data-service.service";
 import { Storage } from '@ionic/storage';
 import {OrderService} from "./services/order.service";
+import {SpecialsProductsService} from "./specials-products.service";
 import {ProductsService} from "./products.service";
 
 @Component({
@@ -14,6 +15,7 @@ export class AppComponent {
   types;
   constructor(private dataService: DataServiceService,
               private orderService: OrderService,
+              private specialsProductsService: SpecialsProductsService,
               private productsService: ProductsService,
               private storage: Storage) {
     Stripe.initialize({
@@ -24,20 +26,30 @@ export class AppComponent {
   async initStorage() {
     await this.storage.create();
     this.types = await this.dataService.getProductTypes().toPromise();
+    this.dataService.getActiveMenu().subscribe(productResults => {
+      this.orderService.setMenuLoading(false);
+      const availableItems = this.formatMenu(productResults);
+      this.productsService.setProducts(availableItems, this.types);
+    });
+    await this.orderService.loadRegularTimes();
     try {
       const res = await this.dataService.getActiveSpecial().toPromise();
       this.orderService.setLoading(false);
       if(!res || new Date(res.end) < new Date()) {
-        this.orderService.setSpecialId([]);
+        this.orderService.setSpecialId(null);
         return;
       }
       this.orderService.setSpecialId(res.id);
       let temp = this.formatMenu(res.products);
       temp = this.sortBySpecial(temp);
-      this.productsService.setProducts(temp);
+      this.specialsProductsService.setProducts(temp);
+      await this.orderService.loadSpecialTimes();
+
     } catch (err) {
-      this.orderService.setSpecialId([]);
+      this.orderService.setLoading(false);
+      this.orderService.setSpecialId(null);
     }
+
 
     await this.storage.set('types', this.types);
   }
