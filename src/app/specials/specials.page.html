@@ -1,6 +1,6 @@
 <div class="full">
   <div class="ion-page" id="main">
-    <ion-content *ngIf="specialExists() && timesAvailable()" color="light">
+    <ion-content *ngIf="getSpecialStatus() == 'active'" color="light">
               <ion-grid class="products-ion-grid">
                 <ion-row class="ion-justify-content-center">
                   <ion-col class="col" size="12" size-sm="6" size-md="3" size-lg="3" size-xl="2" *ngFor="let item of this.orderService.getSpecialProducts()">
@@ -65,15 +65,18 @@
               <ion-spinner name="lines"></ion-spinner>
             </ng-template>
     </ion-content>
-    <ion-content *ngIf="!specialExists()" class="noSpecial" color="light">
+    <ion-content *ngIf="getSpecialStatus() == 'noSpecial'" class="noSpecial" color="light">
       <h2>
       Sorry we don't have any special active currently! Please check our calendar for the next special!
       </h2>
     </ion-content>
-    <ion-content *ngIf="specialExists() && !timesAvailable()" class="noSpecial" color="light">
+    <ion-content *ngIf="getSpecialStatus() == 'sold out'" class="noSpecial" color="light">
       <h2>
         Sorry we are currently sold out of this special! Please check our calendar for upcoming specials
       </h2>
     </ion-content>
+<!--    <ion-content *ngIf="specialLoading()" color="light">-->
+
+<!--    </ion-content>-->
   </div>
 </div>

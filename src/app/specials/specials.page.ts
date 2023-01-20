@@ -25,6 +25,7 @@ export class SpecialsPage implements OnInit {
   menuToggled = false;
   types;
   specialTypeId;
+  once = false;
 
   constructor(public dataService: DataServiceService,
               private spinnerService: SpinnerService,
@@ -41,10 +42,6 @@ export class SpecialsPage implements OnInit {
     return item.quantity == 0;
   }
   async ionViewDidEnter() {
-    // await this.spinnerService.showSpinner();
-    // while(this.orderService.specialLoading) {
-    // }
-    // await this.spinnerService.hideSpinner();
   }
 
   sortBySpecial(products) {
@@ -149,7 +146,29 @@ export class SpecialsPage implements OnInit {
     return Object.keys(item.selections);
   }
 
+
+  getSpecialStatus() {
+    if(!this.orderService.specialLoading && !this.once) {
+      this.once = true;
+      this.spinnerService.hideSpinner();
+    }
+    if(this.orderService.specialLoading) {
+      return "loading";
+    }
+    if(this.orderService.activeSpecial() && !this.timesAvailable()) {
+      return "sold out";
+    }
+    if(this.orderService.activeSpecial()) {
+      return "active";
+    }
+    return "noSpecial";
+  }
+
+
   specialExists() {
+    if(this.orderService.specialLoading) {
+      return false;
+    }
     return this.orderService.activeSpecial();
   }
   timesAvailable() {
@@ -212,9 +231,7 @@ export class SpecialsPage implements OnInit {
 
   async ngOnInit() {
     if(this.orderService.specialLoading) {
-      await this.spinnerService.showSpinner();
-    } else {
-      await this.spinnerService.hideSpinner();
+      await this.spinnerService.showSpinner(20000);
     }
     this.specialsProductsService.productsUpdated.subscribe((vals) => {
       this.products = vals;
@@ -222,11 +239,6 @@ export class SpecialsPage implements OnInit {
     if(this.orderService.getSpecialId()) {
       await this.spinnerService.hideSpinner();
     }
-    let timeout = 200;
-    let i = 0;
-    while(this.orderService.specialLoading && i++ < timeout) {
-    }    await this.spinnerService.hideSpinner();
-
       if (window.screen.width < 600) { // 768px portrait
       this.mobile = true;
     }

@@ -34,6 +34,7 @@ export class AppComponent {
     await this.orderService.loadRegularTimes();
     try {
       const res = await this.dataService.getActiveSpecial().toPromise();
+
       this.orderService.setLoading(false);
       if(!res || new Date(res.end) < new Date()) {
         this.orderService.setSpecialId(null);

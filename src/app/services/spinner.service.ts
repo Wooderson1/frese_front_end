@@ -10,10 +10,10 @@ export class SpinnerService {
   constructor(public loadingController: LoadingController) {
   }
 
-  public async showSpinner() {
+  public async showSpinner(duration= 3000) {
     this.isLoading = true;
     return await this.loadingController.create({
-      duration: 3000,
+      duration,
     }).then(a => {
       a.present().then(() => {
 
@@ -27,7 +27,11 @@ export class SpinnerService {
   public async hideSpinner(){
     this.isLoading = false;
     if(!this.loadingController) {
-    return await this.loadingController.dismiss().then(() => console.log('dismissed'));
+      return;
+    }
+    try {
+      await this.loadingController.dismiss().then(() => console.log('dismissed'));
+    }catch(e) {
     }
   }
 }
