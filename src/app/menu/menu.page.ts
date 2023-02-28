@@ -1,6 +1,7 @@
 import {Component, HostListener, Input, OnInit, SimpleChanges} from '@angular/core';
 import {MenuController, Platform} from "@ionic/angular";
 import {OrderService} from "../services/order.service";
+import {SpecialsProductsService} from "../specials-products.service";
 
 @Component({
   selector: 'app-menu',
@@ -15,25 +16,31 @@ export class MenuPage implements OnInit {
       icon: 'home',
       url: '/frese-bakery',
     },
-    // {
-    //   title: 'Home',
-    //   icon: 'home',
-    //   url: '/home'
-    // },
-    {
-      title: 'Special',
-      icon: 'star',
-      url: '/specials',
-    },
     {
       title: 'Menu',
       icon: 'pizza',
       url: '/food-menu',
     }
   ]
-  constructor(private menuController: MenuController, private plt: Platform) { }
+  specialItems = []
+  constructor(private menuController: MenuController, private plt: Platform, public orderService: OrderService, public specialsService: SpecialsProductsService) {
+    this.specialsService.getSpecials().then(specials => {
+      specials.forEach(special => {
+        this.menuItems.push({
+          title: special.name,
+          icon: 'star',
+          url: `/specials/${special.id}`,
+        })
+        this.specialItems.push({
+          special,
+          title: special.name,
+          icon: 'star',
+          url: `/specials/${special.id}`,
+        })
+      })
+    });
+  }
   ngOnChanges(changes: SimpleChanges) {
-    console.log("C ", changes);
   }
   updateTitle(title: string) {
     this.titleTest = this.menuItems.filter(item => item.url == title)[0].title;

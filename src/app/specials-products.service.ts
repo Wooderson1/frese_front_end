@@ -1,44 +1,86 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {DataServiceService} from "./services/data-service.service";
+import Special from "./Special";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpecialsProductsService {
 
-  products;
-  productsUpdated = new EventEmitter();
-  availableTimes;
+  specials: {};
+  specialLoading: boolean = true;
+  SLEEP_COUNT = 100;
   constructor(private dataService: DataServiceService) {
+    this.init().then(() => {
+    });
+    this.specials = {};
+  }
+  async waitForSpecials() {
+    let i = 0;
+    while(this.specialLoading && i < this.SLEEP_COUNT) {
+      console.log('.')
+      await this.sleep(100);
+      i++;
+    }
+    return this.specials;
+  }
+  getTimesForSpecials(specials) {
+    let times = {};
+    specials.forEach(specialId =>{
+      const special = this.specials[specialId];
+      if(special.getAvailableTimesCount() > 0) {
+        Object.keys(special.availableTimes).forEach(key => {
+          times[key] = special.availableTimes[key];
+        })
+      }
+      });
+    return times;
+  }
+  getSpecialIdsContainingProductId(productId) {
+    const specialIds = []
+    Object.keys(this.specials).forEach(specialId => {
+      const { id, products } = this.specials[specialId];
+      const prodIds = products.map(v => v.id);
+      if(prodIds.includes(productId)) {
+        specialIds.push(id);
+      }
+    });
+    return specialIds;
+  }
+  getFirstSpecial() {
+    const keys = Object.keys(this.specials);
+    return this.specials[keys[0]];
   }
 
-  async loadAvailableTimes(specialId) {
-    this.availableTimes = await this.dataService.getAvailableSpecialSlots(specialId).toPromise();
+  async init() {
+    try {
+    const res = await this.dataService.getActiveSpecials().toPromise();
+    if (!res || res.length === 0) { // we removed a check for end time being > now
+      return;
+    }
+    for (const special of res) {
+      const s = new Special(special, this.dataService);
+      await s.formatMenu();
+      this.specials[s.id]=s;
+    }
+    this.specialLoading = false;
+    } catch(err) {
+      this.specialLoading = false;
+    }
   }
-  getAvailableTimes() {
-    return this.availableTimes;
+  activeSpecial() {
+    return Object.keys(this.specials).length > 0;
   }
-  getAvailableTimesCount() {
-    if(!this.availableTimes) { return 0; }
-    return Object.keys(this.availableTimes).length;
-  }
+  sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-  setProducts(p) {
-    this.products = p;
-  }
-
-  getProducts() {
-    return this.products;
-  }
-
-  findMatchingProduct(p) {
-    return this.products.find(product => product.id === p)
-  }
-
-  updateProductQuantity(itemId, increment) {
-    const p = this.findMatchingProduct(itemId);
-    if(p.quantity === -1){ return; }
-    p.quantity -= increment;
-    this.productsUpdated.emit(this.products);
+  async getSpecials() {
+    let i = 0;
+    while(this.specialLoading && i < this.SLEEP_COUNT) {
+      await this.sleep(100);
+      i++;
+    }
+    return Object.keys(this.specials).map(v => {
+      return this.specials[v];
+    });
   }
 }

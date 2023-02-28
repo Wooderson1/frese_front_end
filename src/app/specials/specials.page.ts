@@ -26,6 +26,8 @@ export class SpecialsPage implements OnInit {
   types;
   specialTypeId;
   once = false;
+  SPECIAL_ID = 0;
+  special;
 
   constructor(public dataService: DataServiceService,
               private spinnerService: SpinnerService,
@@ -35,7 +37,10 @@ export class SpecialsPage implements OnInit {
               private alertController: AlertController,
               private router: Router,
               private storage: Storage,
+              private route: ActivatedRoute,
               public popoverController: PopoverController) {
+    const routeParams = this.route.snapshot.paramMap;
+    this.SPECIAL_ID = parseInt(routeParams.get('specialsId'));
   }
 
   disableButton(item) {
@@ -148,20 +153,21 @@ export class SpecialsPage implements OnInit {
 
 
   getSpecialStatus() {
-    if(!this.orderService.specialLoading && !this.once) {
+    let res = "noSpecial";
+    if(!this.specialsProductsService.specialLoading && !this.once) {
       this.once = true;
       this.spinnerService.hideSpinner();
     }
-    if(this.orderService.specialLoading) {
-      return "loading";
+    if(this.specialsProductsService.specialLoading) {
+      res = "loading";
     }
-    if(this.orderService.activeSpecial() && !this.timesAvailable()) {
-      return "sold out";
+    if(this.specialsProductsService.activeSpecial() && !this.timesAvailable()) {
+      res = "sold out";
     }
-    if(this.orderService.activeSpecial()) {
-      return "active";
+    if(this.specialsProductsService.activeSpecial()) {
+      res = "active";
     }
-    return "noSpecial";
+    return res;
   }
 
 
@@ -172,7 +178,7 @@ export class SpecialsPage implements OnInit {
     return this.orderService.activeSpecial();
   }
   timesAvailable() {
-    return this.specialsProductsService.getAvailableTimesCount() > 0;
+    return this.specialsProductsService.specials[this.SPECIAL_ID]?.getAvailableTimesCount() > 0;
   }
 
   async addToCart(newItem) {
@@ -230,15 +236,22 @@ export class SpecialsPage implements OnInit {
   }
 
   async ngOnInit() {
-    if(this.orderService.specialLoading) {
+    if(this.specialsProductsService.specialLoading) {
       await this.spinnerService.showSpinner(20000);
     }
-    this.specialsProductsService.productsUpdated.subscribe((vals) => {
+    await this.specialsProductsService.waitForSpecials();
+    const routeParams = this.route.snapshot.paramMap;
+    const specialId = parseInt(routeParams.get('specialsId'))
+    if(!specialId) {
+      const first = this.specialsProductsService.getFirstSpecial();
+      this.SPECIAL_ID = first?.id
+    }
+    if(!this.specialsProductsService[specialId]) {
+      await this.router.navigate(['/specials']);
+    }
+    this.specialsProductsService.specials[this.SPECIAL_ID]?.productsUpdated.subscribe((vals) => {
       this.products = vals;
     });
-    if(this.orderService.getSpecialId()) {
-      await this.spinnerService.hideSpinner();
-    }
       if (window.screen.width < 600) { // 768px portrait
       this.mobile = true;
     }

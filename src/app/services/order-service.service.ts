@@ -29,6 +29,9 @@ export class OrderServiceService {
   getActiveSpecial() {
     return this.http.get(`${this.apiUrl}/activeSpecial`);
   }
+  getActiveSpecials() {
+    return this.http.get(`${this.apiUrl}/activeSpecials`);
+  }
   getSpecialById(id) {
     return this.http.get(`${this.apiUrl}/specials/${id}`)
   }

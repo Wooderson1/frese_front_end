@@ -53,17 +53,19 @@ export class PayNowPage {
     2. a special exists, no slots
     3. no special exists, use regular hours
      */
-    if(this.orderService.activeSpecial() && !this.orderService.containsSpecialProducts()) {
-      this.availableTimes = this.productsService.availableTimes;
-      this.pickupDate = this.productsService.getAvailableTimesCount() > 0 ? moment(Object.keys(this.availableTimes)[0]).toDate() : null;
-
-    } else if(this.orderService.activeSpecial()) {
-      this.availableTimes = this.specialsProductsService.availableTimes;
-      this.pickupDate = this.specialsProductsService.getAvailableTimesCount() > 0 ? moment(Object.keys(this.availableTimes)[0]).toDate() : null;
-    } else { // No special
-      this.availableTimes = this.productsService.availableTimes;
-      this.pickupDate = this.productsService.getAvailableTimesCount() > 0 ? moment(Object.keys(this.availableTimes)[0]).toDate() : null;
-    }
+    this.availableTimes = await this.orderService.getTimesForCart();
+    this.availableTimes = Object.keys(this.availableTimes).sort((a,b) => {
+      const aDate = new Date(a);
+      const bDate = new Date(b);
+      return aDate.getTime() < bDate.getTime() ? -1: 1;
+    }).reduce(
+      (obj, key) => {
+        obj[key] = this.availableTimes[key];
+        return obj;
+      },
+      {}
+    );
+    this.pickupDate =  moment(Object.keys(this.availableTimes)[0]).toDate()
   }
 
   async ngAfterViewInit() {
@@ -238,10 +240,11 @@ export class PayNowPage {
       event.preventDefault();
 
 
+      this.purchaseInProgress = true;
       if (!(await this.requiredFieldsCompleted())) {
+        this.purchaseInProgress = false;
         return;
       }
-
       this.stripe.createToken(this.card).then(result => {
         if (result.error) {
           var errorElement = document.getElementById('card-errors');
@@ -253,6 +256,9 @@ export class PayNowPage {
       });
     });
   }
+  isPurchaseInProgress() {
+    return this.purchaseInProgress;
+  }
 
   async Pay() {
     this.purchaseInProgress = true;
@@ -260,15 +266,17 @@ export class PayNowPage {
       this.purchaseInProgress = false;
       return;
     }
-
-    this.stripe.createToken(this.card).then(result => {
-      if (result.error) {
-        var errorElement = document.getElementById('card-errors');
-        errorElement.textContent = result.error.message;
-        this.purchaseInProgress = false;
-      } else {
-        this.makePayment(result.token);
-      }
-    });
+    return;
   }
+
+  //   this.stripe.createToken(this.card).then(result => {
+  //     if (result.error) {
+  //       var errorElement = document.getElementById('card-errors');
+  //       errorElement.textContent = result.error.message;
+  //       this.purchaseInProgress = false;
+  //     } else {
+  //       this.makePayment(result.token);
+  //     }
+  //   });
+  // }
 }
