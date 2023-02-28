@@ -64,7 +64,6 @@
     padding: 0;
   }
 }
-
 .menuButton{
   color: white;
 }
@@ -100,4 +99,17 @@
   height: 100%;
   text-align: center;
   justify-content: center;
+}
+
+.dropdown {
+  width: 136px;
+  //height: 150px;
+  background: #fff;
+  position: absolute;
+  top: 40px;
+  //left: 7px;
+  z-index: 1;
+  ion-item:hover {
+    --ion-item-color: var(--ion-color-primary);
+  }
 }

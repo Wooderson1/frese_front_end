@@ -41,6 +41,10 @@ const routes: Routes = [
         loadChildren: () => import('../unsubscribe/unsubscribe.module').then(m => m.UnsubscribePageModule)
       },
       {
+        path: 'specials/:specialsId',
+        loadChildren: () => import('../specials/specials.module').then( m => m.SpecialsPageModule)
+      },
+      {
         path: '**',
         redirectTo: 'specials'
       }

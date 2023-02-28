@@ -41,6 +41,9 @@ export class DataServiceService {
     return this.orderService.unsubscribe(email);
   }
 
+  getActiveSpecials() : Observable<any> {
+    return this.orderService.getActiveSpecials();
+  }
   getActiveSpecial() : Observable<any> {
     return this.orderService.getActiveSpecial();
   }

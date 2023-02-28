@@ -2,6 +2,7 @@ import {Injectable, EventEmitter, SimpleChanges} from '@angular/core';
 import {Storage} from "@ionic/storage";
 import { ProductsService } from '../products.service';
 import { SpecialsProductsService } from '../specials-products.service';
+import { DataServiceService } from "./data-service.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +14,50 @@ export class OrderService {
   specialLoading = true;
   menuLoading = true;
   orderUpdated = new EventEmitter();
+  types;
 
   constructor(private storage: Storage,
               private specialsProductsService: SpecialsProductsService,
+              private dataService: DataServiceService,
               private productsService: ProductsService) {
+    this.init().then(() => {
+    })
+  }
+  async init() {
+    // 2. Menu
+    const productResults = await this.dataService.getActiveMenu().toPromise();
+    this.setMenuLoading(false);
+
+    const availableItems = this.formatMenu(productResults);
+    await this.productsService.setProducts(availableItems);
+
+    // 3. Order timeslots
+    await this.loadRegularTimes();
   }
   async ngOnInit() {
   }
-
+  formatMenu(menu) {
+    return this.initializeSelectedSizes(menu);
+  }
+  sortBySpecial(products) {
+    const specialTypeId = this.types.find(element => {
+      return element.name === "Special";
+    })
+    return products.sort((a, b) => {
+      if (a.typeId === specialTypeId.id) {
+        return -1;
+      }
+      return 1;
+    })
+  }
+  initializeSelectedSizes(menu) {
+    menu.forEach((item) => {
+      if (item.product_sizes && item.product_sizes.length > 0) {
+        item.product_size_selected = item.product_sizes[0];
+      }
+    });
+    return menu;
+  }
   ngOnChanges(changes: SimpleChanges) {
   }
 
@@ -34,12 +71,39 @@ export class OrderService {
     return this.specialsId;
   }
 
+  menuContainsAllProducts() {
+    try {
+
+    if(!this.order) { return true; }
+    if(!this.productsService.types) { return true;}
+    if(!this.productsService.products) { return true; }
+    const specialTypeId = this.productsService.types.find(element => {
+      return element.name === "Special";
+    })
+    const productIdsInCart = this.order.items.map(v => v.productId);
+    const specialIds = this.productsService.products.filter(v => v.typeId != specialTypeId.id).map(v=>v.id);
+    return !productIdsInCart.every(elem => specialIds.includes(elem));
+    } catch(err) {
+      return true;
+    }
+  }
+  specialContainsAllProducts(special) {
+    try {
+      if(!this.order) { return true; }
+      const productIdsInCart = this.order.items.map(v => v.productId);
+      const specialIds = special.products.map(v => v.id);
+      return !productIdsInCart.every(elem => specialIds.includes(elem));
+    } catch(err) {
+      return true;
+    }
+  }
+
   getSpecialId() {
     return this.specialsId;
   }
 
   getSpecialProducts() {
-    const specialProductIds = this.specialsProductsService.getProducts().map(p => p.id)
+    const specialProductIds = this.specialsProductsService.specials[0].getProducts().map(p => p.id)
     return this.productsService.products.filter(p => {
       return specialProductIds.includes(p.id);
     });
@@ -66,20 +130,51 @@ export class OrderService {
 
   }
 
-  containsSpecialProducts() {
-    const specialTypeId = this.productsService.types.find(element => {
-      return element.name === "Special";
-    })
-    return this.order.items.some(item => {
-      return item.typeId === specialTypeId.id;
-    })
-  }
+ async getTimesForCart() {
+    /*
+       if an item belongs to a special in the cart we only return that
+       specials times
+
+       if the cart has no special items, return all specials/times with that item
+     */
+   const specialTypeId = this.productsService.types.find(element => {
+     return element.name === "Special";
+   })
+
+   /* Check for any special items in the cart */
+   const specialProductsInCart = this.order.items.filter(item => {
+     return item.typeId === specialTypeId.id;
+   })
+   let specialsBeingBought = [];
+   specialProductsInCart.forEach(product => {
+     specialsBeingBought = this.specialsProductsService.getSpecialIdsContainingProductId(product.productId);
+   });
+   let specialsTimes = this.specialsProductsService.getTimesForSpecials(specialsBeingBought);
+   if(Object.keys(specialsTimes).length > 0) {
+     return specialsTimes;
+   }
+   /* at this point the cart contains no special items */
+
+   let times = {};
+   // if every item in the cart belongs to a special, add its times
+   const productIdsInCart = this.order.items.map(v => v.productId);
+   const specials = await this.specialsProductsService.getSpecials();
+   specials.forEach(special => {
+     const specialIds = special.products.map(v => v.id);
+     if(productIdsInCart.every(elem => specialIds.includes(elem))) {
+       Object.keys(special.availableTimes).forEach(key => {
+         times[key] = special.availableTimes[key];
+       })
+     }
+   })
+   Object.keys(this.productsService.availableTimes).forEach(key => {
+     times[key] =this.productsService.availableTimes[key];
+   })
+   return times;
+ }
 
   async loadRegularTimes() {
     await this.productsService.loadAvailableTimes();
-  }
-  async loadSpecialTimes() {
-    await this.specialsProductsService.loadAvailableTimes(this.specialsId);
   }
 
   async addToCart(newItem) {

@@ -1,7 +1,7 @@
   <ion-menu contentId="main" menuId="myMenu">
     <ion-header>
       <ion-toolbar>
-        <ion-title>Test</ion-title>
+        <ion-title></ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -9,13 +9,25 @@
 <!--        <img class="logo" src="../../assets/images/freseLogo.png">-->
 
 <!--        <ion-label>Version: 1.0.23</ion-label>-->
-        <ion-menu-toggle *ngFor="let p of menuItems; let i = index">
-          <ion-item button (click)="updateTitle(p.url)" class="iconColor" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}">
+      <ion-menu-toggle *ngFor="let p of specialItems; let i = index">
+        <ion-item [disabled]="orderService.specialContainsAllProducts(p.special)"button (click)="updateTitle(p.url)" class="iconColor" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}">
+          <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+          <ion-label>{{ p.title }}</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle>
 
-            <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-            <ion-label>{{ p.title }}</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
+      <ion-item [disabled]="orderService.menuContainsAllProducts()"button (click)="updateTitle('/frese-bakery')" class="iconColor" routerDirection="root" [routerLink]="'/frese-bakery'" lines="none" detail="false" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}">
+        <ion-icon slot="start" [ios]="'home-outline'" [md]="'home-sharp'"></ion-icon>
+        <ion-label>Order Now</ion-label>
+      </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle>
+      <ion-item button (click)="updateTitle('/food-menu')" class="iconColor" routerDirection="root" [routerLink]="'/food-menu'" lines="none" detail="false" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}">
+        <ion-icon slot="start" [ios]="'pizza-outline'" [md]="'pizza-sharp'"></ion-icon>
+        <ion-label>Menu</ion-label>
+      </ion-item>
+      </ion-menu-toggle>
 <!--      </ion-list>-->
 
       <!--        <ion-list id="labels-list">-->

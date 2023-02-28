@@ -18,8 +18,8 @@ export class ProductsService {
     return Object.keys(this.availableTimes).length;
   }
 
-  setProducts(p, types) {
-    this.types = types;
+  async setProducts(p) {
+    this.types = await this.dataService.getProductTypes().toPromise();
     this.products = p;
   }
   async loadAvailableTimes() {

@@ -3,7 +3,7 @@
     <ion-content *ngIf="getSpecialStatus() == 'active'" color="light">
               <ion-grid class="products-ion-grid">
                 <ion-row class="ion-justify-content-center">
-                  <ion-col class="col" size="12" size-sm="6" size-md="3" size-lg="3" size-xl="2" *ngFor="let item of this.orderService.getSpecialProducts()">
+                  <ion-col class="col" size="12" size-sm="6" size-md="3" size-lg="3" size-xl="2" *ngFor="let item of this.specialsProductsService.specials[this.SPECIAL_ID]?.getProducts()">
                     <ion-card class="item-row">
                       <ion-img class="item-image" *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
                       <ng-template #noPhoto>

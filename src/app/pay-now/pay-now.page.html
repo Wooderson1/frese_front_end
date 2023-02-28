@@ -55,7 +55,7 @@
         </div>
 <!--        <ion-button color="frese" type="submit" expand="full">Make Payment</ion-button>-->
         <ion-item [disabled]="purchaseInProgress" class="pay-button" color="frese">
-          <button appDebounceClick [disabled]="purchaseInProgress" class="full_button" type="submit" (debounceClick)="Pay()" [debounceTime]="750">Make Payment</button>
+          <button [disabled]="isPurchaseInProgress()" class="full_button" type="submit">Make Payment</button>
         </ion-item>
       </form>
     </ion-card-content>
