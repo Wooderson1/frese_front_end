@@ -21,13 +21,6 @@
     <img class="photo" src="../../../assets/images/freseLogo.png">
   </ion-col>
   <ion-col size="8" class="ion-text-left">
-<!--    <ion-row>-->
-<!--      <ion-col *ngFor="let special of specialsItems">-->
-<!--        <ion-button class="menuButton" fill="clear" [routerLink]="[special.url]" routerDirection="root" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact:true}">-->
-<!--          {{special.title}}-->
-<!--        </ion-button>-->
-<!--      </ion-col>-->
-<!--    </ion-row>-->
     <ion-button #productbtn (mouseenter)="dropdown=true" (mouseleave)="hideDropdown($event)" class="menuButton" fill="clear" routerLink="/specials" routerDirection="root" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact:true}">
       <ion-icon slot="end" [name]="dropdown ? 'chevron-down' : 'chevron-up'"></ion-icon>
       Specials
