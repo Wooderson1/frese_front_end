@@ -246,7 +246,7 @@ export class SpecialsPage implements OnInit {
       const first = this.specialsProductsService.getFirstSpecial();
       this.SPECIAL_ID = first?.id
     }
-    if(!this.specialsProductsService[specialId]) {
+    if(!this.specialsProductsService.specials[specialId]) {
       await this.router.navigate(['/specials']);
     }
     this.specialsProductsService.specials[this.SPECIAL_ID]?.productsUpdated.subscribe((vals) => {
