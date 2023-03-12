@@ -56,6 +56,7 @@ export class SpecialsProductsService {
     try {
     const res = await this.dataService.getActiveSpecials().toPromise();
     if (!res || res.length === 0) { // we removed a check for end time being > now
+      this.specialLoading = false;
       return;
     }
     for (const special of res) {
