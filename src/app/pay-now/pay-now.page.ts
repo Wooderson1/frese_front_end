@@ -199,8 +199,6 @@ export class PayNowPage {
       }).toPromise();
       } catch(err) {
         await this.presentAlertMessage("Something went wrong with your order. Please call the bakery at (518) 756-1000");
-        console.log("Something went wrong for order id ", this.order.id);
-        console.log("Here's the err ", err);
       }
       await this.modalController.dismiss({success: true});
     }
