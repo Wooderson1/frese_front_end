@@ -40,7 +40,6 @@
                         <ion-list *ngIf="hasSelections(item)">
                           <div class="subText">Selections</div>
                           <div class="select-opt" *ngFor="let selectionKey of selectionKeys(item)">
-                            {{stringify(item, selectionKey)}}
                             <ion-select [(ngModel)]="item.product_selection_values[selectionKey].selected"
                                         [placeholder]="selectionKey">
                               <ion-select-option *ngFor="let v of item.product_selection_values[selectionKey]"

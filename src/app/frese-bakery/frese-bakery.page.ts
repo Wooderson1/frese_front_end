@@ -273,38 +273,7 @@ export class FreseBakeryPage implements OnInit {
     }
   }
 
-  // addItem(item) {
-  //   let foundIdentical = false;
-  //   this.cart.items.forEach(i => {
-  //     let oldQuantity = i.quantity;
-  //     i.quantity = 1;
-  //     if (JSON.stringify(i) == JSON.stringify(item)) {
-  //       i.quantity = oldQuantity + 1;
-  //       foundIdentical = true;
-  //       return;
-  //     } else {
-  //       i.quantity = oldQuantity;
-  //     }
-  //   })
-  //   if (foundIdentical) {
-  //     this.orderService.setOrder(this.cart);
-  //     return;
-  //   }
-  //   this.cart.items.push(item);
-  //   this.orderService.setOrder(this.cart);
-  // }
-
-  showSels(item) {
-    return JSON.stringify(item.product_selection_values);
-
-  }
-  stringify(item, selectionKey) {
-    return JSON.stringify(item.product_selection_values[selectionKey]);
-  }
-
   async addToCart(newItem) {
-    console.log("ADDING ", newItem.product_selection_values["Flavors"]);
-    console.log("ADDING ", newItem.product_selection_values["Flavors"].selected);
     let resp = await this.orderService.addToCart(newItem);
     if(resp === "Whoops we don't have that many left, we've updated your cart") {
       await this.presentAlertMessage("Whoops we don't have that many left, we've updated your cart");
@@ -325,41 +294,8 @@ export class FreseBakeryPage implements OnInit {
     }
   }
 
-  // Update cart
-  // async updateCart(newItem) {
-  //   if (newItem.quantity === 0) {
-  //     await this.presentAlertMessage("Whoops we don't have that many left, we've updated your cart");
-  //     return;
-  //   }
-  //   if (this.checkForSelectionCount(newItem)) {
-  //
-  //     const alert = await this.alertController.create({
-  //       header: 'Whoops!',
-  //       message: 'Please make a selection',
-  //       buttons: [
-  //         {
-  //           text: 'Dismiss',
-  //           handler: () => {
-  //           }
-  //         }
-  //       ]
-  //     });
-  //     return alert.present();
-  //   }
-  //   let item = this.formatCartItem(newItem);
-  //
-  //   this.addItem(item);
-  // }
-
   // check out logic goes here
   async checkOut(final) {
-
-
-    if (final.items) {
-      for (const x of final.items) {
-
-      }
-    }
 
     const popover = await this.popoverController.create({
       component: CheckOutComponent,
@@ -374,14 +310,6 @@ export class FreseBakeryPage implements OnInit {
       component: PopoverComponent,
     });
     return await popover.present();
-  }
-
-  formatAOV(val) {
-    let keys = Object.keys(val);
-    keys.forEach(k => {
-      val[k].forEach(v => v["selected"] = false);
-    });
-    return val;
   }
 
   formatMenu(menu) {
@@ -429,11 +357,6 @@ export class FreseBakeryPage implements OnInit {
 
   displaySubtotal() {
     return this.getSubtotal().toFixed(2);
-  }
-
-  ssdisplayAmount(amount) {
-
-    return amount.toFixed(2);
   }
 
   displayAmount(amount) {
