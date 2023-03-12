@@ -14,9 +14,9 @@ export class StripeService {
     return this.http.post(`${this.apiUrl}/processOrderAndPay`, data)
   }
   processPayment(data) {
-    const {phone, email, amount, currency, token, orderId, name } = data;
+    const {phone, email, amount, currency, token, orderId, name, pickupTime } = data;
     return this.http.post(`${this.apiUrl}/stripe/charge`, {
-      phone, email, amount, currency, token, orderId, name
+      phone, email, amount, currency, token, orderId, name, pickupTime
     })
   }
 }
