@@ -196,60 +196,6 @@ export class FreseBakeryPage implements OnInit {
     }
   }
 
-  formatSelections(item) {
-    return;
-  }
-  //   let vals = {};
-  //   console.log(item.product_selection_values)
-  //   Object.keys(item.product_selection_values).forEach(key => {
-  //     if (item.product_selection_values[key].selected) {
-  //       vals[key] = {
-  //         value: item.product_selection_values[key].selected.value,
-  //         cost: item.product_selection_values[key].selected.cost
-  //       };
-  //       item.product_selection_values[key].selected = null;
-  //     }
-  //   });
-  //   return vals;
-  // }
-
-  // formatAddOns(item) {
-  //   let vals = {};
-  //   Object.keys(item.product_add_on_values).forEach(key => {
-  //     if (item.product_add_on_values[key].selected) {
-  //       vals[key] = item.product_add_on_values[key].selected.map(val => {
-  //         return {
-  //           value: val.value,
-  //           cost: val.cost
-  //         }
-  //       });
-  //       item.product_add_on_values[key].selected = null;
-  //     }
-  //   });
-  //   return vals;
-  // }
-
-  // formatSize(item) {
-  //   if (!item.product_size_selected) {
-  //     return null;
-  //   }
-  //   let id = item.product_size_selected.id;
-  //   item.product_size_selected = item.product_sizes[0];
-  //   return id;
-  // }
-
-  // formatCartItem(item) {
-  //   return {
-  //     price: this.getItemCost(item),
-  //     productId: item.id,
-  //     product_name: item.title,
-  //     quantity: 1,
-  //     product_size_id: this.formatSize(item),
-  //     selections: this.formatSelections(item),
-  //     add_ons: this.formatAddOns(item),
-  //   };
-  // }
-
   getAddOnValues(item, key) {
     return item.add_ons[key];
   }
