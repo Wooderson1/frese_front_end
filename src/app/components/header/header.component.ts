@@ -70,7 +70,6 @@ export class HeaderComponent implements OnInit {
     this.orderService.orderUpdated.subscribe((vals) => {
       const {order, specialsId} = vals;
       this.cart = order;
-      console.log("UPDATED ", this.cart);
       this.specialsId = specialsId;
     })
     // this.cart.items = [1,2,3];
