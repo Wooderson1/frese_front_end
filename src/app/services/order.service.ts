@@ -62,7 +62,6 @@ export class OrderService {
   }
 
   checkForSelectionCount(item) {
-    console.log("ITEM ", item);
     return Object.keys(item.product_selection_values).some(key => {
       return !item.product_selection_values[key].selected
     });
@@ -223,7 +222,6 @@ export class OrderService {
   }
 
   formatAddOns(item) {
-    console.log("226 ", item);
     let vals = {};
     Object.keys(item.product_add_on_values).forEach(key => {
       if (item.product_add_on_values[key].selected) {
@@ -241,7 +239,6 @@ export class OrderService {
 
   formatSelections(item) {
     let vals = {};
-    console.log("FORMATTING ", item);
     Object.keys(item.product_selection_values).forEach(key => {
       if (item.product_selection_values[key].selected) {
         vals[key] = {
@@ -255,7 +252,6 @@ export class OrderService {
   }
 
   addItem(item) {
-    console.log("257 ", item);
     let foundIdentical = false;
     this.order.items.forEach(i => {
       let oldQuantity = i.quantity;
