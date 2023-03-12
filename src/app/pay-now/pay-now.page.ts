@@ -166,9 +166,19 @@ export class PayNowPage {
         orderId: this.order.id,
         email: this.customerInfo.email,
         phone: this.customerInfo.phone,
-        name: this.customerInfo.name
+        name: this.customerInfo.name,
+        pickupTime: this.pickupDate
       }).toPromise();
     } catch (err) {
+      if(err.error.message === "Order already paid for") {
+        await this.dataService.updateOrderDetails(this.order.id, {
+          notes: this.orderNotes,
+          pickupTime: this.pickupDate
+        }).toPromise();
+        await this.presentAlertMessage("It looks like we processed this order already, please call to confirm your order (518) 756-1000");
+        await this.modalController.dismiss({success:false});
+        return;
+      }
       await this.presentAlertMessage("We had trouble processing your payment. Please try again");
       this.purchaseInProgress = false;
       return;
@@ -182,18 +192,16 @@ export class PayNowPage {
 
       return;
     } else {
+      try {
       await this.dataService.updateOrderDetails(this.order.id, {
         notes: this.orderNotes,
         pickupTime: this.pickupDate
       }).toPromise();
-      this.modalController.dismiss({success: true});
+      } catch(err) {
+        await this.presentAlertMessage("Something went wrong with your order. Please call the bakery at (518) 756-1000");
+      }
+      await this.modalController.dismiss({success: true});
     }
-  } catch(err) {
-    this.dataService.updateOrderDetails(this.order.id, {
-      notes: this.orderNotes,
-      pickupTime: this.pickupDate
-    }).toPromise();
-    this.modalController.dismiss({success: true});
   }
 
   ngOnDestroy() {
@@ -249,6 +257,7 @@ export class PayNowPage {
         if (result.error) {
           var errorElement = document.getElementById('card-errors');
           errorElement.textContent = result.error.message;
+          this.purchaseInProgress = false;
         } else {
 
           this.makePayment(result.token);
