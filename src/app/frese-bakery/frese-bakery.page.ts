@@ -43,6 +43,7 @@ export class FreseBakeryPage implements OnInit {
               private alertController: AlertController,
               private productsService: ProductsService,
               public popoverController: PopoverController) {
+    console.log("CONSTRUCTOR FB");
   }
 
 
@@ -137,6 +138,11 @@ export class FreseBakeryPage implements OnInit {
       return;
     }
     const availableTimes = await this.dataService.getAvailableTimeSlots().toPromise();
+    Object.keys(availableTimes).forEach(k => {
+      if(!availableTimes[k].active) {
+        delete availableTimes[k];
+      }
+    })
     if (Object.keys(availableTimes).length <= 0) {
       await this.presentAlertMessage("Sorry it seems like we're too busy to take new orders at this time! Please try again later.", this.refreshPage);
       return;

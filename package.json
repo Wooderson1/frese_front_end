@@ -8,6 +8,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build-docker": "docker build -t frese/app-order .",
+    "local": "TZ='America/New_York' ionic serve",
     "browser": "ionic cordova platform add browser && ionic cordova build browser",
     "run-docker": "docker run --network host frese/app-order",
     "test": "ng test",

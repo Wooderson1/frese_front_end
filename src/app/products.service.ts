@@ -24,6 +24,11 @@ export class ProductsService {
   }
   async loadAvailableTimes() {
     this.availableTimes = await this.dataService.getAvailableTimeSlots().toPromise();
+    Object.keys(this.availableTimes).forEach(k => {
+      if(!this.availableTimes[k].active) {
+        delete this.availableTimes[k];
+      }
+    })
   }
   getProducts() {
     const special = this.types.find(t => t.name === "Special");
