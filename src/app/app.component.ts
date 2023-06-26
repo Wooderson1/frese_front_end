@@ -19,7 +19,6 @@ export class AppComponent {
               private productsService: ProductsService,
               private location: Location,
               private storage: Storage) {
-    this.location.replaceState('/.well-known/apple-developer-merchantid-domain-association');
     Stripe.initialize({
       publishableKey: 'Your Publishable Key',
     });

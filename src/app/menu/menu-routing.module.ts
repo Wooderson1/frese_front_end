@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import {Routes, RouterModule, UrlSegment, UrlMatchResult} from '@angular/router';
+import { Location } from '@angular/common';
 
 import {MenuPage} from './menu.page';
 
@@ -50,12 +51,25 @@ const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: 'specials'
+        redirectTo: '.well-known/apple-developer-merchantid-domain-association'
       }
     ]
   }
 
 ];
+function dogRouteMatcher(url: UrlSegment[]): UrlMatchResult | null {
+  console.log(url);
+  const regex = /dog/i; // Use the desired regex pattern here
+  const path = url.map(segment => segment.path).join('/');
+
+  if (regex.test(path)) {
+    return { consumed: url };
+  }
+
+  return null;
+}
+
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

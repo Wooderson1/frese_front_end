@@ -19,10 +19,6 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
-  },
-  {
-    path: '.well-known/apple-developer-merchantid-domain-association',
-    loadChildren: () => import('./pages/apple-pay/apple-pay.module').then( m => m.ApplePayPageModule)
   }
 ];
 
