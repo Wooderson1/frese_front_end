@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 import {OrderService} from "./services/order.service";
 import {SpecialsProductsService} from "./specials-products.service";
 import {ProductsService} from "./products.service";
+import { Location } from '@angular/common'
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,9 @@ export class AppComponent {
               private orderService: OrderService,
               private specialsProductsService: SpecialsProductsService,
               private productsService: ProductsService,
+              private location: Location,
               private storage: Storage) {
+    this.location.replaceState('/.well-known/apple-developer-merchantid-domain-association');
     Stripe.initialize({
       publishableKey: 'Your Publishable Key',
     });

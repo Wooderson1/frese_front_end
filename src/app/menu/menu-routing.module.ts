@@ -45,6 +45,10 @@ const routes: Routes = [
         loadChildren: () => import('../specials/specials.module').then( m => m.SpecialsPageModule)
       },
       {
+        path: '.well-known/apple-developer-merchantid-domain-association',
+        loadChildren: () => import('../pages/apple-pay/apple-pay.module').then( m => m.ApplePayPageModule)
+      },
+      {
         path: '**',
         redirectTo: 'specials'
       }
