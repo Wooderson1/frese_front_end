@@ -51,7 +51,7 @@ const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: '.well-known/apple-developer-merchantid-domain-association'
+        redirectTo: 'specials'
       }
     ]
   }
