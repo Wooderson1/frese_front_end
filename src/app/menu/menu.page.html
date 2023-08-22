@@ -28,6 +28,12 @@
         <ion-label>Menu</ion-label>
       </ion-item>
       </ion-menu-toggle>
+      <ion-menu-toggle>
+      <ion-item button (click)="updateTitle('/calendar')" class="iconColor" routerDirection="root" [routerLink]="'/calendar'" lines="none" detail="false" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}">
+        <ion-icon slot="start" [ios]="'calendar-outline'" [md]="'calendar-sharp'"></ion-icon>
+        <ion-label>Calendar</ion-label>
+      </ion-item>
+      </ion-menu-toggle>
 <!--      </ion-list>-->
 
       <!--        <ion-list id="labels-list">-->

@@ -34,6 +34,10 @@ const routes: Routes = [
         loadChildren: () => import('../pages/food-menu/food-menu.module').then(m => m.FoodMenuPageModule)
       },
       {
+        path: 'calendar',
+        loadChildren: () => import('../calendar/calendar.module').then(m => m.CalendarPageModule)
+      },
+      {
         path: 'specials',
         redirectTo: 'specials/'
       },
