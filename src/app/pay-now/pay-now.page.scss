@@ -15,12 +15,13 @@ button {
 .full_button:disabled,
 .pay-button:disabled,
 button[disabled]{
-  //border: 1px solid #999999;
-  //background-color: #cccccc;
-  //color: #666666;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
 }
 .full_button{
   background-color: var(--ion-color-frese);
+  color: black;
   width: 100%;
   height: 100%;
   padding: 0;

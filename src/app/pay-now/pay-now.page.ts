@@ -65,7 +65,11 @@ export class PayNowPage {
       },
       {}
     );
-    this.pickupDate =  moment(Object.keys(this.availableTimes)[0]).toDate()
+    if(Object.keys(this.availableTimes).length === 0) {
+      this.pickupDate = null;
+    } else {
+      this.pickupDate =  moment(Object.keys(this.availableTimes)[0]).toDate()
+    }
   }
 
   async ngAfterViewInit() {
@@ -101,6 +105,7 @@ export class PayNowPage {
   }
 
   async setPickupTime() {
+    if(!this.pickupDate) { return; }
     const m = await this.modalController.create({
       component: DatePickerPage,
       componentProps: {
