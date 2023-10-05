@@ -1,0 +1,64 @@
+<ion-header color="dark">
+  <ion-toolbar>
+    <img src="assets/images/freseLogo.png" width="140px" height="90px" class="ion-margin"/>
+    <div slot="end" class="ion-padding-end">
+      <ion-button color="frese" (click)="refreshPage()">
+        <ion-icon slot="start" name="close-outline"></ion-icon>
+        Close
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Thank you for your order!</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content class="order-details">
+      <div>
+        <strong>Invoice Number:</strong> {{ order.id }}
+      </div>
+      <div>
+        <strong>Pickup Time:</strong> {{ formatPickupTime(order.pickupTime) }}
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Order Items</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item lines="none" *ngFor="let item of order.items">
+          <ion-label>
+            {{item.quantity}} x {{ item.product.title }}
+            <div *ngIf="item.product_size_id">
+              <small><em>Size: {{getSizeName(item)}}</em></small>
+            </div>
+            <div *ngFor="let selection of item.selections">
+              <small><em>{{ selection }}</em></small>
+            </div>
+            <div *ngFor="let add_ons of item.add_ons">
+              <small><em>{{ add_ons }}</em></small>
+            </div>
+          </ion-label>
+          <ion-text>{{ item.price * item.quantity | currency }}</ion-text>
+        </ion-item>
+      </ion-list>
+      <ion-item>
+        <ion-label>
+          <div><strong>Tax:</strong></div>
+          <div><strong>Total:</strong></div>
+        </ion-label>
+        <ion-text>
+          <div class="estimated-tax">{{ getEstimatedTax() | currency }}</div>
+          <div><strong>{{getTotal() | currency }}</strong></div>
+        </ion-text>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
