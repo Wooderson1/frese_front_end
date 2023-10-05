@@ -1,0 +1,76 @@
+/* General styling */
+ion-content {
+  font-family: 'Arial', sans-serif;
+}
+
+ion-card {
+  //margin: 10px 0;
+  //box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+ion-card-header {
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+ion-card-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333;
+}
+
+ion-card-content {
+  padding: 15px;
+}
+.estimated-tax {
+  font-size: 0.8em;
+  color: #777;
+  margin-top: 5px;
+}
+/* Order Items styling */
+ion-item {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 10px 15px;
+}
+
+ion-item:last-child {
+  border: none;
+}
+
+ion-label {
+  font-size: 1em;
+  color: #444;
+}
+
+ion-text {
+  font-size: 1em;
+  color: #666;
+  font-weight: bold;
+}
+
+ion-item-divider {
+  background-color: #f7f7f7;
+  color: #555;
+}
+.order-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1em;
+  padding: 15px;
+}
+
+.order-details > div {
+  flex: 1;
+  padding: 0 10px;
+  color: #444;
+}
+/* Selection styling */
+small {
+  display: block;
+  font-size: 0.8em;
+  margin-top: 5px;
+  color: #777;
+}
+

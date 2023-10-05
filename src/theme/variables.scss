@@ -4,7 +4,9 @@
 /** Ionic CSS Variables **/
 :root {
   --ion-margin: 8px;
-
+  ion-button {
+    --border-radius: 10px;
+  }
   /** frese bakery logo color **/
   --ion-color-frese: #ffaf38;
   --ion-color-frese-rgb: 255, 176, 56;

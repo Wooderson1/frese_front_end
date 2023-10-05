@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {PayNowPage} from "../pay-now/pay-now.page";
-import {SpinnerService} from "../services/spinner.service";
-import {DataServiceService} from "../services/data-service.service";
-import {AlertController, ModalController} from "@ionic/angular";
-import {OrderService} from "../services/order.service";
+import {PayNowPage} from '../pay-now/pay-now.page';
+import {SpinnerService} from '../services/spinner.service';
+import {DataServiceService} from '../services/data-service.service';
+import {AlertController, ModalController} from '@ionic/angular';
+import {OrderService} from '../services/order.service';
 import { Storage } from '@ionic/storage';
+import {ProductsService} from '../products.service';
 
 @Component({
   selector: 'app-cart',
@@ -23,6 +24,7 @@ export class CartPage implements OnInit {
               private modalController: ModalController,
               private alertController: AlertController,
               private storage: Storage,
+              private productsService: ProductsService,
               public orderService: OrderService,
               private dataService: DataServiceService) { }
 
@@ -34,13 +36,13 @@ export class CartPage implements OnInit {
   }
   async updateCart(item, increment) {
     const resp = await this.orderService.updateCart(item, increment);
-    if(resp === "Whoops we don't have that many left, we've updated your cart") {
+    if(resp === 'Whoops we don\'t have that many left, we\'ve updated your cart') {
       await this.presentAlertMessage(resp);
     }
 
   }
   async ngOnInit() {
-    this.types = await this.storage.get('types');
+    this.types = this.productsService.types;
   }  async presentAlertMessage(msg, func = null) {
     const binded = func && func.bind(this);
     const alert = await this.alertController.create({
@@ -63,7 +65,7 @@ export class CartPage implements OnInit {
       if(p.id === item.productId) {
         p.quantity += item.quantity;
       }
-    })
+    });
     this.cart.items.splice(index, 1);
   }
 
@@ -109,10 +111,9 @@ export class CartPage implements OnInit {
   }
 
   shouldBeTaxed(item) {
-    const BreadType = this?.types?.find(element => {
-      return element.name === "Bread";
-    })
-    return item.typeId !== BreadType?.id;
+    const BreadType = this?.types?.find(element => element.name === 'Bread');
+    const x = item.typeId !== BreadType?.id;
+    return x;
   }
   getTax() {
     let total = 0;
@@ -144,7 +145,7 @@ export class CartPage implements OnInit {
   }
 
   getTotal() {
-    let subtotal = this.getSubtotal();
+    const subtotal = this.getSubtotal();
     return this.round(subtotal + this.getTax());
   }
 
@@ -158,20 +159,21 @@ export class CartPage implements OnInit {
   closeModal() {
     this.modalController.dismiss({
       refresh: false
-    })
+    });
   }
 
   async Pay() {
     if(this.cart.items.length === 0) {
-      await this.presentAlertMessage("Oops! looks like your cart is empty.");
+      await this.presentAlertMessage('Oops! looks like your cart is empty.');
       return;
     }
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
 
+    console.log(this.cart);
     const orderRes = await this.dataService.createOrder(this.cart).toPromise();
     if (!orderRes.id) {
-      await this.presentAlertMessage("Something went wrong creating your order, please try again");
+      await this.presentAlertMessage('Something went wrong creating your order, please try again');
       return;
     }
 
@@ -186,7 +188,7 @@ export class CartPage implements OnInit {
     modal.onDidDismiss().then(async (detail: any) => {
       this.spinnerService.hideSpinner();
       if (detail.data && detail.data.success) {
-        await this.presentAlertMessage("Thank you for your order! We will email you a receipt.", this.refreshPage);
+        await this.presentAlertMessage('Thank you for your order! We will email you a receipt.', this.refreshPage);
       }
     });
     await modal.present();

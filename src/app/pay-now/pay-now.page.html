@@ -11,54 +11,51 @@
 </ion-header>
 
 <ion-content>
-  <ion-card class="welcome-card" lines="none">
-    <!--    <ion-img src="/assets/stripe.png"></ion-img>-->
-    <ion-card-header lines="none">
-<!--      <ion-card-subtitle>Order Details</ion-card-subtitle>-->
-      <ion-card-title>Order Details</ion-card-title>
-      <ion-item>Total: ${{ displayAmount(this.order.total) }}</ion-item>
-      <ion-item>
-        <ion-icon (click)="setPickupTime()" slot="end" [style.color]="'#000000'" name="calendar"></ion-icon>
-        <ion-label>Pickup Time: {{formatDate()}}</ion-label>
-      </ion-item>
-      <ion-item lines="none">
-        <ion-icon slot="end" [style.color]="'#000000'" class="darkicon" name="pencil-outline"></ion-icon>
-        <ion-input class="input-lines" [(ngModel)]="orderNotes" placeholder="Notes for the order..."></ion-input>
-      </ion-item>
-      <ion-item lines="none">
-        <ion-button *ngIf="!couponApplied" (click)="applyCoupon()" slot="end">
-          APPLY
-        </ion-button>
-        <ion-icon *ngIf="couponApplied" slot="end" [style.color]="'#000000'" class="darkicon" name="checkmark-outline"></ion-icon>
-        <ion-input [disabled]="couponApplied" class="input-lines" [(ngModel)]="coupon" placeholder="Discount code..."></ion-input>
-      </ion-item>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item lines="inset" class="white-background">
-        <ion-input [(ngModel)]="customerInfo.name" placeholder="Customer Name" (keyup.enter)="hideKeyboard()"
-                   type="email"></ion-input>
-      </ion-item>
-      <ion-item lines="inset" class="white-background">
-        <ion-input [(ngModel)]="customerInfo.email" placeholder="Email" (keyup.enter)="hideKeyboard()"
-                   type="email"></ion-input>
-      </ion-item>
-      <ion-item lines="inset" class="white-background">
-        <ion-input [(ngModel)]="customerInfo.phone" placeholder="Phone Number" (keyup.enter)="hideKeyboard()"
-                   type="email"></ion-input>
-      </ion-item>
-      <br>
-      <form action="/" method="post" id="payment-form">
-        <div class="form-row">
-          <div id="card-element"> <!-- a Stripe Element will be inserted here. --> </div>
-          <!-- Used to display Element errors -->
-          <div id="card-errors" role="alert"></div>
-        </div>
-<!--        <ion-button color="frese" type="submit" expand="full">Make Payment</ion-button>-->
-        <ion-item [disabled]="purchaseInProgress || !pickupDate" class="pay-button" color="frese">
-<!--          <ion-button [disabled]="isPurchaseInProgress()" class="full_button" type="submit">Make Payment</ion-button>-->
-          <button [disabled]="isPurchaseInProgress()" class="full_button" type="submit">Make Payment</button>
-        </ion-item>
-      </form>
-    </ion-card-content>
-  </ion-card>
+
+  <form class="full-size" id="payment-form">
+    <ion-label>Total: ${{ displayAmount(this.order.total) }}</ion-label>
+    <ion-item (click)="setPickupTime()" lines="none">
+      <ion-icon slot="start" color="primary" name="calendar"></ion-icon>
+      <ion-label>
+        <p>Select Time</p>
+      {{formatDate()}}
+      </ion-label>
+    </ion-item>
+    <ion-item  class="roundedInput">
+      <ion-label position="floating">Name</ion-label>
+      <ion-input name="1" [(ngModel)]="customerInfo.name" placeholder="Your Name"></ion-input>
+    </ion-item>
+    <ion-item  class="roundedInput">
+      <ion-label position="floating">Email</ion-label>
+      <ion-input name="email" [(ngModel)]="customerInfo.email" placeholder="your@email.com"></ion-input>
+    </ion-item>
+    <ion-item  class="roundedInput">
+      <ion-label position="floating">Phone</ion-label>
+      <ion-input type="tel" name="phone" [(ngModel)]="customerInfo.phone" placeholder="123-456-7890"></ion-input>
+    </ion-item>
+    <ion-item  class="roundedInput">
+      <ion-label position="floating">Notes</ion-label>
+      <ion-input name="notes" [(ngModel)]="orderNotes" placeholder="123-456-7890"></ion-input>
+    </ion-item>
+    <ion-item  class="roundedInput">
+      <ion-label position="floating">Coupon Code</ion-label>
+      <ion-button class="checkmark-button" *ngIf="!couponApplied" (click)="applyCoupon()" slot="end">
+        APPLY
+      </ion-button>
+      <ion-icon *ngIf="couponApplied" slot="end" [style.color]="'#000000'" class="darkicon" name="checkmark-outline"></ion-icon>
+      <ion-input class="coupon-input" type="tel" name="coupon" [(ngModel)]="coupon" placeholder="Discount code..."></ion-input>
+    </ion-item>
+    <div id="express-checkout-element">
+    </div>
+    <!--    <div id="link-authentication-element">-->
+    <!--    </div>-->
+    <div id="payment-element">
+      <!-- Elements will create form elements here -->
+    </div>
+    <div id="payment-message" class="hidden"></div>
+    <button id="submit">
+      <div class="spinner hidden" id="spinner"></div>
+      <span id="button-text">Pay now</span>
+    </button>
+  </form>
 </ion-content>
