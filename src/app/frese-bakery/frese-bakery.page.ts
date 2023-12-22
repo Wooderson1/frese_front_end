@@ -166,6 +166,7 @@ export class FreseBakeryPage implements OnInit {
   }
 
   getProductsForType(type) {
+return [];
     if (!this.productsService.getProducts()) {
       return [];
     }
