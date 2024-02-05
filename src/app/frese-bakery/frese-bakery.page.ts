@@ -5,10 +5,10 @@ import {DataServiceService} from '../services/data-service.service';
 import {AlertController, isPlatform, ModalController, PopoverController} from '@ionic/angular';
 import {PopoverComponent} from '../popover/popover.component';
 import {CheckOutComponent} from '../check-out/check-out.component';
-import {PayNowPage} from "../pay-now/pay-now.page";
-import {SpinnerService} from "../services/spinner.service";
-import {OrderService} from "../services/order.service";
-import {initData} from "../helpers/image-formatter";
+import {PayNowPage} from '../pay-now/pay-now.page';
+import {SpinnerService} from '../services/spinner.service';
+import {OrderService} from '../services/order.service';
+import {initData} from '../helpers/image-formatter';
 import { ProductsService } from '../products.service';
 
 @Component({
@@ -29,7 +29,7 @@ export class FreseBakeryPage implements OnInit {
   productTypes;
   TAX_CONSTANT = .08;
   menuToggled = false;
-  titleTest = "";
+  titleTest = '';
 
   orderItem;
   todaysDate = new Date().toISOString();
@@ -43,7 +43,7 @@ export class FreseBakeryPage implements OnInit {
               private alertController: AlertController,
               private productsService: ProductsService,
               public popoverController: PopoverController) {
-    console.log("CONSTRUCTOR FB");
+    console.log('CONSTRUCTOR FB');
   }
 
 
@@ -125,7 +125,7 @@ export class FreseBakeryPage implements OnInit {
 
   async Pay() {
     if (this.cart.items.length === 0) {
-      await this.presentAlertMessage("Oops! looks like your cart is empty.");
+      await this.presentAlertMessage('Oops! looks like your cart is empty.');
       return;
     }
 
@@ -134,7 +134,7 @@ export class FreseBakeryPage implements OnInit {
 
     const orderRes = await this.dataService.createOrder(this.cart).toPromise();
     if (!orderRes.id) {
-      await this.presentAlertMessage("Something went wrong creating your order, please try again");
+      await this.presentAlertMessage('Something went wrong creating your order, please try again');
       return;
     }
     const availableTimes = await this.dataService.getAvailableTimeSlots().toPromise();
@@ -142,9 +142,9 @@ export class FreseBakeryPage implements OnInit {
       if(!availableTimes[k].active) {
         delete availableTimes[k];
       }
-    })
+    });
     if (Object.keys(availableTimes).length <= 0) {
-      await this.presentAlertMessage("Sorry it seems like we're too busy to take new orders at this time! Please try again later.", this.refreshPage);
+      await this.presentAlertMessage('Sorry it seems like we\'re too busy to take new orders at this time! Please try again later.', this.refreshPage);
       return;
     }
     const modal = await this.modalController.create({
@@ -159,7 +159,7 @@ export class FreseBakeryPage implements OnInit {
     modal.onDidDismiss().then(async (detail: any) => {
       this.spinnerService.hideSpinner();
       if (detail.data && detail.data.success) {
-        await this.presentAlertMessage("Thank you for your order!", this.refreshPage);
+        await this.presentAlertMessage('Thank you for your order!', this.refreshPage);
       }
     });
     await modal.present();
@@ -207,9 +207,7 @@ export class FreseBakeryPage implements OnInit {
   }
 
   checkForSelectionCount(item) {
-    return Object.keys(item.product_selection_values).some(key => {
-      return !item.product_selection_values[key].selected
-    });
+    return Object.keys(item.product_selection_values).some(key => !item.product_selection_values[key].selected);
   }
 
   deleteItem(index) {
@@ -226,11 +224,11 @@ export class FreseBakeryPage implements OnInit {
   }
 
   async addToCart(newItem) {
-    let resp = await this.orderService.addToCart(newItem);
-    if(resp === "Whoops we don't have that many left, we've updated your cart") {
-      await this.presentAlertMessage("Whoops we don't have that many left, we've updated your cart");
+    const resp = await this.orderService.addToCart(newItem);
+    if(resp === 'Whoops we don\'t have that many left, we\'ve updated your cart') {
+      await this.presentAlertMessage('Whoops we don\'t have that many left, we\'ve updated your cart');
     }
-    if(resp === "Please make a selection") {
+    if(resp === 'Please make a selection') {
       const alert = await this.alertController.create({
         header: 'Whoops!',
         message: 'Please make a selection',
@@ -284,11 +282,11 @@ export class FreseBakeryPage implements OnInit {
       await this.spinnerService.hideSpinner();
     }
     this.productsService.productsUpdated.subscribe((vals) => {
-    })
+    });
     this.dataService.getProductTypes().subscribe(types => {
       this.productTypes = types;
     });
-    let timeout = 200;
+    const timeout = 200;
     let i = 0;
     while(this.orderService.menuLoading && i++ < timeout) {
     }
@@ -317,7 +315,7 @@ export class FreseBakeryPage implements OnInit {
 
 
   getTotal() {
-    let subtotal = this.getSubtotal();
+    const subtotal = this.getSubtotal();
     return this.round(subtotal + this.getTax(subtotal));
   }
 
@@ -347,8 +345,11 @@ export class FreseBakeryPage implements OnInit {
   }
 
   getSortedTypes() {
-let sorted = [...this.productTypes];
-let last = sorted.pop();
+    if(!this.productTypes) {
+      return;
+    }
+const sorted = [...this.productTypes];
+const last = sorted.pop();
 sorted.unshift(last);
 return sorted;
 
