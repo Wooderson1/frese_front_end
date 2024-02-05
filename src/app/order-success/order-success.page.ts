@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import dateFormat from 'dateformat';
+import {ActivatedRoute} from '@angular/router';
+import {DataServiceService} from '../services/data-service.service';
 
 @Component({
   selector: 'app-order-success',
@@ -8,9 +10,14 @@ import dateFormat from 'dateformat';
 })
 export class OrderSuccessPage implements OnInit {
   order;
-  constructor() { }
+  constructor(private route: ActivatedRoute, private dataService: DataServiceService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const routeParams = await this.route.queryParams.toPromise();
+    const orderId = parseInt(routeParams.get('orderId'), 10);
+    if(orderId) {
+      this.order = await this.dataService.getOrderById(orderId);
+    }
     this.order.items = this.formatOrderItems(this.order);
     console.log(this.order.items);
   }

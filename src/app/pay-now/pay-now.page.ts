@@ -14,6 +14,7 @@ import {OrderService} from '../services/order.service';
 import {SpecialsProductsService} from '../specials-products.service';
 import {ProductsService} from '../products.service';
 import {OrderSuccessPage} from '../order-success/order-success.page';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-pay-now',
@@ -22,7 +23,8 @@ import {OrderSuccessPage} from '../order-success/order-success.page';
   encapsulation: ViewEncapsulation.None
 })
 export class PayNowPage {
-  stripe = Stripe('pk_live_51KasQqEZvpspKOfSzW7sdVtBJmH1pVuJ7MkqdkFvwMqH1FG2RkSdpI5qDqEzsxeNgUOwODddzocbKqlRu90DAnMA00Y537FNq1');
+  stripe = Stripe(environment.stripe);
+  // stripe = Stripe('pk_live_51KasQqEZvpspKOfSzW7sdVtBJmH1pVuJ7MkqdkFvwMqH1FG2RkSdpI5qDqEzsxeNgUOwODddzocbKqlRu90DAnMA00Y537FNq1');
   // stripe = Stripe('pk_test_51KasQqEZvpspKOfSlXnGLRy8IxkOOIZfo5bSREuWGPiK4HCkRyPaSy3m6TqFll4shlG3czSvOiE6eeUEUBG4Ueat00nSgYii4r');
   card: any;
   customerInfo: any = {};
@@ -38,6 +40,7 @@ export class PayNowPage {
   cart;
   couponApplied = false;
   purchaseInProgress = false;
+  clientSecret;
   private paymentIntent: any;
   private paymentElement: any;
 
@@ -82,6 +85,7 @@ export class PayNowPage {
       this.paymentIntent = res;
       console.log(this.paymentIntent);
       const {client_secret: clientSecret} = this.paymentIntent;
+      this.clientSecret = clientSecret;
       await this.setupStripe1(clientSecret);
       document.querySelector('#payment-form').addEventListener('submit', this.handleSubmit.bind(this));
 
@@ -299,6 +303,10 @@ export class PayNowPage {
     e.preventDefault();
     setLoading(true);
 
+    if (!(await this.requiredFieldsCompleted())) {
+      this.setLoading(false);
+      return;
+    }
     const {error: submitError} = await this.elements.submit();
     if (submitError) {
       this.showMessage('Error submitting payment');
@@ -353,7 +361,7 @@ export class PayNowPage {
         this.showMessage('Order already paid. Please call (518) 756-1000 to verify order');
       } else if (this.paymentIntent && this.paymentIntent.status === 'succeeded' && !error) {
         this.showMessage('Payment successful');
-        const { order } = await this.dataService.updateOrderDetails(this.order.id, {
+        const {order} = await this.dataService.updateOrderDetails(this.order.id, {
           notes: this.orderNotes,
           pickupTime: this.pickupDate
         }).toPromise();
@@ -368,7 +376,16 @@ export class PayNowPage {
         modal.onDidDismiss().then(async (detail: any) => {
         });
         await modal.present();
-      } else {
+      } else if(this.paymentIntent && this.paymentIntent && this.paymentIntent.next_action.cashapp_handle_redirect_or_display_qr_code){ // CHECK FOR succeeded / failed
+        const return_url = `http://localhost:3100/#/order-success?orderId=${this.order.id}`;
+        console.log(return_url);
+        const response = await this.stripe.confirmCashappPayment(this.clientSecret, {
+          payment_method: {
+            type: 'cashapp',
+          },
+          return_url,
+        });
+    }else {
         console.error(error);
         console.error(error.type);
         console.log(this.paymentIntent.status);

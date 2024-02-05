@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { OrderServiceService } from './order-service.service';
 import { Observable } from 'rxjs';
-import {StripeService} from "./stripe.service";
+import {StripeService} from './stripe.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,9 @@ export class DataServiceService {
   }
   getActiveMenu(): Observable<any> {
     return this.orderService.getActiveMenu();
+  }
+  getOrderById(id): Observable<any> {
+    return this.orderService.getOrderById(id);
   }
 
   createOrder(o): Observable<any> {
@@ -41,16 +44,16 @@ export class DataServiceService {
     return this.orderService.unsubscribe(email);
   }
 
-  getActiveSpecials() : Observable<any> {
+  getActiveSpecials(): Observable<any> {
     return this.orderService.getActiveSpecials();
   }
-  getActiveSpecial() : Observable<any> {
+  getActiveSpecial(): Observable<any> {
     return this.orderService.getActiveSpecial();
   }
-  getSpecialById(id) : Observable<any> {
-    return this.orderService.getSpecialById(id)
+  getSpecialById(id): Observable<any> {
+    return this.orderService.getSpecialById(id);
   }
-  applyCoupon(intent, orderId, coupon) : Observable<any> {
+  applyCoupon(intent, orderId, coupon): Observable<any> {
     return this.orderService.applyCoupon(intent, orderId, coupon);
   }
 

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Stripe } from '@capacitor-community/stripe';
-import {DataServiceService} from "./services/data-service.service";
+import {DataServiceService} from './services/data-service.service';
 import { Storage } from '@ionic/storage';
-import {OrderService} from "./services/order.service";
-import {SpecialsProductsService} from "./specials-products.service";
-import {ProductsService} from "./products.service";
-import { Location } from '@angular/common'
+import {OrderService} from './services/order.service';
+import {SpecialsProductsService} from './specials-products.service';
+import {ProductsService} from './products.service';
+import { Location } from '@angular/common';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,7 @@ export class AppComponent {
               private productsService: ProductsService,
               private location: Location,
               private storage: Storage) {
+    console.log(environment.env);
     Stripe.initialize({
       publishableKey: 'Your Publishable Key',
     });

@@ -6,15 +6,17 @@ import { FreseBakeryPageRoutingModule } from './frese-bakery-routing.module';
 import { FreseBakeryPage } from './frese-bakery.page';
 import { PopoverComponent } from '../popover/popover.component';
 import { CheckOutComponent } from '../check-out/check-out.component';
-import {DebounceClickDirective} from "../helpers/debounce-click.directive";
+import {DebounceClickDirective} from '../helpers/debounce-click.directive';
+import {LazyLoadImageModule} from 'ng-lazyload-image';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    FreseBakeryPageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        FreseBakeryPageRoutingModule,
+        LazyLoadImageModule
+    ],
   entryComponents: [PopoverComponent, CheckOutComponent],
   declarations: [FreseBakeryPage, PopoverComponent, CheckOutComponent]
 })
