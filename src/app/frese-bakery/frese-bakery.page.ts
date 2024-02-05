@@ -29,7 +29,7 @@ export class FreseBakeryPage implements OnInit {
   productTypes;
   TAX_CONSTANT = .08;
   menuToggled = false;
-  titleTest = "TESTICLES";
+  titleTest = "";
 
   orderItem;
   todaysDate = new Date().toISOString();
@@ -345,6 +345,14 @@ export class FreseBakeryPage implements OnInit {
   getTax(total) {
     return this.round(total * this.TAX_CONSTANT);
   }
+
+  getSortedTypes() {
+let sorted = [...this.productTypes];
+let last = sorted.pop();
+sorted.unshift(last);
+return sorted;
+
+}
 
   getSelectionKeys(item) {
     return Object.keys(item.selections);

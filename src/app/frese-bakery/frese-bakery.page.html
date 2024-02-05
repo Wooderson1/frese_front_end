@@ -6,7 +6,7 @@
           <!--  Avaiable Items  -->
           <ion-col>
             <ion-grid>
-              <ion-row *ngFor="let type of this.productTypes">
+              <ion-row *ngFor="let type of getSortedTypes()">
                 <ion-grid *ngIf="getProductsForType(type).length>0">
                   <ion-row>
                     <ion-title> {{ type.name }}</ion-title>
