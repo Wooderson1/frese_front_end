@@ -15,7 +15,8 @@
                   <ion-row>
                     <div *ngFor="let item of getProductsForType(type)">
                       <ion-card class="item-row" *ngIf="item.typeId === type.id">
-                        <ion-img class="item-image" *ngIf="item.photoUrl; else noPhoto" [src]="item.photoUrl"></ion-img>
+<!--                        <ion-img class="item-image" *ngIf="item.photoUrl; else noPhoto" [src]="getImageForUrl(item.photoUrl)"></ion-img>-->
+                        <img [lazyLoad]="item.photoUrl" src="assets/images/giphy.gif" class="item-image" *ngIf="item.photoUrl; else noPhoto">
                         <ng-template #noPhoto>
                           <ion-img class="item-image" src="assets/images/pizza.jpg"></ion-img>
                         </ng-template>
@@ -40,9 +41,9 @@
                         <ion-list *ngIf="hasSelections(item)">
                           <div class="subText">Selections</div>
                           <div class="select-opt" *ngFor="let selectionKey of selectionKeys(item)">
-                            <ion-select [(ngModel)]="item.product_selection_values[selectionKey].selected"
+                            <ion-select [(ngModel)]="item.product_selection_values[selectionKey][item.product_size_selected.size].selected"
                                         [placeholder]="selectionKey">
-                              <ion-select-option *ngFor="let v of item.product_selection_values[selectionKey]"
+                              <ion-select-option *ngFor="let v of item.product_selection_values[selectionKey][item.product_size_selected.size]"
                                                  [value]="v">
                                 {{v.value}}
                                 <br>
@@ -54,9 +55,9 @@
                         <ion-list *ngIf="hasAddOns(item)">
                           <div class="subText">Extras</div>
                           <div class="select-opt" *ngFor="let addOnKey of addOnKeys(item)">
-                            <ion-select multiple=true [(ngModel)]="item.product_add_on_values[addOnKey].selected"
+                            <ion-select multiple=true [(ngModel)]="item.product_add_on_values[addOnKey][item.product_size_selected.size].selected"
                                         [placeholder]="addOnKey">
-                              <ion-select-option *ngFor="let v of item.product_add_on_values[addOnKey]" [value]="v">
+                              <ion-select-option *ngFor="let v of item.product_add_on_values[addOnKey][item.product_size_selected.size]" [value]="v">
                                 {{v.value}}
                                 <br>
                                 <p *ngIf="v.cost">${{v.cost}}</p>

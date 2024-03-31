@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-const config = require('../config.json');
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderServiceService {
-  apiUrl = config.App.baseUrl;
+  apiUrl = environment.baseUrl;
   constructor(public http: HttpClient) { }
 
   getProductTypes() {
@@ -15,6 +15,9 @@ export class OrderServiceService {
   getFullMenu() {
     return this.http.get(`${this.apiUrl}/productsAndSizes`);
   }
+  getOrderById(id) {
+    return this.http.get(`${this.apiUrl}/orders/${id}`);
+  }
   getActiveMenu() {
     return this.http.get(`${this.apiUrl}/activeProductsAndSizesIncludingSpecials`);
   }
@@ -22,8 +25,8 @@ export class OrderServiceService {
     return this.http.post(`${this.apiUrl}/orders/${orderId}/coupon/${coupon}/apply`, {intent});
   }
   createOrder(o) {
-    o.status = "pending";
-    return this.http.post(`${this.apiUrl}/orders`, o)
+    o.status = 'pending';
+    return this.http.post(`${this.apiUrl}/orders`, o);
   }
 
   getActiveSpecial() {
@@ -33,7 +36,7 @@ export class OrderServiceService {
     return this.http.get(`${this.apiUrl}/activeSpecials`);
   }
   getSpecialById(id) {
-    return this.http.get(`${this.apiUrl}/specials/${id}`)
+    return this.http.get(`${this.apiUrl}/specials/${id}`);
   }
 
   unsubscribe(email) {

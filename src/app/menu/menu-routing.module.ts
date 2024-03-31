@@ -54,6 +54,10 @@ const routes: Routes = [
         loadChildren: () => import('../pages/apple-pay/apple-pay.module').then( m => m.ApplePayPageModule)
       },
       {
+        path: 'order-success',
+        loadChildren: () => import('../order-success/order-success.module').then( m => m.OrderSuccessPageModule)
+      },
+      {
         path: '**',
         redirectTo: 'specials'
       }

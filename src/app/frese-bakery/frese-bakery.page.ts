@@ -10,6 +10,7 @@ import {SpinnerService} from '../services/spinner.service';
 import {OrderService} from '../services/order.service';
 import {initData} from '../helpers/image-formatter';
 import { ProductsService } from '../products.service';
+import { ImageCacheService } from '../services/image-cache.service';
 
 @Component({
   selector: 'app-frese-bakery',
@@ -42,8 +43,8 @@ export class FreseBakeryPage implements OnInit {
               private modalController: ModalController,
               private alertController: AlertController,
               private productsService: ProductsService,
+              private imageCacheService: ImageCacheService,
               public popoverController: PopoverController) {
-    console.log('CONSTRUCTOR FB');
   }
 
 
@@ -59,6 +60,10 @@ export class FreseBakeryPage implements OnInit {
     return isPlatform('mobile');
   }
 
+  async getImageForUrl(url) {
+    // const img = await this.imageCacheService.getImage(url);
+    // return img;
+  }
 
   increment(cart) {
     cart.price += (cart.price / cart.quantity);
@@ -207,7 +212,7 @@ export class FreseBakeryPage implements OnInit {
   }
 
   checkForSelectionCount(item) {
-    return Object.keys(item.product_selection_values).some(key => !item.product_selection_values[key].selected);
+    return Object.keys(item.product_selection_values).some(key => !item.product_selection_values[key][item.product_size_selected.size].selected);
   }
 
   deleteItem(index) {

@@ -1,8 +1,8 @@
 import {Injectable, EventEmitter, SimpleChanges} from '@angular/core';
-import {Storage} from "@ionic/storage";
+import {Storage} from '@ionic/storage';
 import { ProductsService } from '../products.service';
 import { SpecialsProductsService } from '../specials-products.service';
-import { DataServiceService } from "./data-service.service";
+import { DataServiceService } from './data-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class OrderService {
               private dataService: DataServiceService,
               private productsService: ProductsService) {
     this.init().then(() => {
-    })
+    });
   }
   async init() {
     // 2. Menu
@@ -40,15 +40,13 @@ export class OrderService {
     return this.initializeSelectedSizes(menu);
   }
   sortBySpecial(products) {
-    const specialTypeId = this.types.find(element => {
-      return element.name === "Special";
-    })
+    const specialTypeId = this.types.find(element => element.name === 'Special');
     return products.sort((a, b) => {
       if (a.typeId === specialTypeId.id) {
         return -1;
       }
       return 1;
-    })
+    });
   }
   initializeSelectedSizes(menu) {
     menu.forEach((item) => {
@@ -62,11 +60,9 @@ export class OrderService {
   }
 
   checkForSelectionCount(item) {
-    return Object.keys(item.product_selection_values).some(key => {
-      return !item.product_selection_values[key].selected
-    });
+    console.log(JSON.stringify(item));
+    return Object.keys(item.product_selection_values).some(key => !item.product_selection_values[key][item.product_size_selected.size].selected);
   }
-
   activeSpecial() {
     return this.specialsId;
   }
@@ -77,9 +73,7 @@ export class OrderService {
     if(!this.order) { return true; }
     if(!this.productsService.types) { return true;}
     if(!this.productsService.products) { return true; }
-    const specialTypeId = this.productsService.types.find(element => {
-      return element.name === "Special";
-    })
+    const specialTypeId = this.productsService.types.find(element => element.name === 'Special');
     const productIdsInCart = this.order.items.map(v => v.productId);
     const specialIds = this.productsService.products.filter(v => v.typeId != specialTypeId.id).map(v=>v.id);
     return !productIdsInCart.every(elem => specialIds.includes(elem));
@@ -103,24 +97,22 @@ export class OrderService {
   }
 
   getSpecialProducts() {
-    const specialProductIds = this.specialsProductsService.specials[0].getProducts().map(p => p.id)
-    return this.productsService.products.filter(p => {
-      return specialProductIds.includes(p.id);
-    });
+    const specialProductIds = this.specialsProductsService.specials[0].getProducts().map(p => p.id);
+    return this.productsService.products.filter(p => specialProductIds.includes(p.id));
   }
 
   async updateCart(item, increment) {
     const match = this.productsService.findMatchingProduct(item.productId);
     const q = match.quantity;
     if(q === 0 && increment > 0) {
-      return "Whoops we don't have that many left, we've updated your cart";
+      return 'Whoops we don\'t have that many left, we\'ve updated your cart';
     }
-    let index = this.order.items.findIndex(cartItem => {
+    const index = this.order.items.findIndex(cartItem => {
       const cloneCartItem = JSON.parse(JSON.stringify(cartItem));
       const cloneNewItem = JSON.parse(JSON.stringify(item));
       return JSON.stringify(cloneNewItem) === JSON.stringify(cloneCartItem);
     });
-    let matchingItem = this.order.items[index];
+    const matchingItem = this.order.items[index];
     this.productsService.updateProductQuantity(matchingItem.productId, increment);
     if (matchingItem.quantity + increment === 0) {
       this.order.items.splice(index, 1);
@@ -137,25 +129,21 @@ export class OrderService {
 
        if the cart has no special items, return all specials/times with that item
      */
-   const specialTypeId = this.productsService.types.find(element => {
-     return element.name === "Special";
-   })
+   const specialTypeId = this.productsService.types.find(element => element.name === 'Special');
 
    /* Check for any special items in the cart */
-   const specialProductsInCart = this.order.items.filter(item => {
-     return item.typeId === specialTypeId.id;
-   })
+   const specialProductsInCart = this.order.items.filter(item => item.typeId === specialTypeId.id);
    let specialsBeingBought = [];
    specialProductsInCart.forEach(product => {
      specialsBeingBought = this.specialsProductsService.getSpecialIdsContainingProductId(product.productId);
    });
-   let specialsTimes = this.specialsProductsService.getTimesForSpecials(specialsBeingBought);
+   const specialsTimes = this.specialsProductsService.getTimesForSpecials(specialsBeingBought);
    if(Object.keys(specialsTimes).length > 0) {
      return specialsTimes;
    }
    /* at this point the cart contains no special items */
 
-   let times = {};
+   const times = {};
    // if every item in the cart belongs to a special, add its times
    const productIdsInCart = this.order.items.map(v => v.productId);
    const specials = await this.specialsProductsService.getSpecials();
@@ -164,12 +152,12 @@ export class OrderService {
      if(productIdsInCart.every(elem => specialIds.includes(elem))) {
        Object.keys(special.availableTimes).forEach(key => {
          times[key] = special.availableTimes[key];
-       })
+       });
      }
-   })
+   });
    Object.keys(this.productsService.availableTimes).forEach(key => {
      times[key] =this.productsService.availableTimes[key];
-   })
+   });
    return times;
  }
 
@@ -180,13 +168,13 @@ export class OrderService {
   async addToCart(newItem) {
     if (newItem.quantity === 0) {
       // await this.presentAlertMessage("Whoops we don't have that many left, we've updated your cart");
-      return "Whoops we don't have that many left, we've updated your cart";
+      return 'Whoops we don\'t have that many left, we\'ve updated your cart';
     }
     if (this.checkForSelectionCount(newItem)) {
-      return "Please make a selection";
+      return 'Please make a selection';
     }
     newItem.quantity--;
-    let item = this.formatCartItem(newItem);
+    const item = this.formatCartItem(newItem);
 
     this.addItem(item);
   }
@@ -203,13 +191,13 @@ export class OrderService {
     if (!item.product_size_selected) {
       return null;
     }
-    let id = item.product_size_selected.id;
-    item.product_size_selected = item.product_sizes[0];
+    const id = item.product_size_selected.id;
+    // item.product_size_selected = item.product_sizes[0];
     return id;
   }
 
   formatCartItem(item) {
-    return {
+    const formatted = {
       price: this.getItemCost(item),
       productId: item.id,
       product_name: item.title,
@@ -219,18 +207,24 @@ export class OrderService {
       add_ons: this.formatAddOns(item),
       typeId: item.typeId
     };
+    item.product_size_selected = item.product_sizes[0];
+    return formatted;
   }
 
   formatAddOns(item) {
-    let vals = {};
+    const size = item.product_size_selected.size;
+    const vals = {};
     Object.keys(item.product_add_on_values).forEach(key => {
-      if (item.product_add_on_values[key].selected) {
-        vals[key] = item.product_add_on_values[key].selected.map(val => {
-          return {
+      console.log(item.product_add_on_values[key][size].selected);
+      console.log(item.product_add_on_values[key][size]?.selected?.length);
+      if (item.product_add_on_values[key][size].selected &&
+        item.product_add_on_values[key][size].selected.length > 0) {
+        const arr = item.product_add_on_values[key][size].selected;
+        console.log(arr);
+        vals[key] = arr.map(val => ({
             value: val.value,
             cost: val.cost
-          }
-        });
+          }));
         item.product_add_on_values[key].selected = null;
       }
     });
@@ -238,14 +232,15 @@ export class OrderService {
   }
 
   formatSelections(item) {
-    let vals = {};
+    const size = item.product_size_selected.size;
+    const vals = {};
     Object.keys(item.product_selection_values).forEach(key => {
-      if (item.product_selection_values[key].selected) {
+      if (item.product_selection_values[key][size].selected) {
         vals[key] = {
-          value: item.product_selection_values[key].selected.value,
-          cost: item.product_selection_values[key].selected.cost
+          value: item.product_selection_values[key][size].selected.value,
+          cost: item.product_selection_values[key][size].selected.cost
         };
-        item.product_selection_values[key].selected = null;
+        item.product_selection_values[key][size].selected = null;
       }
     });
     return vals;
@@ -254,7 +249,7 @@ export class OrderService {
   addItem(item) {
     let foundIdentical = false;
     this.order.items.forEach(i => {
-      let oldQuantity = i.quantity;
+      const oldQuantity = i.quantity;
       i.quantity = 1;
       if (JSON.stringify(i) == JSON.stringify(item)) {
         i.quantity = oldQuantity + 1;
@@ -263,7 +258,7 @@ export class OrderService {
       } else {
         i.quantity = oldQuantity;
       }
-    })
+    });
     if (foundIdentical) {
       this.setSpecialId(this.specialsId);
       return;
@@ -279,11 +274,11 @@ export class OrderService {
 
   setMenuLoading(x) {
     this.menuLoading = x;
-    this.orderUpdated.emit({loading: this.menuLoading})
+    this.orderUpdated.emit({loading: this.menuLoading});
   }
   setLoading(x) {
     this.specialLoading = x;
-    this.orderUpdated.emit({loading: this.specialLoading})
+    this.orderUpdated.emit({loading: this.specialLoading});
   }
   setOrder(x) {
     this.order = x;

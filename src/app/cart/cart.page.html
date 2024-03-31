@@ -55,7 +55,8 @@
           <div class="subText" *ngFor="let addOnKey of getAddOnKeys(item)">
             <ion-grid>
               <div><b>{{addOnKey}}:</b></div>
-              <ion-row *ngFor="let v of getAddOnValues(item, addOnKey)">
+              <div *ngFor="let s of getAddOnSizes(item, addOnKey)">
+                <ion-row *ngFor="let v of getAddOnValues(item, addOnKey)">
                 <ion-col class="startSlot half-width">
                   {{v.value}}
                 </ion-col>
@@ -63,6 +64,7 @@
                   <div *ngIf="v.cost">${{displayAmount(v.cost * item.quantity)}}</div>
                 </ion-col>
               </ion-row>
+              </div>
             </ion-grid>
           </div>
         </ion-label>
@@ -73,7 +75,7 @@
     <div class="startSlot">
       <div class="subText">
         Subtotal: ${{displaySubtotal()}}<br>
-        Est. Tax: ${{displayAmount(getTax(getSubtotal()))}}<br>
+        Est. Tax: ${{displayAmount(getTax())}}<br>
       </div>
       <b>Total:</b> ${{displayTotal()}}
     </div>

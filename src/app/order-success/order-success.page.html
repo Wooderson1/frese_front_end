@@ -18,10 +18,10 @@
 
     <ion-card-content class="order-details">
       <div>
-        <strong>Invoice Number:</strong> {{ order.id }}
+        <strong>Invoice Number:</strong> {{ order?.id }}
       </div>
       <div>
-        <strong>Pickup Time:</strong> {{ formatPickupTime(order.pickupTime) }}
+        <strong>Pickup Time:</strong> {{ formatPickupTime(order?.pickupTime) }}
       </div>
     </ion-card-content>
   </ion-card>
@@ -32,17 +32,21 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item lines="none" *ngFor="let item of order.items">
+        <ion-item lines="none" *ngFor="let item of getOrderItems()">
           <ion-label>
             {{item.quantity}} x {{ item.product.title }}
             <div *ngIf="item.product_size_id">
               <small><em>Size: {{getSizeName(item)}}</em></small>
             </div>
             <div *ngFor="let selection of item.selections">
-              <small><em>{{ selection }}</em></small>
+              <ion-label>
+                <p>{{selection}}</p>
+              </ion-label>
             </div>
-            <div *ngFor="let add_ons of item.add_ons">
-              <small><em>{{ add_ons }}</em></small>
+            <div *ngFor="let add_on of item.add_ons">
+              <ion-label>
+                <p>{{add_on}}</p>
+              </ion-label>
             </div>
           </ion-label>
           <ion-text>{{ item.price * item.quantity | currency }}</ion-text>

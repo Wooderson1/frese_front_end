@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {DataServiceService} from "./services/data-service.service";
-import Special from "./Special";
+import {DataServiceService} from './services/data-service.service';
+import Special from './Special';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ import Special from "./Special";
 export class SpecialsProductsService {
 
   specials: {};
-  specialLoading: boolean = true;
+  specialLoading = true;
   SLEEP_COUNT = 100;
   constructor(private dataService: DataServiceService) {
     this.init().then(() => {
@@ -18,26 +18,26 @@ export class SpecialsProductsService {
   async waitForSpecials() {
     let i = 0;
     while(this.specialLoading && i < this.SLEEP_COUNT) {
-      console.log('.')
+      console.log('.');
       await this.sleep(100);
       i++;
     }
     return this.specials;
   }
   getTimesForSpecials(specials) {
-    let times = {};
+    const times = {};
     specials.forEach(specialId =>{
       const special = this.specials[specialId];
       if(special.getAvailableTimesCount() > 0) {
         Object.keys(special.availableTimes).forEach(key => {
           times[key] = special.availableTimes[key];
-        })
+        });
       }
       });
     return times;
   }
   getSpecialIdsContainingProductId(productId) {
-    const specialIds = []
+    const specialIds = [];
     Object.keys(this.specials).forEach(specialId => {
       const { id, products } = this.specials[specialId];
       const prodIds = products.map(v => v.id);
@@ -80,8 +80,6 @@ export class SpecialsProductsService {
       await this.sleep(100);
       i++;
     }
-    return Object.keys(this.specials).map(v => {
-      return this.specials[v];
-    });
+    return Object.keys(this.specials).map(v => this.specials[v]);
   }
 }

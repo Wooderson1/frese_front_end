@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import dateFormat from 'dateformat';
+import {ActivatedRoute} from '@angular/router';
+import {DataServiceService} from '../services/data-service.service';
 
 @Component({
   selector: 'app-order-success',
@@ -8,15 +10,31 @@ import dateFormat from 'dateformat';
 })
 export class OrderSuccessPage implements OnInit {
   order;
-  constructor() { }
+  constructor(private route: ActivatedRoute, private dataService: DataServiceService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const routeParams = this.route.snapshot.paramMap;
+    this.route.queryParams.subscribe(async params => {
+      console.log(params);
+    const orderId = parseInt(params.orderId, 10);
+    if(orderId) {
+      this.order = await this.dataService.getOrderById(orderId).toPromise();
+    }
     this.order.items = this.formatOrderItems(this.order);
-    console.log(this.order.items);
+    console.log('ITEMS ', this.order.items);
+    });
+  }
+
+  getOrderItems() {
+    if(this.order?.items.length) {
+    return this.order.items;
+    } else {
+      return [];
+    }
   }
 
   getTotal() {
-    return this.order.total;
+    return this.order?.total;
   }
   refreshPage() {
     window.location.reload();
@@ -30,18 +48,17 @@ export class OrderSuccessPage implements OnInit {
     }
   }
   getSubTotal(): number {
-    return this.order.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return this.order?.items.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
 
   getEstimatedTax(): number {
-    return this.order.total - this.getSubTotal();
+    return this.order?.total - this.getSubTotal();
   }
   displayAmount(amount) {
     return amount.toFixed(2);
   }
 
   getSelectionKeys(item) {
-    console.log('SEL ', item.selections);
     return Object.keys(item.selections);
   }
 
@@ -51,7 +68,6 @@ export class OrderSuccessPage implements OnInit {
 
   getSizeName(item) {
     const productSize = item.product.product_sizes.find(ps => ps.id === item.product_size_id);
-    console.log('PS ', productSize);
     return productSize ? productSize.size: null;
   }
   getAddOnValues(item, key) {
@@ -61,13 +77,17 @@ export class OrderSuccessPage implements OnInit {
   displayTotal() {
     return this.getTotal().toFixed(2);
   }
+
   formatOrderItems(order) {
     const itemMap = {};
+    console.log('LEN ', order.items.length);
     order.items.forEach(item => {
       let entry = JSON.parse(JSON.stringify(item));
+      console.log('E ', entry);
       delete entry.created_at;
       delete entry.updated_at;
       delete entry.id;
+      console.log('ITEM SEL ', item.selections);
       if (item.selections) {
         const parsed = JSON.parse(item.selections);
         entry.selections = [];
@@ -79,7 +99,6 @@ export class OrderSuccessPage implements OnInit {
         const parsed = JSON.parse(item.add_ons);
         entry.add_ons = [];
         for (const [k, _] of Object.entries(parsed)) {
-          // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/no-shadow
           const add_on_res = parsed[k].map(item => item.value).join(', ');
           entry.add_ons.push(`${k}: ${add_on_res}`);
         }
