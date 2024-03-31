@@ -1,5 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {DataServiceService} from "./services/data-service.service";
+import {DataServiceService} from './services/data-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,7 @@ export class ProductsService {
 
   async setProducts(p) {
     this.types = await this.dataService.getProductTypes().toPromise();
+    console.log(p);
     this.products = p;
   }
   async loadAvailableTimes() {
@@ -28,15 +29,15 @@ export class ProductsService {
       if(!this.availableTimes[k].active) {
         delete this.availableTimes[k];
       }
-    })
+    });
   }
   getProducts() {
-    const special = this.types.find(t => t.name === "Special");
-    return this.products.filter(p => p.typeId !== special.id)
+    const special = this.types.find(t => t.name === 'Special');
+    return this.products.filter(p => p.typeId !== special.id);
   }
 
   findMatchingProduct(p) {
-    return this.products.find(product => product.id === p)
+    return this.products.find(product => product.id === p);
   }
 
   updateProductQuantity(itemId, increment) {
