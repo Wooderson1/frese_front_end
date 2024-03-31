@@ -212,7 +212,8 @@ export class OrderService {
   }
 
   formatAddOns(item) {
-    const size = item.product_size_selected.size;
+    console.log('FF ', item);
+    const size = item.product_size_selected?.size;
     const vals = {};
     Object.keys(item.product_add_on_values).forEach(key => {
       console.log(item.product_add_on_values[key][size].selected);
@@ -232,8 +233,10 @@ export class OrderService {
   }
 
   formatSelections(item) {
-    const size = item.product_size_selected.size;
+    console.log('IN ', item);
+    const size = item.product_size_selected?.size;
     const vals = {};
+    console.log(' SEL ', item.product_selection_values);
     Object.keys(item.product_selection_values).forEach(key => {
       if (item.product_selection_values[key][size].selected) {
         vals[key] = {
