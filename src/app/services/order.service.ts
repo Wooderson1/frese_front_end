@@ -60,9 +60,9 @@ export class OrderService {
   }
 
   checkForSelectionCount(item) {
-    return Object.keys(item.product_selection_values).some(key => !item.product_selection_values[key].selected);
+    console.log(JSON.stringify(item));
+    return Object.keys(item.product_selection_values).some(key => !item.product_selection_values[key][item.product_size_selected.size].selected);
   }
-
   activeSpecial() {
     return this.specialsId;
   }
@@ -188,17 +188,16 @@ export class OrderService {
   }
 
   formatSize(item) {
-    console.log(item);
     if (!item.product_size_selected) {
       return null;
     }
     const id = item.product_size_selected.id;
-    item.product_size_selected = item.product_sizes[0];
+    // item.product_size_selected = item.product_sizes[0];
     return id;
   }
 
   formatCartItem(item) {
-    return {
+    const formatted = {
       price: this.getItemCost(item),
       productId: item.id,
       product_name: item.title,
@@ -208,13 +207,21 @@ export class OrderService {
       add_ons: this.formatAddOns(item),
       typeId: item.typeId
     };
+    item.product_size_selected = item.product_sizes[0];
+    return formatted;
   }
 
   formatAddOns(item) {
+    const size = item.product_size_selected.size;
     const vals = {};
     Object.keys(item.product_add_on_values).forEach(key => {
-      if (item.product_add_on_values[key].selected) {
-        vals[key] = item.product_add_on_values[key].selected.map(val => ({
+      console.log(item.product_add_on_values[key][size].selected);
+      console.log(item.product_add_on_values[key][size]?.selected?.length);
+      if (item.product_add_on_values[key][size].selected &&
+        item.product_add_on_values[key][size].selected.length > 0) {
+        const arr = item.product_add_on_values[key][size].selected;
+        console.log(arr);
+        vals[key] = arr.map(val => ({
             value: val.value,
             cost: val.cost
           }));
@@ -225,14 +232,15 @@ export class OrderService {
   }
 
   formatSelections(item) {
+    const size = item.product_size_selected.size;
     const vals = {};
     Object.keys(item.product_selection_values).forEach(key => {
-      if (item.product_selection_values[key].selected) {
+      if (item.product_selection_values[key][size].selected) {
         vals[key] = {
-          value: item.product_selection_values[key].selected.value,
-          cost: item.product_selection_values[key].selected.cost
+          value: item.product_selection_values[key][size].selected.value,
+          cost: item.product_selection_values[key][size].selected.cost
         };
-        item.product_selection_values[key].selected = null;
+        item.product_selection_values[key][size].selected = null;
       }
     });
     return vals;

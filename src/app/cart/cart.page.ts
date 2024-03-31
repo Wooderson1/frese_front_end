@@ -68,6 +68,9 @@ export class CartPage implements OnInit {
     });
     this.cart.items.splice(index, 1);
   }
+  getAddOnSizes(item, key) {
+    return Object.keys(item.add_ons[key]);
+  }
 
   displayAmount(amount) {
     return amount.toFixed(2);
@@ -170,8 +173,8 @@ export class CartPage implements OnInit {
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
 
-    console.log(this.cart);
     const orderRes = await this.dataService.createOrder(this.cart).toPromise();
+    console.log('SENDING TO SUCCESS ', orderRes);
     if (!orderRes.id) {
       await this.presentAlertMessage('Something went wrong creating your order, please try again');
       return;

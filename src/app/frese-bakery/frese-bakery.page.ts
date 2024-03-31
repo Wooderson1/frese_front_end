@@ -30,7 +30,7 @@ export class FreseBakeryPage implements OnInit {
   productTypes;
   TAX_CONSTANT = .08;
   menuToggled = false;
-  titleTest = 'TESTICLES';
+  titleTest = '';
 
   orderItem;
   todaysDate = new Date().toISOString();
@@ -212,7 +212,7 @@ export class FreseBakeryPage implements OnInit {
   }
 
   checkForSelectionCount(item) {
-    return Object.keys(item.product_selection_values).some(key => !item.product_selection_values[key].selected);
+    return Object.keys(item.product_selection_values).some(key => !item.product_selection_values[key][item.product_size_selected.size].selected);
   }
 
   deleteItem(index) {
@@ -230,7 +230,6 @@ export class FreseBakeryPage implements OnInit {
 
   async addToCart(newItem) {
     const resp = await this.orderService.addToCart(newItem);
-    console.log();
     if(resp === 'Whoops we don\'t have that many left, we\'ve updated your cart') {
       await this.presentAlertMessage('Whoops we don\'t have that many left, we\'ve updated your cart');
     }
@@ -349,6 +348,17 @@ export class FreseBakeryPage implements OnInit {
   getTax(total) {
     return this.round(total * this.TAX_CONSTANT);
   }
+
+  getSortedTypes() {
+    if(!this.productTypes) {
+      return;
+    }
+const sorted = [...this.productTypes];
+const last = sorted.pop();
+sorted.unshift(last);
+return sorted;
+
+}
 
   getSelectionKeys(item) {
     return Object.keys(item.selections);
