@@ -77,6 +77,7 @@ export class CartPage implements OnInit {
   }
 
   getSelectionKeys(item) {
+    console.log('JJ ', item);
     return Object.keys(item.selections);
   }
 
