@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ModalController, PickerController} from "@ionic/angular";
-import * as moment from "moment";
-import {DataServiceService} from "../services/data-service.service";
-import {PickerOptions} from "@ionic/core"
+import {ModalController, PickerController} from '@ionic/angular';
+import * as moment from 'moment';
+import {DataServiceService} from '../services/data-service.service';
+import {PickerOptions} from '@ionic/core';
 
 @Component({
   selector: 'app-date-picker',
@@ -12,7 +12,7 @@ import {PickerOptions} from "@ionic/core"
 export class DatePickerPage implements OnInit {
   pickupTime;
   todayTime;
-  todayDate;
+  // todayDate;
   selections = {
     month: null,
     day: null,
@@ -36,16 +36,14 @@ export class DatePickerPage implements OnInit {
     this.selections.hour = hours[0];
     const minutes = this.getMinutesForHour();
     this.selections.minute = minutes[0];
-    this.todayDate = this.pickupTime.toISOString();
+    // this.todayDate = this.pickupTime.toISOString();
   }
 
   formatArrForPicker(arr) {
-    return arr.map(val => {
-      return {
+    return arr.map(val => ({
         text: val,
         value: val
-      }
-    })
+      }));
 
   }
 
@@ -53,10 +51,10 @@ export class DatePickerPage implements OnInit {
   }
 
   formatMonth(index) {
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
     ];
-    return monthNames[index]
+    return monthNames[index];
   }
 
   getMinutesForHour() {
@@ -76,7 +74,7 @@ export class DatePickerPage implements OnInit {
 
     const days = Object.keys(this.availableTimes).filter(date => {
       const d = new Date(date);
-      return (d.getDate() === parseInt(this.selections.day) && d.getMonth() === parseInt(this.selections.month));
+      return (d.getDate() === parseInt(this.selections.day, 10) && d.getMonth() === parseInt(this.selections.month, 10));
     }).map(date => {
       const d = new Date(date);
       return d.getHours();
@@ -87,7 +85,7 @@ export class DatePickerPage implements OnInit {
   getDaysForMonth() {
     const days = Object.keys(this.availableTimes).filter(date => {
       const d = new Date(date);
-      return d.getMonth() === parseInt(this.selections.month)
+      return d.getMonth() === parseInt(this.selections.month, 10);
     }).map(date => {
       const d = new Date(date);
       return d.getDate();
@@ -114,7 +112,7 @@ export class DatePickerPage implements OnInit {
       ],
       columns: [
         {
-          name: name,
+          name,
           options: vals,
           selectedIndex: -1
         },
@@ -131,12 +129,10 @@ export class DatePickerPage implements OnInit {
   }
 
   getFormattedMonths() {
-    return this.getMonthValues().map(val => {
-      return this.formatMonth(val);
-    })
+    return this.getMonthValues().map(val => this.formatMonth(val));
   }
   formatHour(hours) {
-    var suffix = hours < 12 ? "":"";
+    const suffix = hours < 12 ? '':'';
     return ((hours + 11) % 12 + 1) + suffix;
   }
   getMonth() {
@@ -171,7 +167,7 @@ export class DatePickerPage implements OnInit {
   resetFieldsLowerThan(field) {
     switch(field) {
       case 'month':
-        this.selections.day = this.getDaysForMonth()[0]
+        this.selections.day = this.getDaysForMonth()[0];
         this.selections.hour = this.getHoursForDay()[0];
         this.selections.minute = this.getMinutesForHour()[0];
         break;
@@ -187,37 +183,33 @@ export class DatePickerPage implements OnInit {
 
   async showMinutePicker() {
     const formattedMinutes = this.formatArrForPicker(this.getMinutesForHour());
-    const options = this.getPickerOptions("Minute", formattedMinutes, "minute");
-    let picker = await this.pickerController.create(options);
+    const options = this.getPickerOptions('Minute', formattedMinutes, 'minute');
+    const picker = await this.pickerController.create(options);
     await picker.present();
   }
   async showHourPicker() {
-    const formattedHours = this.getHoursForDay().map(val => {
-      return {
+    const formattedHours = this.getHoursForDay().map(val => ({
         text: this.formatHour(val),
         value: val
-      }
-    });
-    const options = this.getPickerOptions("Hour", formattedHours, "hour");
-    let picker = await this.pickerController.create(options);
+      }));
+    const options = this.getPickerOptions('Hour', formattedHours, 'hour');
+    const picker = await this.pickerController.create(options);
     await picker.present();
   }
   async showDayPicker() {
     const formattedDays = this.formatArrForPicker(this.getDaysForMonth());
 
-    const options = this.getPickerOptions("Day", formattedDays, "day");
-    let picker = await this.pickerController.create(options);
+    const options = this.getPickerOptions('Day', formattedDays, 'day');
+    const picker = await this.pickerController.create(options);
     await picker.present();
   }
   async showMonthPicker() {
-    const formattedMonths = this.getMonthValues().map(val => {
-      return {
+    const formattedMonths = this.getMonthValues().map(val => ({
         text: this.formatMonth(val),
         value: val
-      }
-    });
-    const options = this.getPickerOptions("Month", formattedMonths, "month");
-    let picker = await this.pickerController.create(options);
+      }));
+    const options = this.getPickerOptions('Month', formattedMonths, 'month');
+    const picker = await this.pickerController.create(options);
     await picker.present();
   }
 
@@ -242,21 +234,21 @@ export class DatePickerPage implements OnInit {
   //   })
   // }
 
-  formatDate() {
-    const d = this.pickupTime;
-    const hours = d.getHours() > 12 ? (d.getHours() - 12).toLocaleString('en-US', {minimumIntegerDigits: 2}) : d.getHours();
-    const minutes = d.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2});
-    const AMPM = d.getHours() >= 12 ? 'PM' : 'AM';
-    return [d.getMonth() + 1,
-        d.getDate(),
-        d.getFullYear()].join('/') + ' ' +
-      [hours,
-        minutes].join(':') + " " + AMPM;
-  }
-
+  // formatDate() {
+  //   const d = this.pickupTime;
+  //   const hours = d.getHours() > 12 ? (d.getHours() - 12).toLocaleString('en-US', {minimumIntegerDigits: 2}) : d.getHours();
+  //   const minutes = d.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2});
+  //   const AMPM = d.getHours() >= 12 ? 'PM' : 'AM';
+  //   return [d.getMonth() + 1,
+  //       d.getDate(),
+  //       d.getFullYear()].join('/') + ' ' +
+  //     [hours,
+  //       minutes].join(':') + " " + AMPM;
+  // }
+  //
 
   submitAndExit() {
-    let { hour, minute, day, month } = this.selections;
+    const { hour, minute, day, month } = this.selections;
 
     const date = new Date();
     const todayMonth = date.getMonth();

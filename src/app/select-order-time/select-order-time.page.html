@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pickup Time</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid class="padme">
+    <ion-row>
+      <ion-label class="centerme">Please choose a pickup date</ion-label>
+    </ion-row>
+    <ion-select [(ngModel)]="selectedDate">
+      <ion-select-option *ngFor="let v of formatDates()"
+                         [value]="v">
+        {{v}}</ion-select-option>
+    </ion-select>
+    <ion-row>
+        <ion-label class="centerme">Please choose a pickup time</ion-label>
+    </ion-row>
+    <div *ngFor="let t of getHoursForTimes()">
+      <ion-row>
+        <ion-label class="centerme frese">{{t}}</ion-label>
+        </ion-row>
+      <ion-row>
+        <div *ngFor="let time of getTimesForSelectedDateAndHour(t)">
+          <ion-col>
+            <ion-button [class.selected]="time===selectedTime" (click)="selectTime(time)">{{ time }}</ion-button>
+          </ion-col>
+        </div>
+      </ion-row>
+    </div>
+  </ion-grid>
+  <div class="total-menu">
+    <ion-button class="pay-button" [disabled]="!selectedTime" (click)="submitAndContinue()">Continue</ion-button>
+  </div>
+</ion-content>

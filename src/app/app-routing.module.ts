@@ -27,6 +27,10 @@ const routes: Routes = [
   {
     path: 'order-success',
     loadChildren: () => import('./order-success/order-success.module').then( m => m.OrderSuccessPageModule)
+  },
+  {
+    path: 'select-order-time',
+    loadChildren: () => import('./select-order-time/select-order-time.module').then( m => m.SelectOrderTimePageModule)
   }
 ];
 
