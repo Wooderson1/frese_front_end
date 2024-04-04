@@ -13,7 +13,7 @@
     <ion-row>
       <ion-label class="centerme">Please choose a pickup date</ion-label>
     </ion-row>
-    <ion-select [(ngModel)]="selectedDate">
+    <ion-select [(ngModel)]="selectedDate" (ionChange)="clearTime()">
       <ion-select-option *ngFor="let v of formatDates()"
                          [value]="v">
         {{v}}</ion-select-option>

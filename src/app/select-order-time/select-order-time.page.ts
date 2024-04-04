@@ -83,6 +83,9 @@ export class SelectOrderTimePage implements OnInit {
   selectDate(date) {
     this.selectedDate = date;
   }
+  clearTime() {
+    this.selectedTime = null;
+  }
   segmentChanged(event) {
     this.selectedDate = event.data;
   }
