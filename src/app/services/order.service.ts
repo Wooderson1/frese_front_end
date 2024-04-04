@@ -9,7 +9,7 @@ import { DataServiceService } from './data-service.service';
 })
 export class OrderService {
 
-  order = {items: [], total: 0, subtotal: 0};
+  order = {items: [], total: 0, subtotal: 0, pickupTime: new Date()};
   specialsId = null;
   specialLoading = true;
   menuLoading = true;
@@ -119,7 +119,13 @@ export class OrderService {
       return;
     }
     matchingItem.quantity += increment;
+  }
 
+  getPickupTime() {
+    return this.order.pickupTime;
+  }
+  setPickupTime(time) {
+    this.order.pickupTime = time;
   }
 
  async getTimesForCart() {

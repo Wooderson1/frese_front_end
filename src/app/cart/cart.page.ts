@@ -6,6 +6,7 @@ import {AlertController, ModalController} from '@ionic/angular';
 import {OrderService} from '../services/order.service';
 import { Storage } from '@ionic/storage';
 import {ProductsService} from '../products.service';
+import {SelectOrderTimePage} from '../select-order-time/select-order-time.page';
 
 @Component({
   selector: 'app-cart',
@@ -43,7 +44,8 @@ export class CartPage implements OnInit {
   }
   async ngOnInit() {
     this.types = this.productsService.types;
-  }  async presentAlertMessage(msg, func = null) {
+  }
+  async presentAlertMessage(msg, func = null) {
     const binded = func && func.bind(this);
     const alert = await this.alertController.create({
       message: msg,
@@ -77,7 +79,6 @@ export class CartPage implements OnInit {
   }
 
   getSelectionKeys(item) {
-    console.log('JJ ', item);
     return Object.keys(item.selections);
   }
 
@@ -173,20 +174,17 @@ export class CartPage implements OnInit {
     }
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
-
-    const orderRes = await this.dataService.createOrder(this.cart).toPromise();
-    console.log('SENDING TO SUCCESS ', orderRes);
-    if (!orderRes.id) {
-      await this.presentAlertMessage('Something went wrong creating your order, please try again');
-      return;
-    }
-
+    //
+    // const orderRes = await this.dataService.createOrder(this.cart).toPromise();
+    // console.log('SENDING TO SUCCESS ', orderRes);
+    // if (!orderRes.id) {
+    //   await this.presentAlertMessage('Something went wrong creating your order, please try again');
+    //   return;
+    // }
+    //
     const modal = await this.modalController.create({
-      component: PayNowPage,
+      component: SelectOrderTimePage,
       componentProps: {
-        // cart: this.cart,
-        order: orderRes,
-        subtotal: this.cart.subtotal,
       }
     });
     modal.onDidDismiss().then(async (detail: any) => {

@@ -1,0 +1,38 @@
+.selected {
+  //background-color: black;
+  --background: black;
+  --color: white;
+  color: white;
+}
+.total-menu {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content:center;
+  //max-width: 390px;
+  //min-width: 350px;
+  //right:0;
+  //width: inherit;
+}
+.frese {
+  color: var(--ion-color-frese);
+}
+.centerme {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;  text-align: center;
+}
+.padme{
+  padding-bottom: 50px;
+}
+.pay-button {
+  width: 97%;
+  padding: 0;
+  border-radius: 10px;
+  //--padding-end: 0px;
+  //--padding-start: 0px;
+  //--inner-padding-end: 0px;
+  //--inner-padding-start: 0px;
+}

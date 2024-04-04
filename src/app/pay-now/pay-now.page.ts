@@ -34,7 +34,6 @@ export class PayNowPage {
   orderNotes;
   total;
   elements;
-  pickupDate;
   formattedDate;
   availableTimes;
   cart;
@@ -52,31 +51,6 @@ export class PayNowPage {
               private specialsProductsService: SpecialsProductsService,
               private productsService: ProductsService,
               private dataService: DataServiceService) {
-  }
-
-  async ngOnInit() {
-    /*
-    1. a special exists with slots
-    2. a special exists, no slots
-    3. no special exists, use regular hours
-     */
-    this.availableTimes = await this.orderService.getTimesForCart();
-    this.availableTimes = Object.keys(this.availableTimes).sort((a, b) => {
-      const aDate = new Date(a);
-      const bDate = new Date(b);
-      return aDate.getTime() < bDate.getTime() ? -1 : 1;
-    }).reduce(
-      (obj, key) => {
-        obj[key] = this.availableTimes[key];
-        return obj;
-      },
-      {}
-    );
-    if (Object.keys(this.availableTimes).length === 0) {
-      this.pickupDate = null;
-    } else {
-      this.pickupDate = moment(Object.keys(this.availableTimes)[0]).toDate();
-    }
   }
 
   async ngAfterViewInit() {
@@ -111,10 +85,7 @@ export class PayNowPage {
   }
 
   formatDate() {
-    const d = this.pickupDate;
-    if (!this.pickupDate) {
-      return 'Unable to accept new orders at this time!';
-    }
+    const d = new Date(this.orderService.getPickupTime());
     const hours = d.getHours() > 12 ? (d.getHours() - 12).toLocaleString('en-US', {minimumIntegerDigits: 2}) : d.getHours();
     const minutes = d.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2});
     const AMPM = d.getHours() >= 12 ? 'PM' : 'AM';
@@ -123,27 +94,6 @@ export class PayNowPage {
         d.getFullYear()].join('/') + ' ' +
       [hours,
         minutes].join(':') + ' ' + AMPM;
-  }
-
-  async setPickupTime() {
-    if (!this.pickupDate) {
-      return;
-    }
-    const m = await this.modalController.create({
-      component: DatePickerPage,
-      componentProps: {
-        pickupTime: this.pickupDate,
-        availableTimes: this.availableTimes
-      }
-    });
-    m.onDidDismiss().then(async (detail: any) => {
-
-      if (detail.data === undefined) {
-        return;
-      }
-      this.pickupDate = detail.data.pickupTime;
-    });
-    await m.present();
   }
 
   async requiredFieldsCompleted() {
@@ -195,13 +145,11 @@ export class PayNowPage {
         email: this.customerInfo.email,
         phone: this.customerInfo.phone,
         name: this.customerInfo.name,
-        pickupTime: this.pickupDate
       }).toPromise();
     } catch (err) {
       if (err.error.message === 'Order already paid for') {
         await this.dataService.updateOrderDetails(this.order.id, {
           notes: this.orderNotes,
-          pickupTime: this.pickupDate
         }).toPromise();
         await this.presentAlertMessage('It looks like we processed this order already, please call to confirm your order (518) 756-1000');
         await this.modalController.dismiss({success: false});
@@ -223,7 +171,6 @@ export class PayNowPage {
       try {
         await this.dataService.updateOrderDetails(this.order.id, {
           notes: this.orderNotes,
-          pickupTime: this.pickupDate
         }).toPromise();
       } catch (err) {
         await this.presentAlertMessage('Something went wrong with your order. Please call the bakery at (518) 756-1000');
@@ -341,7 +288,6 @@ export class PayNowPage {
           email: this.customerInfo.email,
           phone: this.customerInfo.phone,
           name: this.customerInfo.name,
-          pickupTime: this.pickupDate,
           paymentInfo: {
             intent: this.paymentIntent.id,
             payment_method: paymentMethod.id
@@ -363,7 +309,6 @@ export class PayNowPage {
         this.showMessage('Payment successful');
         const {order} = await this.dataService.updateOrderDetails(this.order.id, {
           notes: this.orderNotes,
-          pickupTime: this.pickupDate
         }).toPromise();
         this.order = order;
         const modal = await this.modalController.create({
