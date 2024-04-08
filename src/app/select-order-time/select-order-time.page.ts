@@ -28,7 +28,12 @@ export class SelectOrderTimePage implements OnInit {
               public pickerController: PickerController) {
   }
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
+
+  }
+
+  async ionViewWillEnter() {
+    await this.spinnerService.showSpinner();
     await this.productService.loadAvailableTimes();
     this.availableTimes = await this.orderService.getTimesForCart();
     this.availableTimes = Object.keys(this.availableTimes).sort((a, b) => {
@@ -44,6 +49,7 @@ export class SelectOrderTimePage implements OnInit {
     );
     this.initializeFormattedObject();
     this.selectedDate = this.formatDates()[0];
+    await this.spinnerService.hideSpinner();
   }
 
   async dismissModal() {
