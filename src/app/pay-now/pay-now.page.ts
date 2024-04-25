@@ -321,15 +321,15 @@ export class PayNowPage {
         modal.onDidDismiss().then(async (detail: any) => {
         });
         await modal.present();
-      } else if(this.paymentIntent && this.paymentIntent && this.paymentIntent.next_action.cashapp_handle_redirect_or_display_qr_code){ // CHECK FOR succeeded / failed
-        const return_url = `http://localhost:3100/#/order-success?orderId=${this.order.id}`;
-        console.log(return_url);
-        const response = await this.stripe.confirmCashappPayment(this.clientSecret, {
-          payment_method: {
-            type: 'cashapp',
-          },
-          return_url,
-        });
+      // } else if(this.paymentIntent && this.paymentIntent && this.paymentIntent.next_action.cashapp_handle_redirect_or_display_qr_code){ // CHECK FOR succeeded / failed
+      //   const return_url = `http://localhost:3100/#/order-success?orderId=${this.order.id}`;
+      //   console.log(return_url);
+      //   const response = await this.stripe.confirmCashappPayment(this.clientSecret, {
+      //     payment_method: {
+      //       type: 'cashapp',
+      //     },
+      //     return_url,
+      //   });
     }else {
         console.error(error);
         console.error(error.type);
