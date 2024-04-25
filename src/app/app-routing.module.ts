@@ -31,6 +31,10 @@ const routes: Routes = [
   {
     path: 'select-order-time',
     loadChildren: () => import('./select-order-time/select-order-time.module').then( m => m.SelectOrderTimePageModule)
+  },
+  {
+    path: 'catering',
+    loadChildren: () => import('./catering/catering.module').then( m => m.CateringPageModule)
   }
 ];
 

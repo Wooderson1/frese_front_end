@@ -58,6 +58,10 @@ const routes: Routes = [
         loadChildren: () => import('../order-success/order-success.module').then( m => m.OrderSuccessPageModule)
       },
       {
+        path: 'catering',
+        loadChildren: () => import('../catering/catering.module').then( m => m.CateringPageModule)
+      },
+      {
         path: '**',
         redirectTo: 'specials'
       }
