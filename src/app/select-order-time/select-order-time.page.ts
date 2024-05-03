@@ -174,7 +174,9 @@ export class SelectOrderTimePage implements OnInit {
     const order = this.orderService.getOrder();
     let orderRes;
     try {
+      console.log('CREATING ORDER ', order);
       orderRes = await this.dataService.createOrder(order).toPromise();
+      console.log('ORDER RES ', orderRes);
     } catch (e) {
       console.log(e);
       await this.helperService.presentAlertMessage(JSON.stringify(e));
@@ -184,7 +186,7 @@ export class SelectOrderTimePage implements OnInit {
       return;
     }
 
-    this.orderService.setOrder(orderRes);
+    // this.orderService.setOrder(orderRes);
     const modal = await this.modalController.create({
       component: PayNowPage,
       componentProps: {

@@ -27,7 +27,11 @@ export class PayNowPage {
   // stripe = Stripe('pk_live_51KasQqEZvpspKOfSzW7sdVtBJmH1pVuJ7MkqdkFvwMqH1FG2RkSdpI5qDqEzsxeNgUOwODddzocbKqlRu90DAnMA00Y537FNq1');
   // stripe = Stripe('pk_test_51KasQqEZvpspKOfSlXnGLRy8IxkOOIZfo5bSREuWGPiK4HCkRyPaSy3m6TqFll4shlG3czSvOiE6eeUEUBG4Ueat00nSgYii4r');
   card: any;
-  customerInfo: any = {};
+  customerInfo: any = {
+    name: '',
+    email: '',
+    phone: '',
+  };
   coupon;
   order;
   createdOrder;
@@ -99,14 +103,17 @@ export class PayNowPage {
   async requiredFieldsCompleted() {
 
     if (!this.customerInfo.name || !this.customerInfo.email || !this.customerInfo.phone) {
-      await this.presentAlertMessage('Please fill out the required fields.');
-      return false;
+      console.log('Missing customer info ', this.customerInfo);
+      // await this.presentAlertMessage('Please fill out the required fields.');
+      // return false;
     } else if (!validateEmail(this.customerInfo.email)) {
-      await this.presentAlertMessage('Please enter a valid email');
-      return false;
+      console.log('Bad customer email ', this.customerInfo);
+      // await this.presentAlertMessage('Please enter a valid email');
+      // return false;
     } else if (!validatePhone(this.customerInfo.phone)) {
-      await this.presentAlertMessage('Please enter a valid phone number');
-      return false;
+      console.log('Bad customer phone ', this.customerInfo);
+      // await this.presentAlertMessage('Please enter a valid phone number');
+      // return false;
 
     }
     return true;
@@ -272,6 +279,7 @@ export class PayNowPage {
 
     if (error) {
       this.showMessage('Payment details incomplete');
+      console.log('ACTUAL ', error);
       return;
     }
 
@@ -295,12 +303,16 @@ export class PayNowPage {
         }
       ).toPromise();
       console.log('RESP ', resp);
+      if(resp.error && resp.type === 'custom_error') {
+        this.showMessage(resp.error);
+      }
       if (resp.error) {
         error = resp.error.raw;
       } else {
         this.paymentIntent = resp.paymentIntent;
       }
 
+      console.log('E E E ', e);
       if (error && (error.type === 'card_error' || error.type === 'validation_error')) {
         this.showMessage(error.message);
       } else if (error && error.type === 'invalid_request_error' && error.message.includes('previously confirmed')) {
@@ -321,16 +333,17 @@ export class PayNowPage {
         modal.onDidDismiss().then(async (detail: any) => {
         });
         await modal.present();
-      // } else if(this.paymentIntent && this.paymentIntent && this.paymentIntent.next_action.cashapp_handle_redirect_or_display_qr_code){ // CHECK FOR succeeded / failed
-      //   const return_url = `http://localhost:3100/#/order-success?orderId=${this.order.id}`;
-      //   console.log(return_url);
-      //   const response = await this.stripe.confirmCashappPayment(this.clientSecret, {
-      //     payment_method: {
-      //       type: 'cashapp',
-      //     },
-      //     return_url,
-      //   });
+        // } else if(this.paymentIntent && this.paymentIntent && this.paymentIntent.next_action.cashapp_handle_redirect_or_display_qr_code){ // CHECK FOR succeeded / failed
+        //   const return_url = `http://localhost:3100/#/order-success?orderId=${this.order.id}`;
+        //   console.log(return_url);
+        //   const response = await this.stripe.confirmCashappPayment(this.clientSecret, {
+        //     payment_method: {
+        //       type: 'cashapp',
+        //     },
+        //     return_url,
+        //   });
     }else {
+        console.error(this.paymentIntent);
         console.error(error);
         console.error(error.type);
         console.log(this.paymentIntent.status);

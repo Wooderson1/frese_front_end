@@ -137,7 +137,9 @@ export class FreseBakeryPage implements OnInit {
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
 
+    console.log('CREATING ORDER ', this.cart);
     const orderRes = await this.dataService.createOrder(this.cart).toPromise();
+    console.log('ORDER RES ', orderRes);
     if (!orderRes.id) {
       await this.presentAlertMessage('Something went wrong creating your order, please try again');
       return;
