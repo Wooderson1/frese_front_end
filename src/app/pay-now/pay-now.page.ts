@@ -104,17 +104,16 @@ export class PayNowPage {
 
     if (!this.customerInfo.name || !this.customerInfo.email || !this.customerInfo.phone) {
       console.log('Missing customer info ', this.customerInfo);
-      // await this.presentAlertMessage('Please fill out the required fields.');
-      // return false;
+      await this.presentAlertMessage('Please fill out the required fields.');
+      return false;
     } else if (!validateEmail(this.customerInfo.email)) {
       console.log('Bad customer email ', this.customerInfo);
-      // await this.presentAlertMessage('Please enter a valid email');
-      // return false;
+      await this.presentAlertMessage('Please enter a valid email');
+      return false;
     } else if (!validatePhone(this.customerInfo.phone)) {
       console.log('Bad customer phone ', this.customerInfo);
-      // await this.presentAlertMessage('Please enter a valid phone number');
-      // return false;
-
+      await this.presentAlertMessage('Please enter a valid phone number');
+      return false;
     }
     return true;
   }
@@ -266,6 +265,8 @@ export class PayNowPage {
       this.showMessage('Error submitting payment');
       return;
     }
+    console.log(JSON.stringify(this.customerInfo));
+    return;
 
     const {error, paymentMethod} = await this.stripe.createPaymentMethod({
       elements: this.elements,
