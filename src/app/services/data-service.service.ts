@@ -26,6 +26,9 @@ export class DataServiceService {
     return this.orderService.getOrderById(id);
   }
 
+  createAndProcessOrder(order, paymentIntentInfo): Observable<any>{
+    return this.orderService.createAndProcessOrder(order, paymentIntentInfo);
+  }
   createOrder(o): Observable<any> {
     return this.orderService.createOrder(o);
   }

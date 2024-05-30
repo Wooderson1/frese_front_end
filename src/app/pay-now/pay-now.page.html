@@ -22,15 +22,15 @@
     </ion-item>
     <ion-item  class="roundedInput">
       <ion-label position="floating">Name</ion-label>
-      <ion-input name="1" [(ngModel)]="customerInfo.name" placeholder="Your Name"></ion-input>
+      <ion-input name="1" [(ngModel)]="this.order.name" placeholder="Your Name"></ion-input>
     </ion-item>
     <ion-item  class="roundedInput">
       <ion-label position="floating">Email</ion-label>
-      <ion-input name="email" [(ngModel)]="customerInfo.email" placeholder="your@email.com"></ion-input>
+      <ion-input name="email" [(ngModel)]="this.order.email" placeholder="your@email.com"></ion-input>
     </ion-item>
     <ion-item  class="roundedInput">
       <ion-label position="floating">Phone</ion-label>
-      <ion-input type="tel" name="phone" [(ngModel)]="customerInfo.phone" placeholder="123-456-7890"></ion-input>
+      <ion-input type="tel" name="phone" [(ngModel)]="this.order.phone" placeholder="123-456-7890"></ion-input>
     </ion-item>
     <ion-item  class="roundedInput">
       <ion-label position="floating">Notes</ion-label>

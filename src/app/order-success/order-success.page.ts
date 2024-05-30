@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import dateFormat from 'dateformat';
 import {ActivatedRoute} from '@angular/router';
 import {DataServiceService} from '../services/data-service.service';
+import {OrderService} from '../services/order.service';
 
 @Component({
   selector: 'app-order-success',
@@ -10,7 +11,7 @@ import {DataServiceService} from '../services/data-service.service';
 })
 export class OrderSuccessPage implements OnInit {
   order;
-  constructor(private route: ActivatedRoute, private dataService: DataServiceService) { }
+  constructor(private route: ActivatedRoute, private orderService: OrderService, private dataService: DataServiceService) { }
 
   async ngOnInit() {
     const routeParams = this.route.snapshot.paramMap;
@@ -19,9 +20,11 @@ export class OrderSuccessPage implements OnInit {
     const orderId = parseInt(params.orderId, 10);
     if(orderId) {
       this.order = await this.dataService.getOrderById(orderId).toPromise();
+    } else {
+      this.order = this.orderService.getOrder();
     }
+      console.log('ORDER ', this.order);
     this.order.items = this.formatOrderItems(this.order);
-    console.log('ITEMS ', this.order.items);
     });
   }
 
@@ -99,6 +102,7 @@ export class OrderSuccessPage implements OnInit {
         const parsed = JSON.parse(item.add_ons);
         entry.add_ons = [];
         for (const [k, _] of Object.entries(parsed)) {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           const add_on_res = parsed[k].map(item => item.value).join(', ');
           entry.add_ons.push(`${k}: ${add_on_res}`);
         }
@@ -129,8 +133,8 @@ export class OrderSuccessPage implements OnInit {
   }
   isToday(someDate) {
     const today = new Date();
-    return someDate.getDate() == today.getDate() &&
-      someDate.getMonth() == today.getMonth() &&
-      someDate.getFullYear() == today.getFullYear();
+    return someDate.getDate() === today.getDate() &&
+      someDate.getMonth() === today.getMonth() &&
+      someDate.getFullYear() === today.getFullYear();
   }
 }

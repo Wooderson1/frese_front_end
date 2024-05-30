@@ -28,6 +28,12 @@ export class OrderServiceService {
     o.status = 'pending';
     return this.http.post(`${this.apiUrl}/orders`, o);
   }
+  createAndProcessOrder(order, paymentIntentInfo) {
+    const body = {
+      order, paymentIntentInfo
+    };
+    return this.http.post(`${this.apiUrl}/processOrderAndPay`, body);
+  }
 
   getActiveSpecial() {
     return this.http.get(`${this.apiUrl}/activeSpecial`);
