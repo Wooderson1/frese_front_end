@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import * as validateEmail from '../helpers/emailValidator';
 import * as validatePhone from '../helpers/phoneValidator';
 
@@ -22,7 +22,7 @@ import {environment} from '../../environments/environment';
   styleUrls: ['./pay-now.page.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class PayNowPage {
+export class PayNowPage implements OnInit, AfterViewInit, OnDestroy {
   stripe = Stripe(environment.stripe);
   // stripe = Stripe('pk_live_51KasQqEZvpspKOfSzW7sdVtBJmH1pVuJ7MkqdkFvwMqH1FG2RkSdpI5qDqEzsxeNgUOwODddzocbKqlRu90DAnMA00Y537FNq1');
   // stripe = Stripe('pk_test_51KasQqEZvpspKOfSlXnGLRy8IxkOOIZfo5bSREuWGPiK4HCkRyPaSy3m6TqFll4shlG3czSvOiE6eeUEUBG4Ueat00nSgYii4r');
@@ -59,6 +59,7 @@ export class PayNowPage {
 
   async ngAfterViewInit() {
     console.log(this.order.total);
+    console.log(environment.stripe);
     this.dataService.getIntent({amount: Math.round(this.order.total * 100)}).subscribe(async (res: any) => {
       this.paymentIntent = res;
       console.log(this.paymentIntent);
@@ -102,19 +103,18 @@ export class PayNowPage {
 
   async requiredFieldsCompleted() {
 
-    if (!this.customerInfo.name || !this.customerInfo.email || !this.customerInfo.phone) {
-      console.log('Missing customer info ', this.customerInfo);
-      // await this.presentAlertMessage('Please fill out the required fields.');
-      // return false;
-    } else if (!validateEmail(this.customerInfo.email)) {
+    if (!this.order.name || !this.order.email || !this.order.phone) {
+      console.log('Missing customer info ', this.order);
+      await this.presentAlertMessage('Please fill out the required fields.');
+      return false;
+    } else if (!validateEmail(this.order.email)) {
       console.log('Bad customer email ', this.customerInfo);
-      // await this.presentAlertMessage('Please enter a valid email');
-      // return false;
-    } else if (!validatePhone(this.customerInfo.phone)) {
-      console.log('Bad customer phone ', this.customerInfo);
-      // await this.presentAlertMessage('Please enter a valid phone number');
-      // return false;
-
+      await this.presentAlertMessage('Please enter a valid email');
+      return false;
+    } else if (!validatePhone(this.order.phone)) {
+      console.log('Bad customer phone ', this.order);
+      await this.presentAlertMessage('Please enter a valid phone number');
+      return false;
     }
     return true;
   }
@@ -139,51 +139,55 @@ export class PayNowPage {
     return amount.toFixed(2);
   }
 
-  async makePayment(token) {
-    this.spinnerService.showSpinner();
-    let paymentData;
-    try {
-      paymentData = await this.dataService.processPayment({
-        amount: this.order.total * 100,
-        // cart: this.cart,
-        currency: 'usd',
-        token: token.id,
-        orderId: this.order.id,
-        email: this.customerInfo.email,
-        phone: this.customerInfo.phone,
-        name: this.customerInfo.name,
-      }).toPromise();
-    } catch (err) {
-      if (err.error.message === 'Order already paid for') {
-        await this.dataService.updateOrderDetails(this.order.id, {
-          notes: this.orderNotes,
-        }).toPromise();
-        await this.presentAlertMessage('It looks like we processed this order already, please call to confirm your order (518) 756-1000');
-        await this.modalController.dismiss({success: false});
-        return;
-      }
-      await this.presentAlertMessage('We had trouble processing your payment. Please try again');
-      this.purchaseInProgress = false;
-      return;
-    }
-
-    if (paymentData.status !== 'succeeded') {
-      this.spinnerService.hideSpinner();
-
-      await this.presentAlertMessage('We had trouble processing your payment. Please try again');
-      this.purchaseInProgress = false;
-
-      return;
-    } else {
-      try {
-        await this.dataService.updateOrderDetails(this.order.id, {
-          notes: this.orderNotes,
-        }).toPromise();
-      } catch (err) {
-        await this.presentAlertMessage('Something went wrong with your order. Please call the bakery at (518) 756-1000');
-      }
-      await this.modalController.dismiss({success: true});
-    }
+  // async makePayment(token) {
+  //   this.spinnerService.showSpinner();
+  //   let paymentData;
+  //   try {
+  //     paymentData = await this.dataService.processPayment({
+  //       amount: this.order.total * 100,
+  //       // cart: this.cart,
+  //       currency: 'usd',
+  //       token: token.id,
+  //       orderId: this.order.id,
+  //       email: this.customerInfo.email,
+  //       phone: this.customerInfo.phone,
+  //       name: this.customerInfo.name,
+  //     }).toPromise();
+  //   } catch (err) {
+  //     if (err.error.message === 'Order already paid for') {
+  //       await this.dataService.updateOrderDetails(this.order.id, {
+  //         notes: this.orderNotes,
+  //       }).toPromise();
+  //       await this.presentAlertMessage('It looks like we processed this order already, please call to confirm your order (518) 756-1000');
+  //       await this.modalController.dismiss({success: false});
+  //       return;
+  //     }
+  //     await this.presentAlertMessage('We had trouble processing your payment. Please try again');
+  //     this.purchaseInProgress = false;
+  //     return;
+  //   }
+  //
+  //   if (paymentData.status !== 'succeeded') {
+  //     this.spinnerService.hideSpinner();
+  //
+  //     await this.presentAlertMessage('We had trouble processing your payment. Please try again');
+  //     this.purchaseInProgress = false;
+  //
+  //     return;
+  //   } else {
+  //     try {
+  //       await this.dataService.updateOrderDetails(this.order.id, {
+  //         notes: this.orderNotes,
+  //       }).toPromise();
+  //     } catch (err) {
+  //       await this.presentAlertMessage('Something went wrong with your order. Please call the bakery at (518) 756-1000');
+  //     }
+  //     await this.modalController.dismiss({success: true});
+  //   }
+  // }
+  ngOnInit() {
+    this.order = this.orderService.getOrder();
+    console.log('O ', this.order);
   }
 
   ngOnDestroy() {
@@ -197,6 +201,7 @@ export class PayNowPage {
     return this.purchaseInProgress;
   }
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   async Pay() {
     this.purchaseInProgress = true;
     if (!(await this.requiredFieldsCompleted())) {
@@ -218,16 +223,17 @@ export class PayNowPage {
   // }
 
 
-  showMessage(messageText) {
-    const messageContainer = document.querySelector('#payment-message');
-
-    messageContainer.classList.remove('hidden');
-    messageContainer.textContent = messageText;
-
-    setTimeout(function() {
-      messageContainer.classList.add('hidden');
-      messageContainer.textContent = '';
-    }, 4000);
+  async showMessage(messageText) {
+    await this.presentAlertMessage(messageText);
+    // const messageContainer = document.querySelector('#payment-message');
+    //
+    // messageContainer.classList.remove('hidden');
+    // messageContainer.textContent = messageText;
+    //
+    // setTimeout(() => {
+    //   messageContainer.classList.add('hidden');
+    //   messageContainer.textContent = '';
+    // }, 4000);
     this.setLoading(false);
   }
 
@@ -252,11 +258,9 @@ export class PayNowPage {
     this.paymentElement = this.elements.create('payment', options);
     this.paymentElement.mount('#payment-element');
   }
-
   async handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
-
+    this.setLoading(true);
     if (!(await this.requiredFieldsCompleted())) {
       this.setLoading(false);
       return;
@@ -266,8 +270,62 @@ export class PayNowPage {
       this.showMessage('Error submitting payment');
       return;
     }
+    console.log(JSON.stringify(this.order));
+    const {error, paymentMethod} = await this.createPaymentMethod();
+    if (error) {
+      this.showMessage('Payment details incomplete');
+      console.log('ACTUAL ', error);
+      return;
+    }
+    this.processPayment(paymentMethod);
+  }
 
-    const {error, paymentMethod} = await this.stripe.createPaymentMethod({
+  async processPayment(paymentMethod) {
+    const paymentIntentInfo = this.buildPaymentIntentInfo(paymentMethod);
+    try {
+      const {order, charge, error, type }= await this.dataService.createAndProcessOrder(this.order, paymentIntentInfo).toPromise();
+      this.handlePaymentResponse(order, charge, error, type);
+    } catch (e) {
+      this.setLoading(false);
+      console.log('EEEE ', e);
+      this.handlePaymentError(e);
+      // this.showMessage('Something went wrong!');
+    }
+  }
+
+  handlePaymentError(e) {
+    const { error, type } = e.error;
+    console.log('1 ', error);
+    console.log('2 ', type);
+    const errorDictionary = {
+      custom_error: error,
+      card_error: 'Invalid Card details',
+      validation_error: 'Invalid Payment Info',
+    };
+
+    if (error && errorDictionary.hasOwnProperty(type)) {
+      this.showMessage(errorDictionary[type]);
+      return;
+    }
+  }
+
+  buildPaymentIntentInfo(paymentMethod) {
+    return {
+      amount: this.order.total * 100,
+      currency: 'usd',
+      orderId: this.order.id,
+      email: this.order.email,
+      phone: this.order.phone,
+      name: this.order.name,
+      paymentInfo: {
+        intent: this.paymentIntent.id,
+        payment_method: paymentMethod.id
+      }
+    };
+  }
+
+  async createPaymentMethod() {
+    return await this.stripe.createPaymentMethod({
       elements: this.elements,
       params: {
         billing_details: {
@@ -276,101 +334,149 @@ export class PayNowPage {
         }
       }
     });
-
-    if (error) {
-      this.showMessage('Payment details incomplete');
-      console.log('ACTUAL ', error);
-      return;
-    }
-
-
-    try {
-      let error;
-      console.log('ID ', this.paymentIntent.id);
-      const resp = await this.dataService.processIntent(
-        {
-          amount: this.order.total * 100,
-          // cart: this.cart,
-          currency: 'usd',
-          orderId: this.order.id,
-          email: this.customerInfo.email,
-          phone: this.customerInfo.phone,
-          name: this.customerInfo.name,
-          paymentInfo: {
-            intent: this.paymentIntent.id,
-            payment_method: paymentMethod.id
-          }
-        }
-      ).toPromise();
-      console.log('RESP ', resp);
-      if(resp.error && resp.type === 'custom_error') {
-        this.showMessage(resp.error);
-      }
-      if (resp.error) {
-        error = resp.error.raw;
-      } else {
-        this.paymentIntent = resp.paymentIntent;
-      }
-
-      console.log('E E E ', e);
-      if (error && (error.type === 'card_error' || error.type === 'validation_error')) {
-        this.showMessage(error.message);
-      } else if (error && error.type === 'invalid_request_error' && error.message.includes('previously confirmed')) {
-        this.showMessage('Order already paid. Please call (518) 756-1000 to verify order');
-      } else if (this.paymentIntent && this.paymentIntent.status === 'succeeded' && !error) {
-        this.showMessage('Payment successful');
-        const {order} = await this.dataService.updateOrderDetails(this.order.id, {
-          notes: this.orderNotes,
-        }).toPromise();
-        this.order = order;
-        const modal = await this.modalController.create({
-          component: OrderSuccessPage,
-          componentProps: {
-            order: this.order
-            // cart: this.cart,
-          }
-        });
-        modal.onDidDismiss().then(async (detail: any) => {
-        });
-        await modal.present();
-        // } else if(this.paymentIntent && this.paymentIntent && this.paymentIntent.next_action.cashapp_handle_redirect_or_display_qr_code){ // CHECK FOR succeeded / failed
-        //   const return_url = `http://localhost:3100/#/order-success?orderId=${this.order.id}`;
-        //   console.log(return_url);
-        //   const response = await this.stripe.confirmCashappPayment(this.clientSecret, {
-        //     payment_method: {
-        //       type: 'cashapp',
-        //     },
-        //     return_url,
-        //   });
-    }else {
-        console.error(this.paymentIntent);
-        console.error(error);
-        console.error(error.type);
-        console.log(this.paymentIntent.status);
-        this.showMessage('Oops something went wrong!');
-      }
-
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      console.log(e);
-      this.showMessage('Something went wrong!');
-    }
-
-// Show a spinner on payment submission
-    function setLoading(isLoading) {
-      if (isLoading) {
-        // Disable the button and show a spinner
-        ((document.querySelector('#submit')) as any).disabled = true;
-        document.querySelector('#spinner').classList.remove('hidden');
-        document.querySelector('#button-text').classList.add('hidden');
-      } else {
-        ((document.querySelector('#submit')) as any).disabled = false;
-        document.querySelector('#spinner').classList.add('hidden');
-        document.querySelector('#button-text').classList.remove('hidden');
-      }
-    }
   }
+  async handlePaymentResponse(order, charge, error, type) {
+    if (this.paymentIntent && charge.status === 'succeeded' && !error) {
+      this.orderService.setOrder(order);
+      await this.handleSuccessfulPayment();
+    } else {
+      console.error(this.paymentIntent);
+      console.error(error);
+      if (error) {
+        console.error(type);
+      }
+      console.log(charge.status);
+    }
+    this.setLoading(false);
+  }
+
+  async handleSuccessfulPayment() {
+    // this.showMessage('Payment successful');
+    const modal = await this.modalController.create({
+      component: OrderSuccessPage,
+      componentProps: {
+        // order: this.order
+      }
+    });
+    await modal.present();
+  }
+//   async handleSubmit(e) {
+//     e.preventDefault();
+//     setLoading(true);
+//
+//     if (!(await this.requiredFieldsCompleted())) {
+//       this.setLoading(false);
+//       return;
+//     }
+//     const {error: submitError} = await this.elements.submit();
+//     if (submitError) {
+//       this.showMessage('Error submitting payment');
+//       return;
+//     }
+//     console.log(JSON.stringify(this.order));
+//     // return;
+//
+//     const {error, paymentMethod} = await this.stripe.createPaymentMethod({
+//       elements: this.elements,
+//       params: {
+//         // eslint-disable-next-line @typescript-eslint/naming-convention
+//         billing_details: {
+//           name: this.customerInfo.name,
+//           email: this.customerInfo.email
+//         }
+//       }
+//     });
+//
+//     if (error) {
+//       this.showMessage('Payment details incomplete');
+//       console.log('ACTUAL ', error);
+//       return;
+//     }
+//
+//     const paymentIntentInfo = {
+//           amount: this.order.total * 100,
+//           // cart: this.cart,
+//           currency: 'usd',
+//           orderId: this.order.id,
+//           email: this.order.email,
+//           phone: this.order.phone,
+//           name: this.order.name,
+//           paymentInfo: {
+//             intent: this.paymentIntent.id,
+//             // eslint-disable-next-line @typescript-eslint/naming-convention
+//             payment_method: paymentMethod.id
+//           }
+//         };
+//
+//     try {
+//       let error;
+//       console.log('ID ', this.paymentIntent.id);
+//       const resp = await this.dataService.createAndProcessOrder(this.order, paymentIntentInfo).toPromise();
+//       console.log('RESP ', resp);
+//       if(resp.error && resp.type === 'custom_error') {
+//         this.showMessage(resp.error);
+//       }
+//       if (resp.error) {
+//         error = resp.error.raw;
+//       } else {
+//         this.paymentIntent = resp.paymentIntent;
+//       }
+//       console.log(error);
+//
+//       if (error && (error.type === 'card_error' || error.type === 'validation_error')) {
+//         this.showMessage(error.message);
+//       } else if (error && error.type === 'invalid_request_error' && error.message.includes('previously confirmed')) {
+//         this.showMessage('Order already paid. Please call (518) 756-1000 to verify order');
+//       } else if (this.paymentIntent && this.paymentIntent.status === 'succeeded' && !error) {
+//         this.showMessage('Payment successful');
+//         const modal = await this.modalController.create({
+//           component: OrderSuccessPage,
+//           componentProps: {
+//             order: this.order
+//             // cart: this.cart,
+//           }
+//         });
+//         modal.onDidDismiss().then(async (detail: any) => {
+//         });
+//         await modal.present();
+//         // } else if(this.paymentIntent && this.paymentIntent && this.paymentIntent.next_action.cashapp_handle_redirect_or_display_qr_code){ // CHECK FOR succeeded / failed
+//         //   const return_url = `http://localhost:3100/#/order-success?orderId=${this.order.id}`;
+//         //   console.log(return_url);
+//         //   const response = await this.stripe.confirmCashappPayment(this.clientSecret, {
+//         //     payment_method: {
+//         //       type: 'cashapp',
+//         //     },
+//         //     return_url,
+//         //   });
+//     }else {
+//         console.error(this.paymentIntent);
+//         console.error(error);
+//         console.error(error.type);
+//         console.log(this.paymentIntent.status);
+//         this.showMessage('Oops something went wrong!');
+//       }
+//
+//       setLoading(false);
+//     } catch (e) {
+//       setLoading(false);
+//       console.log(e);
+//       this.showMessage('Something went wrong!');
+//     }
+//
+// // Show a spinner on payment submission
+//     function setLoading(isLoading) {
+//       if (isLoading) {
+//         // Disable the button and show a spinner
+//         ((document.querySelector('#submit')) as any).disabled = true;
+//         document.querySelector('#spinner').classList.remove('hidden');
+//         document.querySelector('#button-text').classList.add('hidden');
+//       } else {
+//         ((document.querySelector('#submit')) as any).disabled = false;
+//         document.querySelector('#spinner').classList.add('hidden');
+//         document.querySelector('#button-text').classList.remove('hidden');
+//       }
+//     }
+//   }
   setLoading(isLoading) {
     if (isLoading) {
       // Disable the button and show a spinner

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {DataServiceService} from "../services/data-service.service";
+import {ActivatedRoute} from '@angular/router';
+import {DataServiceService} from '../services/data-service.service';
 
 @Component({
   selector: 'app-unsubscribe',
@@ -16,9 +16,9 @@ export class UnsubscribePage implements OnInit {
     const emailAddress = String(routeParams.get('email'));
     this.dataService.unsubscribe(emailAddress).subscribe(res => {
       console.log(res);
-    })
+    });
 
-    console.log(emailAddress)
+    console.log(emailAddress);
   }
 
 }

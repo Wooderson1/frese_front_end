@@ -171,27 +171,27 @@ export class SelectOrderTimePage implements OnInit {
   async submitAndContinue() {
     const date = this.getDateFromSelections(this.selectedDate, this.selectedTime);
     this.orderService.setPickupTime(date);
-    const order = this.orderService.getOrder();
-    let orderRes;
-    try {
-      console.log('CREATING ORDER ', order);
-      orderRes = await this.dataService.createOrder(order).toPromise();
-      console.log('ORDER RES ', orderRes);
-    } catch (e) {
-      console.log(e);
-      await this.helperService.presentAlertMessage(JSON.stringify(e));
-    }
-    if (!orderRes.id) {
-      await this.helperService.presentAlertMessage('Something went wrong creating your order, please try again');
-      return;
-    }
+    // const order = this.orderService.getOrder();
+    // let orderRes;
+    // try {
+    //   console.log('CREATING ORDER ', order);
+    //   orderRes = await this.dataService.createOrder(order).toPromise();
+    //   console.log('ORDER RES ', orderRes);
+    // } catch (e) {
+    //   console.log(e);
+    //   await this.helperService.presentAlertMessage(JSON.stringify(e));
+    // }
+    // if (!orderRes.id) {
+    //   await this.helperService.presentAlertMessage('Something went wrong creating your order, please try again');
+    //   return;
+    // }
 
     // this.orderService.setOrder(orderRes);
     const modal = await this.modalController.create({
       component: PayNowPage,
       componentProps: {
-        order: orderRes,
-        subtotal: orderRes.subtotal,
+        // order: orderRes,
+        // subtotal: orderRes.subtotal,
       }
     });
     // modal.onDidDismiss().then(async (detail: any) => {
