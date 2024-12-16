@@ -223,16 +223,17 @@ export class PayNowPage implements OnInit, AfterViewInit, OnDestroy {
   // }
 
 
-  showMessage(messageText) {
-    const messageContainer = document.querySelector('#payment-message');
-
-    messageContainer.classList.remove('hidden');
-    messageContainer.textContent = messageText;
-
-    setTimeout(() => {
-      messageContainer.classList.add('hidden');
-      messageContainer.textContent = '';
-    }, 4000);
+  async showMessage(messageText) {
+    await this.presentAlertMessage(messageText);
+    // const messageContainer = document.querySelector('#payment-message');
+    //
+    // messageContainer.classList.remove('hidden');
+    // messageContainer.textContent = messageText;
+    //
+    // setTimeout(() => {
+    //   messageContainer.classList.add('hidden');
+    //   messageContainer.textContent = '';
+    // }, 4000);
     this.setLoading(false);
   }
 
@@ -293,7 +294,7 @@ export class PayNowPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handlePaymentError(e) {
-    let { error, type } = e.error;
+    const { error, type } = e.error;
     console.log('1 ', error);
     console.log('2 ', type);
     const errorDictionary = {
@@ -302,12 +303,6 @@ export class PayNowPage implements OnInit, AfterViewInit, OnDestroy {
       validation_error: 'Invalid Payment Info',
     };
 
-    if(error && type === 'custom_error') {
-      console.log('THE ERR ', error);
-      this.showMessage(error);
-    } else if (error) {
-      error = error.raw;
-    }
     if (error && errorDictionary.hasOwnProperty(type)) {
       this.showMessage(errorDictionary[type]);
       return;
@@ -356,7 +351,7 @@ export class PayNowPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async handleSuccessfulPayment() {
-    this.showMessage('Payment successful');
+    // this.showMessage('Payment successful');
     const modal = await this.modalController.create({
       component: OrderSuccessPage,
       componentProps: {
