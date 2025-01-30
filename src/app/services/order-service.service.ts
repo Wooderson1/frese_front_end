@@ -29,6 +29,7 @@ export class OrderServiceService {
     return this.http.post(`${this.apiUrl}/orders`, o);
   }
   createAndProcessOrder(order, paymentIntentInfo) {
+    order.status = 'pending';
     const body = {
       order, paymentIntentInfo
     };
