@@ -48,7 +48,42 @@ export class SpecialsPage implements OnInit {
   }
   async ionViewDidEnter() {
   }
+  // Function to safely get selected value
+  getSelectedValue(item: any, addOnKey: string): any {
+    const sizeKey = item?.product_size_selected?.size || 'size';
+    return item?.product_add_on_values?.[addOnKey]?.[sizeKey]?.selected;
+  }
 
+  // Function to safely set selected value
+  setSelectedValue(item: any, addOnKey: string, value: any): void {
+    const sizeKey = item?.product_size_selected?.size || 'size';
+    if (item?.product_add_on_values?.[addOnKey]?.[sizeKey]) {
+      item.product_add_on_values[addOnKey][sizeKey].selected = value;
+    }
+  }
+  hasAddOnValues(item: any, addOnKey: string): boolean {
+    return !!item?.product_add_on_values?.[addOnKey];
+  }
+
+  // Function to get the size key
+  getSizeKey(item: any): string {
+    return item?.product_size_selected?.size || 'size';
+  }
+
+  // Function to handle add-on change
+  onAddOnChange(item: any, addOnKey: string, event: any): void {
+    const sizeKey = this.getSizeKey(item);
+    if (item?.product_add_on_values?.[addOnKey]?.[sizeKey]) {
+      item.product_add_on_values[addOnKey][sizeKey].selected = event;
+    }
+  }
+
+  // Function to get add-on options safely
+  // Function to get add-on options safely
+  getAddOnOptions(item: any, addOnKey: string): any[] {
+    const sizeKey = item?.product_size_selected?.size || 'size';
+    return item?.product_add_on_values?.[addOnKey]?.[sizeKey] || [];
+  }
   sortBySpecial(products) {
     const specialTypeId = this.types.find(element => {
       return element.name === "Special";

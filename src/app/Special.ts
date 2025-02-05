@@ -40,7 +40,6 @@ export default class Special {
     this.products = await this.sortBySpecial(t);
   }
   initializeSelectedSizes(menu) {
-    console.log('M ', menu);
     menu.forEach((item) => {
       if (item.product_sizes && item.product_sizes.length > 0) {
         item.product_size_selected = item.product_sizes[0];
