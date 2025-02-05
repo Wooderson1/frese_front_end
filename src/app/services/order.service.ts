@@ -27,6 +27,7 @@ export class OrderService {
     // 2. Menu
     const productResults = await this.dataService.getActiveMenu().toPromise();
     this.setMenuLoading(false);
+    console.log("PR ", productResults )
 
     const availableItems = this.formatMenu(productResults);
     await this.productsService.setProducts(availableItems);
@@ -60,8 +61,11 @@ export class OrderService {
   }
 
   checkForSelectionCount(item) {
-    console.log(JSON.stringify(item));
-    return Object.keys(item.product_selection_values).some(key => !item.product_selection_values[key][item.product_size_selected.size].selected);
+    return Object.keys(item.product_selection_values).some(key => {
+      const sizeKey = item.product_size_selected && item.product_size_selected.size ? item.product_size_selected.size : "size";
+      console.log(sizeKey)
+      return !item.product_selection_values[key][sizeKey].selected;
+    });
   }
   activeSpecial() {
     return this.specialsId;
@@ -218,9 +222,10 @@ export class OrderService {
   }
 
   formatAddOns(item) {
-    console.log('FF ', item);
-    const size = item.product_size_selected?.size;
-    const vals = {};
+    const size = item.product_size_selected?.size || "size";
+    let vals = {};
+    console.log("ADD ONS ", item.product_add_on_values)
+    console.log("SIZE ", size);
     Object.keys(item.product_add_on_values).forEach(key => {
       console.log(item.product_add_on_values[key][size].selected);
       console.log(item.product_add_on_values[key][size]?.selected?.length);
@@ -228,10 +233,12 @@ export class OrderService {
         item.product_add_on_values[key][size].selected.length > 0) {
         const arr = item.product_add_on_values[key][size].selected;
         console.log(arr);
-        vals[key] = arr.map(val => ({
+        vals[key] = arr.map(val => {
+          return {
             value: val.value,
             cost: val.cost
-          }));
+          }
+        });
         item.product_add_on_values[key].selected = null;
       }
     });
@@ -240,7 +247,7 @@ export class OrderService {
 
   formatSelections(item) {
     console.log('IN ', item);
-    const size = item.product_size_selected?.size;
+    const size = item.product_size_selected?.size || "size";
     const vals = {};
     console.log(' SEL ', item.product_selection_values);
     Object.keys(item.product_selection_values).forEach(key => {

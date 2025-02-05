@@ -38,11 +38,13 @@ export class MenuPage implements OnInit {
           url: `/specials/${special.id}`,
         })
       })
+        console.log(this.specialItems)
     });
   }
   ngOnChanges(changes: SimpleChanges) {
   }
   updateTitle(title: string) {
+    console.log("HERE ", title);
     this.titleTest = this.menuItems.filter(item => item.url == title)[0].title;
   }
   ngOnInit() {

@@ -61,6 +61,7 @@ export class SpecialsProductsService {
     }
     for (const special of res) {
       const s = new Special(special, this.dataService);
+      console.log('SS', s);
       await s.formatMenu();
       this.specials[s.id]=s;
     }

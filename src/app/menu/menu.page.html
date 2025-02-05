@@ -12,7 +12,7 @@
       <ion-menu-toggle *ngFor="let p of specialItems; let i = index">
         <ion-item [disabled]="orderService.specialContainsAllProducts(p.special)"button (click)="updateTitle(p.url)" class="iconColor" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="active-item" [routerLinkActiveOptions]="{exact: true}">
           <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-          <ion-label>{{ p.title }}</ion-label>
+          <ion-label>{{ p.url}}</ion-label>
         </ion-item>
       </ion-menu-toggle>
       <ion-menu-toggle>

@@ -127,7 +127,42 @@ export class FreseBakeryPage implements OnInit {
     });
     await alert.present();
   }
+  // Function to safely get selected value
+  getSelectedValue(item: any, addOnKey: string): any {
+    const sizeKey = item?.product_size_selected?.size || 'size';
+    return item?.product_add_on_values?.[addOnKey]?.[sizeKey]?.selected;
+  }
 
+  // Function to safely set selected value
+  setSelectedValue(item: any, addOnKey: string, value: any): void {
+    const sizeKey = item?.product_size_selected?.size || 'size';
+    if (item?.product_add_on_values?.[addOnKey]?.[sizeKey]) {
+      item.product_add_on_values[addOnKey][sizeKey].selected = value;
+    }
+  }
+  hasAddOnValues(item: any, addOnKey: string): boolean {
+    return !!item?.product_add_on_values?.[addOnKey];
+  }
+
+  // Function to get the size key
+  getSizeKey(item: any): string {
+    return item?.product_size_selected?.size || 'size';
+  }
+
+  // Function to handle add-on change
+  onAddOnChange(item: any, addOnKey: string, event: any): void {
+    const sizeKey = this.getSizeKey(item);
+    if (item?.product_add_on_values?.[addOnKey]?.[sizeKey]) {
+      item.product_add_on_values[addOnKey][sizeKey].selected = event;
+    }
+  }
+
+  // Function to get add-on options safely
+  // Function to get add-on options safely
+  getAddOnOptions(item: any, addOnKey: string): any[] {
+    const sizeKey = item?.product_size_selected?.size || 'size';
+    return item?.product_add_on_values?.[addOnKey]?.[sizeKey] || [];
+  }
   async Pay() {
     if (this.cart.items.length === 0) {
       await this.presentAlertMessage('Oops! looks like your cart is empty.');
@@ -137,9 +172,7 @@ export class FreseBakeryPage implements OnInit {
     this.cart.total = this.getTotal();
     this.cart.subtotal = this.getSubtotal();
 
-    console.log('CREATING ORDER ', this.cart);
     const orderRes = await this.dataService.createOrder(this.cart).toPromise();
-    console.log('ORDER RES ', orderRes);
     if (!orderRes.id) {
       await this.presentAlertMessage('Something went wrong creating your order, please try again');
       return;
@@ -367,6 +400,7 @@ return sorted;
   }
 
   getAddOnKeys(item) {
+    console.log("AO ", item)
     return Object.keys(item.add_ons);
   }
 }

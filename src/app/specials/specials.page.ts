@@ -269,14 +269,30 @@ export class SpecialsPage implements OnInit {
   }
 
   hasAddOns(product) {
+    if(!product || !product.product_add_on_values) {
+      return false;
+    }
     return Object.keys(product.product_add_on_values).length > 0;
   }
 
   selectionKeys(product) {
+    console.log(product)
+    try {
+
+    if(!product || product.product_selection_values === undefined) {
+      return [];
+    }
+    console.log(Object.keys(product.product_selection_values));
     return Object.keys(product.product_selection_values);
+    } catch(e) {
+      console.log("SELECTIONS ", e);
+    }
   }
 
   hasSelections(product) {
+    if(!product || !product.product_selection_values) {
+      return false;
+    }
     return Object.keys(product.product_selection_values).length > 0;
   }
 

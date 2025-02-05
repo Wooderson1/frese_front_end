@@ -26,10 +26,9 @@
                           </ion-select-option>
                         </ion-select>
                       </ion-list>
-
-                      <ion-list *ngIf="hasSelections(item)">
+                       <ion-list *ngIf="hasSelections(item)">
                         <div class="subText">Selections</div>
-                        <div class="select-opt" *ngFor="let selectionKey of selectionKeys(item)">
+                        <!-- <div class="select-opt" *ngFor="let selectionKey of selectionKeys(item)">
                           <ion-select [(ngModel)]="item.product_selection_values[selectionKey].selected"
                                       [placeholder]="selectionKey">
                             <ion-select-option *ngFor="let v of item.product_selection_values[selectionKey]"
@@ -39,9 +38,9 @@
                               <p *ngIf="v.cost">${{v.cost}}</p>
                             </ion-select-option>
                           </ion-select>
-                        </div>
-                      </ion-list>
-                      <ion-list *ngIf="hasAddOns(item)">
+                        </div> -->
+                       </ion-list>
+                      <!-- <ion-list *ngIf="hasAddOns(item)">
                         <div class="subText">Extras</div>
                         <div class="select-opt" *ngFor="let addOnKey of addOnKeys(item)">
                           <ion-select multiple=true [(ngModel)]="item.product_add_on_values[addOnKey].selected"
@@ -53,7 +52,7 @@
                             </ion-select-option>
                           </ion-select>
                         </div>
-                      </ion-list>
+                      </ion-list> -->
                       <ion-button class="fancy-button" disabled="{{disableButton(item)}}" color='frese' (click)="addToCart(item)">Add to
                         Cart
                       </ion-button>
